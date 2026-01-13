@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تحميل التطبيق</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    
+    <style>
+        :root {
+            --bg-body: #f4f6f8; --bg-card: #ffffff; --text-main: #1c1e21;
+            --primary: #27ae60; --timer-color: #f39c12; 
+        }
+        
+        body { background: var(--bg-body); color: var(--text-main); font-family: 'Cairo', sans-serif; margin: 0; padding-bottom: 70px; /* مساحة للإعلان السفلي */ }
+
+        header {
+            background: var(--bg-card); padding: 12px 15px; position: sticky; top: 0; z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05); display: flex; align-items: center; gap: 15px;
+        }
+        .header-search { 
+            flex: 1; background: #f0f2f5; padding: 8px 20px; border-radius: 50px; display: flex; align-items: center;
+        }
+        .header-search input { border: none; background: transparent; width: 100%; outline: none; font-family: 'Cairo'; font-weight: 700; }
+
+        .container { max-width: 1000px; margin: 20px auto; padding: 0 15px; display: flex; gap: 20px; flex-wrap: wrap; }
+        .main-content { flex: 1; min-width: 0; }
+        .sidebar-right { width: 300px; display: none; }
+
+        /* الكارت الرئيسي */
+        .main-card {
+            background: var(--bg-card); border-radius: 20px; padding: 25px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.05); text-align: center; margin-bottom: 20px;
+            position: relative; overflow: hidden;
+        }
+        .main-card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 5px;
+            background: linear-gradient(90deg, #3498db, #8e44ad);
+        }
+
+        .app-icon { width: 100px; height: 100px; border-radius: 22px; margin-bottom: 10px; object-fit: cover; border: 1px solid #eee; }
+        .app-title { font-size: 20px; font-weight: 900; margin: 5px 0 15px; }
+        .desc-box { text-align: right; background: #fafafa; padding: 15px; border-radius: 12px; font-size: 14px; line-height: 1.7; color: #555; margin-bottom: 20px; border: 1px solid #eee; }
+
+        /* --- منطقة العداد والإعلانات --- */
+        .download-zone {
+            background: #fff; padding: 20px; border-radius: 15px; border: 1px solid #f0f0f0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03); margin-top: 20px;
+        }
+
+        /* تصميم العداد الدائري */
+        .timer-wrapper { display: none; margin: 20px auto; text-align: center; }
+        .circular-chart { display: block; margin: 10px auto; max-width: 140px; max-height: 140px; }
+        .circle-bg { fill: none; stroke: #f0f2f5; stroke-width: 3; }
+        .circle { 
+            fill: none; stroke-width: 3; stroke-linecap: round; 
+            stroke: var(--timer-color); 
+            stroke-dasharray: 100, 100; transition: stroke-dasharray 1s linear;
+        }
+        .percentage { fill: #2d3436; font-family: 'Cairo'; font-weight: 900; font-size: 0.5em; text-anchor: middle; }
+        
+        /* 🎨 الزر المتناسق (Fixed Button) */
+        .action-btn {
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            width: 100%; padding: 16px; border-radius: 50px; border: none;
+            font-family: 'Cairo'; font-weight: 800; font-size: 16px; color: white;
+            cursor: pointer; transition: 0.3s; text-decoration: none;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+        
+        /* شكل زر البدء (أزرق غامق) */
+        .btn-start {
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+        }
+        .btn-start:hover { transform: translateY(-3px); box-shadow: 0 12px 25px rgba(44, 62, 80, 0.3); }
+
+        /* شكل زر التحميل النهائي (أخضر نيون - جذاب) */
+        .btn-final {
+            background: linear-gradient(135deg, #11998e, #38ef7d);
+            display: none; /* مخفي في البداية */
+            animation: bounceIn 0.6s;
+        }
+        .btn-final:hover { transform: scale(1.02); box-shadow: 0 0 25px rgba(56, 239, 125, 0.6); }
+
+        @keyframes bounceIn {
+            0% { opacity: 0; transform: scale(0.3); }
+            50% { opacity: 1; transform: scale(1.05); }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); }
+        }
+
+        /* --- مساحات إعلانية ذكية (Smart Ads) --- */
+        
+        /* 1. إعلان وسط المحتوى (Native) */
+        .ad-native {
+            background: #fffdf0; border: 1px dashed #f1c40f; padding: 15px; 
+            border-radius: 12px; margin: 15px 0; text-align: center; color: #7f8c8d; font-size: 13px;
+            display: flex; align-items: center; justify-content: center; min-height: 250px;
+        }
+
+        /* 2. إعلان سفلي لاصق (Sticky Footer) */
+        .ad-sticky {
+            position: fixed; bottom: 0; left: 0; width: 100%; height: 60px;
+            background: #fff; border-top: 1px solid #ddd; z-index: 999;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        }
+
+        /* اقتراحات */
+        .grid-mini { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 20px; }
+        .card-mini { background: #fff; padding: 10px; border-radius: 10px; text-align: center; border: 1px solid #eee; cursor: pointer; }
+        .card-mini img { width: 100%; height: 70px; object-fit: cover; border-radius: 8px; }
+        .card-mini h5 { font-size: 11px; margin: 5px 0 0; overflow: hidden; height: 30px; }
+
+        @media (min-width: 992px) { .sidebar-right { display: block; } }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html"><i class="fas fa-arrow-right" style="font-size:22px; color:#333;"></i></a>
+        <div class="header-search">
+            <input type="text" id="postSearch" placeholder="ابحث...">
+            <i class="fas fa-search"></i>
+        </div>
+    </header>
+
+    <div class="container">
+        
+        <div class="main-content">
+            <div id="loader" style="text-align:center; padding:50px; color:#999;"><i class="fas fa-spinner fa-spin fa-2x"></i></div>
+            
+            <div id="content" style="display:none;">
+                <div class="main-card">
+                    <img id="p-img" src="" class="app-icon">
+                    <h1 id="p-title" class="app-title"></h1>
+                    
+                    <div class="ad-native">مساحة إعلانية (إعلان مربع متجاوب)</div>
+
+                    <div id="p-desc" class="desc-box"></div>
+
+                    <div class="download-zone">
+                        
+                        <button id="start-timer-btn" class="action-btn btn-start" onclick="startCountdown()">
+                            <i class="fas fa-bolt"></i> تحضير رابط التحميل
+                        </button>
+
+                        <div id="timer-wrapper" class="timer-wrapper">
+                            <div style="font-weight:bold; margin-bottom:10px;">جاري الفحص والتجهيز...</div>
+                            <svg viewBox="0 0 36 36" class="circular-chart">
+                                <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                <path id="circle-path" class="circle" stroke-dasharray="100, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                <text x="18" y="20.35" class="percentage" id="timer-num">20</text>
+                            </svg>
+                            
+                            <div style="margin-top:15px; height:60px; background:#f9f9f9; border:1px dashed #ccc; display:flex; align-items:center; justify-content:center; font-size:12px; color:#aaa;">
+                                إعلان بانر صغير (320x50)
+                            </div>
+                        </div>
+
+                        <a id="final-link" href="#" target="_blank" class="action-btn btn-final">
+                            <i class="fas fa-download"></i> تحميل مباشر الآن 🚀
+                        </a>
+
+                    </div>
+                </div>
+
+                <h3 style="margin-bottom:15px;">مقالات مشابهة</h3>
+                <div id="related-grid" class="grid-mini"></div>
+            </div>
+        </div>
+
+        <div class="sidebar-right">
+            <div style="background:#fff; padding:20px; border-radius:20px; box-shadow:0 5px 20px rgba(0,0,0,0.05);">
+                <h4 style="margin-top:0;">الأكثر مشاهدة 🔥</h4>
+                <div id="sidebar-related"></div>
+                <div style="margin-top:20px; height:250px; background:#eee; display:flex; align-items:center; justify-content:center;">إعلان جانبي</div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="ad-sticky">
+        <span style="font-size:12px; color:#999;">مساحة إعلانية (AdSense Anchor)</span>
+    </div>
+
+    <script>
+        const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQhxKTHl4F9snFGvkGb73Sn980xW5Da9Zyhk1EjQocGXEF-9MpLpidqGnWINSoD7fLXAMkPVRzAV_5H/pub?output=csv";
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get('id');
+        let appLink = "#";
+
+        function startCountdown() {
+            document.getElementById('start-timer-btn').style.display = 'none';
+            document.getElementById('timer-wrapper').style.display = 'block';
+
+            let timeLeft = 20; // 20 ثانية (وقت مثالي لا يسبب ملل)
+            const circle = document.getElementById('circle-path');
+            const numDisplay = document.getElementById('timer-num');
+            const totalTime = 20;
+            
+            const timer = setInterval(() => {
+                timeLeft--;
+                numDisplay.textContent = timeLeft;
+                const percentage = (timeLeft / totalTime) * 100;
+                circle.style.strokeDasharray = `${percentage}, 100`;
+
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    document.getElementById('timer-wrapper').style.display = 'none';
+                    // إظهار الزر النهائي بتأثير مميز
+                    const finalBtn = document.getElementById('final-link');
+                    finalBtn.href = appLink;
+                    finalBtn.style.display = 'flex'; // تأكد أنه flex ليحافظ على التنسيق
+                }
+            }, 1000);
+        }
+
+        document.getElementById('postSearch').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') window.location.href = `index.html?q=${this.value}`;
+        });
+
+        Papa.parse(sheetURL, {
+            download: true, header: true,
+            complete: function(results) {
+                const all = results.data.filter(x => x.Title && x.Link).reverse();
+                
+                if(id && all[id]) {
+                    const app = all[id];
+                    appLink = app.Link;
+
+                    document.getElementById('p-img').src = app.Image;
+                    document.getElementById('p-title').innerText = app.Title;
+                    document.getElementById('p-desc').innerHTML = app.Desc.replace(/\n/g, '<br>');
+                    document.title = app.Title;
+
+                    const related = all.filter(x => x.Title !== app.Title);
+                    const grid = document.getElementById('related-grid');
+                    related.slice(0, 6).forEach(item => {
+                        const idx = all.indexOf(item);
+                        grid.innerHTML += `
+                            <div class="card-mini" onclick="location.href='post.html?id=${idx}'">
+                                <img src="${item.Image}">
+                                <h5>${item.Title}</h5>
+                            </div>
+                        `;
+                    });
+
+                    const sb = document.getElementById('sidebar-related');
+                    related.slice(6, 10).forEach(item => {
+                        const idx = all.indexOf(item);
+                        sb.innerHTML += `
+                            <div style="display:flex; gap:10px; margin-bottom:10px; cursor:pointer;" onclick="location.href='post.html?id=${idx}'">
+                                <img src="${item.Image}" style="width:50px; height:50px; border-radius:10px;">
+                                <div style="font-size:12px; font-weight:bold;">${item.Title}</div>
+                            </div>
+                        `;
+                    });
+
+                    document.getElementById('loader').style.display = 'none';
+                    document.getElementById('content').style.display = 'block';
+                }
+            }
+        });
+    </script>
+</body>
+</html>
