@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <title>تحميل التطبيق - متجر تسلم</title>
+    <meta name="description" content="صفحة التحميل - متجر تسلم">
+    <meta name="theme-color" content="#2ecc71">
+
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        /* نفس المتغيرات للتناسق */
+        :root {
+            /* نهاري */
+            --bg-body: #f4f6f8;
+            --bg-card: #ffffff;
+            --bg-glass: rgba(255, 255, 255, 0.9);
+            --text-main: #2d3436;
+            --text-sub: #636e72;
+            --primary: #2ecc71;
+            --primary-hover: #27ae60;
+            --hero-bg: #1e1e1e;
+            --border-color: #eee;
+            --shadow: 0 8px 20px rgba(0,0,0,0.06);
+            --radius: 18px;
+            --timer-color: #f39c12;
+        }
+
+        /* ليلي */
+        [data-theme="dark"] {
+            --bg-body: #121212;
+            --bg-card: #1e1e1e;
+            --bg-glass: rgba(30, 30, 30, 0.9);
+            --text-main: #dfe6e9;
+            --text-sub: #b2bec3;
+            --primary: #00d2d3;
+            --primary-hover: #01a3a4;
+            --hero-bg: #000000;
+            --border-color: #333;
+            --shadow: 0 8px 20px rgba(0,0,0,0.4);
+            --timer-color: #f1c40f;
+        }
+
+        * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
+        body { 
+            background: var(--bg-body); font-family: 'Cairo', sans-serif; 
+            margin: 0; padding-bottom: 90px; color: var(--text-main); 
+            transition: background 0.4s ease, color 0.4s ease;
+        }
+        a { text-decoration: none; color: inherit; }
+
+        /* الهيدر */
+        .header {
+            background: var(--bg-glass); 
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            padding: 12px 20px;
+            display: flex; align-items: center; justify-content: space-between;
+            position: sticky; top: 0; z-index: 1000; 
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .header-left { display: flex; align-items: center; gap: 15px; }
+        .back-btn { font-size: 20px; color: var(--text-main); cursor: pointer; transition:0.2s; }
+        .back-btn:hover { color: var(--primary); transform: translateX(5px); }
+
+        .brand-logo {
+            font-family: 'Cairo', sans-serif; font-weight: 900; font-size: 20px;
+            color: var(--primary); letter-spacing: -1px; text-transform: uppercase;
+        }
+
+        .theme-toggle {
+            width: 35px; height: 35px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            background: var(--bg-body); color: var(--text-main);
+            cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        /* التخطيط */
+        .container { max-width: 1000px; margin: 30px auto; padding: 0 15px; display: grid; grid-template-columns: 1fr 320px; gap: 25px; }
+        
+        .main-card {
+            background: var(--bg-card); border-radius: var(--radius); padding: 30px;
+            box-shadow: var(--shadow); text-align: center; position: relative; overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+        
+        .app-icon-lg { 
+            width: 120px; height: 120px; border-radius: 25px; margin-bottom: 15px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15); object-fit: cover;
+            border: 4px solid var(--bg-body);
+        }
+        
+        .app-title-lg { font-size: 24px; font-weight: 900; margin: 5px 0 15px; color: var(--text-main); }
+        
+        .info-pills { display: flex; justify-content: center; gap: 10px; margin-bottom: 25px; }
+        .pill { 
+            background: var(--bg-body); padding: 6px 15px; border-radius: 50px; 
+            font-size: 12px; font-weight: 700; color: var(--text-sub); border: 1px solid var(--border-color);
+        }
+
+        .app-desc { 
+            text-align: right; line-height: 1.8; opacity: 0.9; margin: 20px 0; 
+            padding: 20px; background: var(--bg-body); border-radius: 15px; 
+            font-size: 14px; color: var(--text-main); border: 1px solid var(--border-color);
+        }
+
+        /* التحميل والعداد */
+        .download-zone { margin-top: 30px; padding-top: 20px; border-top: 1px dashed var(--border-color); }
+
+        .action-btn {
+            width: 100%; padding: 16px; border-radius: 14px; border: none;
+            font-family: inherit; font-weight: 800; font-size: 16px; color: white;
+            cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;
+            transition: 0.3s; box-shadow: 0 8px 20px rgba(46, 204, 113, 0.3); text-decoration: none;
+        }
+        .btn-prep { background: var(--primary); }
+        .btn-prep:hover { background: var(--primary-hover); transform: translateY(-3px); }
+        
+        .btn-final { 
+            background: linear-gradient(135deg, #0984e3, #74b9ff); 
+            display: none; animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+        }
+        @keyframes popIn { from {transform: scale(0.5); opacity: 0;} to {transform: scale(1); opacity: 1;} }
+
+        /* ستايل العداد الدائري */
+        .timer-wrapper { display: none; margin: 20px auto; text-align: center; }
+        .circular-chart { display: block; margin: 10px auto; max-width: 120px; max-height: 120px; }
+        .circle-bg { fill: none; stroke: var(--bg-body); stroke-width: 3; }
+        .circle { 
+            fill: none; stroke-width: 3; stroke-linecap: round; 
+            stroke: var(--timer-color); 
+            stroke-dasharray: 100, 100; transition: stroke-dasharray 1s linear;
+        }
+        .percentage { fill: var(--text-main); font-family: 'Cairo'; font-weight: 900; font-size: 0.6em; text-anchor: middle; }
+
+        /* القائمة الجانبية */
+        .sidebar-card { 
+            background: var(--bg-card); padding: 20px; border-radius: var(--radius); 
+            box-shadow: var(--shadow); border: 1px solid var(--border-color);
+        }
+        .mini-item { 
+            display: flex; align-items: center; gap: 12px; margin-bottom: 15px; 
+            cursor: pointer; padding: 10px; border-radius: 10px; transition: 0.2s;
+        }
+        .mini-item:hover { background: var(--bg-body); }
+        .mini-img { width: 45px; height: 45px; border-radius: 10px; object-fit: cover; }
+        .mini-info h4 { margin: 0; font-size: 13px; color: var(--text-main); }
+        .mini-info span { font-size: 11px; color: var(--text-sub); }
+
+        @media (max-width: 900px) {
+            .container { grid-template-columns: 1fr; margin-top: 15px; }
+            .sidebar-card { display: none; }
+        }
+    </style>
+</head>
+<body data-theme="light">
+
+    <nav class="header">
+        <div class="header-left">
+            <a href="index.html" class="back-btn"><i class="fas fa-arrow-right"></i></a>
+            <div class="brand-logo">TESLAM</div>
+        </div>
+        <div class="theme-toggle" onclick="toggleTheme()">
+            <i class="fas fa-moon" id="theme-icon"></i>
+        </div>
+    </nav>
+
+    <div class="container">
+        
+        <main class="main-card">
+            <div id="loader" style="padding:40px;"><i class="fas fa-circle-notch fa-spin fa-2x"></i></div>
+            
+            <div id="content" style="display:none;">
+                <img id="p-img" src="" class="app-icon-lg">
+                <h1 id="p-title" class="app-title-lg"></h1>
+                
+                <div class="info-pills">
+                    <div class="pill"><i class="fas fa-check-circle"></i> آمن 100%</div>
+                    <div class="pill"><i class="fas fa-android"></i> APK</div>
+                    <div class="pill"><i class="fas fa-star" style="color:gold;"></i> 5.0</div>
+                </div>
+
+                <div style="background:var(--bg-body); border:1px dashed var(--text-sub); padding:15px; margin:15px 0; border-radius:12px; color:var(--text-sub); font-size:13px;">
+                    مساحة إعلانية (Native Ad)
+                </div>
+
+                <div id="p-desc" class="app-desc"></div>
+
+                <div class="download-zone">
+                    <button id="btn-start" class="action-btn btn-prep" onclick="startCountdown()">
+                        <i class="fas fa-rocket"></i> تحضير رابط التحميل
+                    </button>
+
+                    <div id="timer-wrapper" class="timer-wrapper">
+                        <div style="font-weight:bold; margin-bottom:10px; color:var(--text-sub); font-size:14px;">جاري فحص الملفات...</div>
+                        
+                        <svg viewBox="0 0 36 36" class="circular-chart">
+                            <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                            <path id="circle-path" class="circle" stroke-dasharray="100, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                            <text x="18" y="21" class="percentage" id="timer-num">20</text>
+                        </svg>
+                        
+                        <div style="margin-top:15px; background:var(--bg-body); padding:10px; border-radius:8px; font-size:12px; color:var(--text-sub);">
+                            إعلان بانر صغير (300x50)
+                        </div>
+                    </div>
+
+                    <a id="btn-final" href="#" target="_blank" class="action-btn btn-final">
+                        <i class="fas fa-download"></i> تحميل مباشر الآن 🚀
+                    </a>
+                </div>
+            </div>
+        </main>
+
+        <aside>
+            <div class="sidebar-card">
+                <div style="font-weight:800; margin-bottom:15px;">🔥 تطبيقات مميزة</div>
+                <div id="sidebar-list"></div>
+            </div>
+            
+            <div style="margin-top:20px; border-radius:15px; background:var(--bg-card); padding:20px; text-align:center; border:1px dashed var(--text-sub); color:var(--text-sub); font-size:12px;">
+                مساحة إعلانية (Sidebar Ad)
+            </div>
+        </aside>
+
+    </div>
+
+    <div style="position: fixed; bottom: 0; left: 0; width: 100%; height: 60px; background: var(--bg-glass); border-top: 1px solid var(--border-color); z-index: 2000; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px);">
+        <span style="font-size:12px; color:var(--text-sub);">مساحة إعلانية (Sticky Footer)</span>
+    </div>
+
+    <script>
+        // 1. Theme Logic
+        const savedTheme = localStorage.getItem('teslam_theme') || 'light';
+        document.body.setAttribute('data-theme', savedTheme);
+        document.getElementById('theme-icon').className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+
+        function toggleTheme() {
+            const body = document.body;
+            const icon = document.getElementById('theme-icon');
+            const current = body.getAttribute('data-theme');
+            
+            if (current === 'dark') {
+                body.setAttribute('data-theme', 'light');
+                icon.className = 'fas fa-moon';
+                localStorage.setItem('teslam_theme', 'light');
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                icon.className = 'fas fa-sun';
+                localStorage.setItem('teslam_theme', 'dark');
+            }
+        }
+
+        // 2. Data Fetching (Firebase Logic)
+        const dbURL = "https://teslamstore-df0a5-default-rtdb.firebaseio.com/apps.json";
+        let finalLink = "#";
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const uid = urlParams.get('uid');
+        const idx = urlParams.get('id');
+
+        // محاولة استخدام الكاش أو جلب جديد
+        let cachedData = localStorage.getItem('teslam_db_fire');
+        if(cachedData) {
+            processData(JSON.parse(cachedData));
+        } else {
+            // جلب مباشر من فايربيس
+            fetch(dbURL)
+                .then(res => res.json())
+                .then(json => {
+                    const cleanData = json ? Object.values(json).reverse() : [];
+                    localStorage.setItem('teslam_db_fire', JSON.stringify(cleanData));
+                    processData(cleanData);
+                })
+                .catch(err => {
+                    console.error(err);
+                    document.getElementById('loader').innerHTML = "حدث خطأ في تحميل البيانات";
+                });
+        }
+
+        function processData(data) {
+            let app = null;
+            if(uid) app = data.find(item => item.ID == uid); // == للتحقق المرن
+            if(!app && idx !== null && data[idx]) app = data[idx];
+
+            if(app) {
+                renderPost(app, data);
+                updateGoogleSEO(app);
+            } else {
+                document.getElementById('loader').innerHTML = "لم يتم العثور على التطبيق";
+            }
+        }
+
+        function renderPost(app, allApps) {
+            document.title = `${app.Title} - تحميل مجاني`;
+            document.getElementById('p-img').src = app.Image;
+            document.getElementById('p-title').innerText = app.Title;
+            document.getElementById('p-desc').innerHTML = app.Desc ? app.Desc.replace(/\n/g, '<br>') : "لا يوجد وصف";
+            finalLink = app.Link;
+
+            const sbList = document.getElementById('sidebar-list');
+            // عرض تطبيقات مشابهة عشوائية
+            const related = allApps.filter(a => a !== app).sort(() => 0.5 - Math.random()).slice(0, 5);
+            related.forEach(item => {
+                const linkId = item.ID ? `uid=${item.ID}` : `id=${allApps.indexOf(item)}`;
+                sbList.innerHTML += `
+                    <div class="mini-item" onclick="location.href='post.html?${linkId}'">
+                        <img src="${item.Image}" class="mini-img">
+                        <div class="mini-info">
+                            <h4>${item.Title}</h4>
+                            <span>تحميل</span>
+                        </div>
+                    </div>
+                `;
+            });
+
+            document.getElementById('loader').style.display = 'none';
+            document.getElementById('content').style.display = 'block';
+        }
+
+        function updateGoogleSEO(app) {
+            let metaDesc = document.querySelector('meta[name="description"]');
+            if (metaDesc) metaDesc.content = `حمل تطبيق ${app.Title} برابط مباشر من متجر تسلم.`;
+            
+            const schemaData = {
+                "@context": "https://schema.org", "@type": "MobileApplication",
+                "name": app.Title, "operatingSystem": "Android", "image": app.Image,
+                "applicationCategory": app.Tag || "Game"
+            };
+            const script = document.createElement('script');
+            script.type = "application/ld+json";
+            script.text = JSON.stringify(schemaData);
+            document.head.appendChild(script);
+        }
+
+        // 3. Countdown Timer (20 Seconds)
+        function startCountdown() {
+            document.getElementById('btn-start').style.display = 'none';
+            document.getElementById('timer-wrapper').style.display = 'block';
+
+            let timeLeft = 20;
+            const totalTime = 20;
+            const circle = document.getElementById('circle-path');
+            const numDisplay = document.getElementById('timer-num');
+            
+            const timer = setInterval(() => {
+                timeLeft--;
+                numDisplay.textContent = timeLeft;
+                
+                const percentage = (timeLeft / totalTime) * 100;
+                circle.style.strokeDasharray = `${percentage}, 100`;
+
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    document.getElementById('timer-wrapper').style.display = 'none';
+                    const finalBtn = document.getElementById('btn-final');
+                    finalBtn.href = finalLink;
+                    finalBtn.style.display = 'flex';
+                }
+            }, 1000);
+        }
+    </script>
+    <script src="https://quge5.com/88/tag.min.js" data-zone="201546" async data-cfasync="false"></script>
+</body>
+</html>
