@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>من نحن - متجر تسلم</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root { --primary: #2ecc71; --bg-body: #f4f6f8; --text-main: #2d3436; }
+        body { background: var(--bg-body); font-family: 'Cairo', sans-serif; color: var(--text-main); margin: 0; padding: 20px; line-height: 1.8; }
+        .container { max-width: 800px; margin: 0 auto; background: #fff; border-radius: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); overflow: hidden; }
+        
+        .header-img { width: 100%; height: 200px; background: linear-gradient(135deg, #2ecc71, #27ae60); display: flex; align-items: center; justify-content: center; color: white; flex-direction: column; }
+        .logo-text { font-size: 40px; font-weight: 900; letter-spacing: -1px; }
+        
+        .content { padding: 40px; }
+        h2 { color: var(--primary); font-size: 22px; margin-top: 30px; border-right: 4px solid var(--primary); padding-right: 15px; }
+        p { color: #555; font-size: 15px; margin-bottom: 20px; }
+        
+        .features { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-top: 30px; }
+        .feat-box { background: #f9f9f9; padding: 20px; border-radius: 15px; text-align: center; }
+        .feat-box i { font-size: 30px; color: var(--primary); margin-bottom: 10px; }
+        .feat-box h4 { margin: 10px 0 5px; }
+        .feat-box p { font-size: 12px; margin: 0; }
+
+        .back-btn { display: inline-block; margin-top: 20px; padding: 10px 30px; background: var(--text-main); color: #fff; text-decoration: none; border-radius: 50px; font-weight: bold; }
+        
+        @media (max-width: 600px) { .features { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header-img">
+            <div class="logo-text">TESLAM</div>
+            <span>قصتنا ورؤيتنا</span>
+        </div>
+
+        <div class="content">
+            <h2>من نحن؟</h2>
+            <p>مرحباً بك في <strong>متجر تسلم (Teslam Store)</strong>، وجهتك الموثوقة والآمنة لاستكشاف وتحميل أحدث تطبيقات الأندرويد، الأدوات التقنية، والشروحات التعليمية. نحن لسنا مجرد متجر تطبيقات تقليدي، بل نحن مجتمع تقني يسعى لتقديم المحتوى الرقمي بشكل نظيف، آمن، ومباشر.</p>
+
+            <h2>رؤيتنا</h2>
+            <p>في عالم مليء بالروابط المعقدة والإعلانات المزعجة، جاءت فكرة "تسلم" لتكون البديل الآمن. رؤيتنا هي توفير تجربة مستخدم سلسة (User Friendly) تتيح للزائر الوصول إلى ما يريد بضغطة زر واحدة، مع ضمان خلو الملفات من أي برمجيات خبيثة.</p>
+
+            <div class="features">
+                <div class="feat-box">
+                    <i class="fas fa-shield-alt"></i>
+                    <h4>أمان تام</h4>
+                    <p>فحص دوري لجميع الملفات</p>
+                </div>
+                <div class="feat-box">
+                    <i class="fas fa-rocket"></i>
+                    <h4>سرعة تحميل</h4>
+                    <p>روابط مباشرة بدون انتظار</p>
+                </div>
+                <div class="feat-box">
+                    <i class="fas fa-sync"></i>
+                    <h4>تحديثات يومية</h4>
+                    <p>أحدث الإصدارات فور صدورها</p>
+                </div>
+                <div class="feat-box">
+                    <i class="fas fa-headset"></i>
+                    <h4>دعم فني</h4>
+                    <p>نسمع اقتراحاتكم دائماً</p>
+                </div>
+            </div>
+
+            <h2>لماذا "تسلم"؟</h2>
+            <p>لأننا نؤمن أن التقنية حق للجميع. نحن نركز على التطبيقات الرسمية، الأدوات التي تحسن إنتاجيتك، والألعاب التي تصنع لك وقتاً ممتعاً، كل ذلك في واجهة عربية أنيقة تدعم الوضع الليلي وتناسب جميع الأجهزة.</p>
+
+            <div style="text-align: center;">
+                <a href="index.html" class="back-btn">تصفح المتجر الآن</a>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
