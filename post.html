@@ -85,6 +85,7 @@
             background: var(--bg-card); border-radius: var(--radius); padding: 30px;
             box-shadow: var(--shadow); text-align: center; position: relative; overflow: hidden;
             border: 1px solid var(--border-color);
+            min-height: 400px;
         }
         
         .app-icon-lg { 
@@ -144,6 +145,7 @@
         .mini-item { 
             display: flex; align-items: center; gap: 12px; margin-bottom: 15px; 
             cursor: pointer; padding: 10px; border-radius: 10px; transition: 0.2s;
+            text-decoration: none; color: inherit;
         }
         .mini-item:hover { background: var(--bg-body); }
         .mini-img { width: 45px; height: 45px; border-radius: 10px; object-fit: cover; }
@@ -152,7 +154,7 @@
 
         @media (max-width: 900px) {
             .container { grid-template-columns: 1fr; margin-top: 15px; }
-            .sidebar-card { display: none; }
+            /* .sidebar-card { display: none; }  << شلنا ده عشان الاقتراحات تظهر في الموبايل تحت */
         }
     </style>
 </head>
@@ -171,7 +173,7 @@
     <div class="container">
         
         <main class="main-card">
-            <div id="loader" style="padding:40px;"><i class="fas fa-circle-notch fa-spin fa-2x"></i></div>
+            <div id="loader" style="padding:40px; margin-top:100px;"><i class="fas fa-circle-notch fa-spin fa-2x"></i></div>
             
             <div id="content" style="display:none;">
                 <img id="p-img" src="" class="app-icon-lg">
@@ -217,8 +219,10 @@
 
         <aside>
             <div class="sidebar-card">
-                <div style="font-weight:800; margin-bottom:15px;">🔥 تطبيقات مميزة</div>
-                <div id="sidebar-list"></div>
+                <div style="font-weight:800; margin-bottom:15px;">🔥 تطبيقات قد تعجبك</div>
+                <div id="sidebar-list">
+                    <div style="text-align:center; padding:10px;"><i class="fas fa-spinner fa-spin"></i></div>
+                </div>
             </div>
             
             <div style="margin-top:20px; border-radius:15px; background:var(--bg-card); padding:20px; text-align:center; border:1px dashed var(--text-sub); color:var(--text-sub); font-size:12px;">
@@ -254,25 +258,29 @@
             }
         }
 
-        // 2. Data Fetching (Firebase Logic)
+        // 2. Data Fetching (Firebase Logic - Updated V3)
         const dbURL = "https://teslamstore-df0a5-default-rtdb.firebaseio.com/apps.json";
         let finalLink = "#";
 
         const urlParams = new URLSearchParams(window.location.search);
-        const uid = urlParams.get('uid');
-        const idx = urlParams.get('id');
+        const uid = urlParams.get('uid'); // الـ ID اللي جاي من الرابط
 
-        // محاولة استخدام الكاش أو جلب جديد
-        let cachedData = localStorage.getItem('teslam_db_fire');
+        // استخدام نفس الكاش (v3) عشان ميعملش تحميل مرتين
+        let cachedData = localStorage.getItem('teslam_db_fire_v3');
+        
         if(cachedData) {
             processData(JSON.parse(cachedData));
         } else {
-            // جلب مباشر من فايربيس
+            // جلب مباشر لو الكاش مش موجود
             fetch(dbURL)
                 .then(res => res.json())
                 .then(json => {
-                    const cleanData = json ? Object.values(json).reverse() : [];
-                    localStorage.setItem('teslam_db_fire', JSON.stringify(cleanData));
+                    // 🔥 نفس الفلتر بتاع الاندكس عشان يتجاهل الفاضي 🔥
+                    const cleanData = json ? Object.values(json).filter(item => item != null).reverse() : [];
+                    
+                    // نحفظه عشان الصفحات التانية تستفيد منه
+                    localStorage.setItem('teslam_db_fire_v3', JSON.stringify(cleanData));
+                    localStorage.setItem('teslam_time_fire_v3', new Date().getTime());
                     processData(cleanData);
                 })
                 .catch(err => {
@@ -283,57 +291,54 @@
 
         function processData(data) {
             let app = null;
-            if(uid) app = data.find(item => item.ID == uid); // == للتحقق المرن
-            if(!app && idx !== null && data[idx]) app = data[idx];
+            
+            // البحث عن التطبيق بالـ ID
+            if(uid) {
+                // بنستخدم == عشان نقارن رقم بنص عادي
+                app = data.find(item => item.ID == uid);
+            }
 
             if(app) {
                 renderPost(app, data);
-                updateGoogleSEO(app);
             } else {
-                document.getElementById('loader').innerHTML = "لم يتم العثور على التطبيق";
+                document.getElementById('loader').innerHTML = "عذراً، التطبيق غير موجود أو تم حذفه.";
             }
         }
 
         function renderPost(app, allApps) {
-            document.title = `${app.Title} - تحميل مجاني`;
-            document.getElementById('p-img').src = app.Image;
-            document.getElementById('p-title').innerText = app.Title;
+            document.title = `${app.Title || 'تطبيق'} - تحميل مجاني`;
+            document.getElementById('p-img').src = app.Image || 'https://placehold.co/150';
+            document.getElementById('p-title').innerText = app.Title || 'بدون عنوان';
             document.getElementById('p-desc').innerHTML = app.Desc ? app.Desc.replace(/\n/g, '<br>') : "لا يوجد وصف";
-            finalLink = app.Link;
+            finalLink = app.Link || '#';
 
+            // --- منطق الاقتراحات (Sidebar) ---
             const sbList = document.getElementById('sidebar-list');
-            // عرض تطبيقات مشابهة عشوائية
-            const related = allApps.filter(a => a !== app).sort(() => 0.5 - Math.random()).slice(0, 5);
+            sbList.innerHTML = ''; // تنظيف اللودر
+
+            // نجيب تطبيقات تانية غير التطبيق الحالي
+            const related = allApps.filter(a => a.ID != app.ID)
+                                   .sort(() => 0.5 - Math.random()) // ترتيب عشوائي
+                                   .slice(0, 5); // ناخد 5 بس
+
+            if (related.length === 0) {
+                sbList.innerHTML = '<div style="text-align:center; font-size:12px; color:var(--text-sub)">لا توجد اقتراحات</div>';
+            }
+
             related.forEach(item => {
-                const linkId = item.ID ? `uid=${item.ID}` : `id=${allApps.indexOf(item)}`;
                 sbList.innerHTML += `
-                    <div class="mini-item" onclick="location.href='post.html?${linkId}'">
-                        <img src="${item.Image}" class="mini-img">
+                    <a href="post.html?uid=${item.ID}" class="mini-item">
+                        <img src="${item.Image || 'https://placehold.co/150'}" class="mini-img">
                         <div class="mini-info">
-                            <h4>${item.Title}</h4>
-                            <span>تحميل</span>
+                            <h4>${item.Title || 'بدون عنوان'}</h4>
+                            <span><i class="fas fa-download"></i> تحميل</span>
                         </div>
-                    </div>
+                    </a>
                 `;
             });
 
             document.getElementById('loader').style.display = 'none';
             document.getElementById('content').style.display = 'block';
-        }
-
-        function updateGoogleSEO(app) {
-            let metaDesc = document.querySelector('meta[name="description"]');
-            if (metaDesc) metaDesc.content = `حمل تطبيق ${app.Title} برابط مباشر من متجر تسلم.`;
-            
-            const schemaData = {
-                "@context": "https://schema.org", "@type": "MobileApplication",
-                "name": app.Title, "operatingSystem": "Android", "image": app.Image,
-                "applicationCategory": app.Tag || "Game"
-            };
-            const script = document.createElement('script');
-            script.type = "application/ld+json";
-            script.text = JSON.stringify(schemaData);
-            document.head.appendChild(script);
         }
 
         // 3. Countdown Timer (20 Seconds)
@@ -366,3 +371,4 @@
     <script src="https://quge5.com/88/tag.min.js" data-zone="201546" async data-cfasync="false"></script>
 </body>
 </html>
+
