@@ -170,11 +170,20 @@
         }
         .tag-pill.active { background: var(--text-main); color: var(--bg-card); border-color: var(--text-main); transform: scale(1.05); }
 
-        /* Grid */
+        /* Grid System - الإصلاح النهائي للشبكة
+           ------------------------------------
+           تم استخدام grid-template-columns: repeat(2, 1fr)
+           لضمان أن التطبيقات تظهر دائماً في عمودين متساويين في الموبايل
+        */
         .section-header { display: flex; align-items: center; gap: 8px; margin-bottom: 20px; }
         .section-header h2 { font-size: 19px; font-weight: 900; margin: 0; color: var(--text-main); }
         
-        .apps-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+        .apps-grid { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); /* ✅ الحل: عمودين دائماً للموبايل */
+            gap: 15px; 
+            width: 100%;
+        }
         
         .app-card {
             background: var(--bg-card); border-radius: var(--radius); padding: 12px;
@@ -182,16 +191,38 @@
             display: flex; flex-direction: column; cursor: pointer; 
             transition: 0.3s; border: 1px solid transparent;
             animation: fadeUp 0.6s ease backwards;
+            overflow: hidden; /* يمنع خروج المحتوى عن الكارت */
         }
         @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
         .app-card:hover { transform: translateY(-5px); border-color: var(--primary); }
         
+        /* Image Fix - كود الصورة المربعة الإجباري
+           ---------------------------------------
+           هذا الكود يجبر الصور (مثل CS Scanner) على الدخول في مربع 
+           بدلاً من أخذ مساحة عشوائية.
+        */
         .card-img-wrapper { 
-            width: 100%; aspect-ratio: 1/1; border-radius: 14px; 
-            overflow: hidden; margin-bottom: 12px; background: var(--bg-body); 
+            width: 100%; 
+            padding-top: 100%; /* نسبة 1:1 (مربع) */
+            position: relative; 
+            border-radius: 14px; 
+            overflow: hidden; 
+            margin-bottom: 12px; 
+            background: var(--bg-body); 
+            border: 1px solid var(--border-color);
         }
-        .card-img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+
+        .card-img { 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; /* ملء المربع بالكامل */
+            transition: 0.5s; 
+        }
+
         .app-card:hover .card-img { transform: scale(1.1); }
 
         .card-title { font-size: 15px; font-weight: 800; margin-bottom: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-main); }
@@ -213,6 +244,7 @@
             backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
         }
 
+        /* للشاشات الكبيرة (لاب توب) يتحول لـ 4 أعمدة */
         @media (min-width: 768px) {
             .apps-grid { grid-template-columns: repeat(4, 1fr); gap: 25px; }
             .container { padding: 0 40px; margin-top: 30px; }
@@ -429,19 +461,16 @@
                      return;
                 }
                 this.renderHero();
-                this.renderRecommended(); // 🔥 تشغيل الاقتراحات العشوائية
+                this.renderRecommended(); 
                 this.renderTagsAndSidebar();
                 this.renderGrid(this.data);
             }
 
-            // 🔥 دالة عرض الاقتراحات العشوائية 🔥
             renderRecommended() {
                 const recContainer = document.getElementById('recommended-section');
                 const recGrid = document.getElementById('recommended-grid');
                 
-                // عمل نسخة من البيانات وخلطها
                 let shuffled = this.shuffleArray([...this.data]);
-                // اختيار أول 4 تطبيقات
                 let selected = shuffled.slice(0, 4);
 
                 if(selected.length > 0) {
@@ -529,7 +558,7 @@
                     (i.Desc && i.Desc.toLowerCase().includes(query))
                 );
                 document.getElementById('hero-section').style.display = q ? 'none' : 'block';
-                document.getElementById('recommended-section').style.display = q ? 'none' : 'block'; // إخفاء الاقتراحات في البحث
+                document.getElementById('recommended-section').style.display = q ? 'none' : 'block';
                 document.getElementById('tags-bar').style.display = q ? 'none' : 'flex';
                 this.renderGrid(filtered);
             }
@@ -559,3 +588,4 @@
     <script src="https://quge5.com/88/tag.min.js" data-zone="201546" async data-cfasync="false"></script>
 </body>
 </html>
+
