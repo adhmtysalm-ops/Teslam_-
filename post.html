@@ -7,10 +7,10 @@
     <title>تحميل التطبيق - متجر تسلم</title>
     <meta name="description" content="صفحة التحميل - متجر تسلم">
     <meta name="theme-color" content="#2ecc71">
-
+ 
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-
+ 
     <style>
         /* نفس المتغيرات للتناسق */
         :root {
@@ -28,7 +28,7 @@
             --radius: 18px;
             --timer-color: #f39c12;
         }
-
+ 
         /* ليلي */
         [data-theme="dark"] {
             --bg-body: #121212;
@@ -43,7 +43,7 @@
             --shadow: 0 8px 20px rgba(0,0,0,0.4);
             --timer-color: #f1c40f;
         }
-
+ 
         * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
         body { 
             background: var(--bg-body); font-family: 'Cairo', sans-serif; 
@@ -51,7 +51,7 @@
             transition: background 0.4s ease, color 0.4s ease;
         }
         a { text-decoration: none; color: inherit; }
-
+ 
         /* الهيدر */
         .header {
             background: var(--bg-glass); 
@@ -65,19 +65,19 @@
         .header-left { display: flex; align-items: center; gap: 15px; }
         .back-btn { font-size: 20px; color: var(--text-main); cursor: pointer; transition:0.2s; }
         .back-btn:hover { color: var(--primary); transform: translateX(5px); }
-
+ 
         .brand-logo {
             font-family: 'Cairo', sans-serif; font-weight: 900; font-size: 20px;
             color: var(--primary); letter-spacing: -1px; text-transform: uppercase;
         }
-
+ 
         .theme-toggle {
             width: 35px; height: 35px; border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
             background: var(--bg-body); color: var(--text-main);
             cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
-
+ 
         /* التخطيط */
         .container { max-width: 1000px; margin: 30px auto; padding: 0 15px; display: grid; grid-template-columns: 1fr 320px; gap: 25px; }
         
@@ -101,16 +101,16 @@
             background: var(--bg-body); padding: 6px 15px; border-radius: 50px; 
             font-size: 12px; font-weight: 700; color: var(--text-sub); border: 1px solid var(--border-color);
         }
-
+ 
         .app-desc { 
             text-align: right; line-height: 1.8; opacity: 0.9; margin: 20px 0; 
             padding: 20px; background: var(--bg-body); border-radius: 15px; 
             font-size: 14px; color: var(--text-main); border: 1px solid var(--border-color);
         }
-
+ 
         /* التحميل والعداد */
         .download-zone { margin-top: 30px; padding-top: 20px; border-top: 1px dashed var(--border-color); }
-
+ 
         .action-btn {
             width: 100%; padding: 16px; border-radius: 14px; border: none;
             font-family: inherit; font-weight: 800; font-size: 16px; color: white;
@@ -125,7 +125,7 @@
             display: none; animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
         }
         @keyframes popIn { from {transform: scale(0.5); opacity: 0;} to {transform: scale(1); opacity: 1;} }
-
+ 
         /* ستايل العداد الدائري */
         .timer-wrapper { display: none; margin: 20px auto; text-align: center; }
         .circular-chart { display: block; margin: 10px auto; max-width: 120px; max-height: 120px; }
@@ -136,7 +136,7 @@
             stroke-dasharray: 100, 100; transition: stroke-dasharray 1s linear;
         }
         .percentage { fill: var(--text-main); font-family: 'Cairo'; font-weight: 900; font-size: 0.6em; text-anchor: middle; }
-
+ 
         /* القائمة الجانبية */
         .sidebar-card { 
             background: var(--bg-card); padding: 20px; border-radius: var(--radius); 
@@ -151,15 +151,14 @@
         .mini-img { width: 45px; height: 45px; border-radius: 10px; object-fit: cover; }
         .mini-info h4 { margin: 0; font-size: 13px; color: var(--text-main); }
         .mini-info span { font-size: 11px; color: var(--text-sub); }
-
+ 
         @media (max-width: 900px) {
             .container { grid-template-columns: 1fr; margin-top: 15px; }
-            /* .sidebar-card { display: none; }  << شلنا ده عشان الاقتراحات تظهر في الموبايل تحت */
         }
     </style>
 </head>
 <body data-theme="light">
-
+ 
     <nav class="header">
         <div class="header-left">
             <a href="index.html" class="back-btn"><i class="fas fa-arrow-right"></i></a>
@@ -169,7 +168,7 @@
             <i class="fas fa-moon" id="theme-icon"></i>
         </div>
     </nav>
-
+ 
     <div class="container">
         
         <main class="main-card">
@@ -184,18 +183,18 @@
                     <div class="pill"><i class="fas fa-android"></i> APK</div>
                     <div class="pill"><i class="fas fa-star" style="color:gold;"></i> 5.0</div>
                 </div>
-
+ 
                 <div style="background:var(--bg-body); border:1px dashed var(--text-sub); padding:15px; margin:15px 0; border-radius:12px; color:var(--text-sub); font-size:13px;">
                     مساحة إعلانية (Native Ad)
                 </div>
-
+ 
                 <div id="p-desc" class="app-desc"></div>
-
+ 
                 <div class="download-zone">
                     <button id="btn-start" class="action-btn btn-prep" onclick="startCountdown()">
                         <i class="fas fa-rocket"></i> تحضير رابط التحميل
                     </button>
-
+ 
                     <div id="timer-wrapper" class="timer-wrapper">
                         <div style="font-weight:bold; margin-bottom:10px; color:var(--text-sub); font-size:14px;">جاري فحص الملفات...</div>
                         
@@ -209,14 +208,14 @@
                             إعلان بانر صغير (300x50)
                         </div>
                     </div>
-
+ 
                     <a id="btn-final" href="#" target="_blank" class="action-btn btn-final">
                         <i class="fas fa-download"></i> تحميل مباشر الآن 🚀
                     </a>
                 </div>
             </div>
         </main>
-
+ 
         <aside>
             <div class="sidebar-card">
                 <div style="font-weight:800; margin-bottom:15px;">🔥 تطبيقات قد تعجبك</div>
@@ -229,19 +228,19 @@
                 مساحة إعلانية (Sidebar Ad)
             </div>
         </aside>
-
+ 
     </div>
-
+ 
     <div style="position: fixed; bottom: 0; left: 0; width: 100%; height: 60px; background: var(--bg-glass); border-top: 1px solid var(--border-color); z-index: 2000; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px);">
         <span style="font-size:12px; color:var(--text-sub);">مساحة إعلانية (Sticky Footer)</span>
     </div>
-
+ 
     <script>
         // 1. Theme Logic
         const savedTheme = localStorage.getItem('teslam_theme') || 'light';
         document.body.setAttribute('data-theme', savedTheme);
         document.getElementById('theme-icon').className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
-
+ 
         function toggleTheme() {
             const body = document.body;
             const icon = document.getElementById('theme-icon');
@@ -257,74 +256,59 @@
                 localStorage.setItem('teslam_theme', 'dark');
             }
         }
-
-        // 2. Data Fetching (Firebase Logic - Updated V3)
+ 
+        // 2. Data Fetching (Direct Fetch - No Cache)
         const dbURL = "https://teslamstore-df0a5-default-rtdb.firebaseio.com/apps.json";
         let finalLink = "#";
-
+ 
         const urlParams = new URLSearchParams(window.location.search);
-        const uid = urlParams.get('uid'); // الـ ID اللي جاي من الرابط
-
-        // استخدام نفس الكاش (v3) عشان ميعملش تحميل مرتين
-        let cachedData = localStorage.getItem('teslam_db_fire_v3');
-        
-        if(cachedData) {
-            processData(JSON.parse(cachedData));
-        } else {
-            // جلب مباشر لو الكاش مش موجود
-            fetch(dbURL)
-                .then(res => res.json())
-                .then(json => {
-                    // 🔥 نفس الفلتر بتاع الاندكس عشان يتجاهل الفاضي 🔥
-                    const cleanData = json ? Object.values(json).filter(item => item != null).reverse() : [];
-                    
-                    // نحفظه عشان الصفحات التانية تستفيد منه
-                    localStorage.setItem('teslam_db_fire_v3', JSON.stringify(cleanData));
-                    localStorage.setItem('teslam_time_fire_v3', new Date().getTime());
-                    processData(cleanData);
-                })
-                .catch(err => {
-                    console.error(err);
-                    document.getElementById('loader').innerHTML = "حدث خطأ في تحميل البيانات";
-                });
-        }
-
+        const uid = urlParams.get('uid');
+ 
+        // 🛑 تم إزالة الكاش (localStorage) - تحميل مباشر دائماً
+        fetch(dbURL)
+            .then(res => res.json())
+            .then(json => {
+                const cleanData = json ? Object.values(json).filter(item => item != null).reverse() : [];
+                processData(cleanData);
+            })
+            .catch(err => {
+                // تم إزالة console.error لتنظيف الكونسول
+                document.getElementById('loader').innerHTML = "حدث خطأ في تحميل البيانات";
+            });
+ 
         function processData(data) {
             let app = null;
             
-            // البحث عن التطبيق بالـ ID
             if(uid) {
-                // بنستخدم == عشان نقارن رقم بنص عادي
                 app = data.find(item => item.ID == uid);
             }
-
+ 
             if(app) {
                 renderPost(app, data);
             } else {
                 document.getElementById('loader').innerHTML = "عذراً، التطبيق غير موجود أو تم حذفه.";
             }
         }
-
+ 
         function renderPost(app, allApps) {
             document.title = `${app.Title || 'تطبيق'} - تحميل مجاني`;
             document.getElementById('p-img').src = app.Image || 'https://placehold.co/150';
             document.getElementById('p-title').innerText = app.Title || 'بدون عنوان';
             document.getElementById('p-desc').innerHTML = app.Desc ? app.Desc.replace(/\n/g, '<br>') : "لا يوجد وصف";
             finalLink = app.Link || '#';
-
+ 
             // --- منطق الاقتراحات (Sidebar) ---
             const sbList = document.getElementById('sidebar-list');
-            sbList.innerHTML = ''; // تنظيف اللودر
-
-            // نجيب تطبيقات تانية غير التطبيق الحالي
+            sbList.innerHTML = '';
+ 
             const related = allApps.filter(a => a.ID != app.ID)
-                                   .sort(() => 0.5 - Math.random()) // ترتيب عشوائي
-                                   .slice(0, 5); // ناخد 5 بس
-
+                                   .sort(() => 0.5 - Math.random())
+                                   .slice(0, 5);
+ 
             if (related.length === 0) {
                 sbList.innerHTML = '<div style="text-align:center; font-size:12px; color:var(--text-sub)">لا توجد اقتراحات</div>';
             }
-
+ 
             related.forEach(item => {
                 sbList.innerHTML += `
                     <a href="post.html?uid=${item.ID}" class="mini-item">
@@ -336,16 +320,16 @@
                     </a>
                 `;
             });
-
+ 
             document.getElementById('loader').style.display = 'none';
             document.getElementById('content').style.display = 'block';
         }
-
+ 
         // 3. Countdown Timer (20 Seconds)
         function startCountdown() {
             document.getElementById('btn-start').style.display = 'none';
             document.getElementById('timer-wrapper').style.display = 'block';
-
+ 
             let timeLeft = 20;
             const totalTime = 20;
             const circle = document.getElementById('circle-path');
@@ -357,7 +341,7 @@
                 
                 const percentage = (timeLeft / totalTime) * 100;
                 circle.style.strokeDasharray = `${percentage}, 100`;
-
+ 
                 if (timeLeft <= 0) {
                     clearInterval(timer);
                     document.getElementById('timer-wrapper').style.display = 'none';
@@ -371,4 +355,3 @@
     <script src="https://quge5.com/88/tag.min.js" data-zone="201546" async data-cfasync="false"></script>
 </body>
 </html>
-
