@@ -22,6 +22,108 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
  
     <style>
+    /* --- تصميم الشات بوت --- */
+.chat-btn {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    width: 60px;
+    height: 60px;
+    background: var(--primary);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    z-index: 9999;
+    transition: transform 0.3s;
+}
+.chat-btn:hover { transform: scale(1.1); }
+
+.chat-window {
+    position: fixed;
+    bottom: 90px;
+    left: 20px;
+    width: 300px;
+    height: 400px;
+    background: var(--bg-card);
+    border-radius: 15px;
+    box-shadow: 0 5px 30px rgba(0,0,0,0.2);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transform: scale(0);
+    transform-origin: bottom left;
+    transition: 0.3s ease;
+    border: 1px solid var(--border-color);
+}
+.chat-window.active { transform: scale(1); }
+
+.chat-header {
+    background: var(--primary);
+    padding: 15px;
+    color: white;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chat-body {
+    flex: 1;
+    padding: 10px;
+    overflow-y: auto;
+    background: var(--bg-body);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.msg {
+    padding: 8px 12px;
+    border-radius: 10px;
+    font-size: 13px;
+    max-width: 85%;
+    line-height: 1.5;
+}
+.msg.bot { background: var(--bg-card); align-self: flex-start; border: 1px solid var(--border-color); color: var(--text-main); }
+.msg.user { background: var(--primary); color: white; align-self: flex-end; }
+
+.chat-footer {
+    padding: 10px;
+    background: var(--bg-card);
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    gap: 5px;
+}
+.chat-input {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    background: var(--bg-body);
+    color: var(--text-main);
+    font-family: inherit;
+}
+.send-btn {
+    width: 35px;
+    height: 35px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+/* إصلاح مشكلة عدم استجابة الأيقونة للضغط */
+.send-btn i { pointer-events: none; }
+
         /* المتغيرات ونظام الألوان */
         :root {
             /* نهاري */
@@ -546,7 +648,7 @@
         </div>
  
         <div style="padding:20px; text-align:center; border-top:1px solid var(--border-color); background:var(--bg-body);">
-            <p style="margin:0; font-size:12px; font-weight:700; color:var(--text-sub);">© 2026 Teslam Store – جميع الحقوق محفوظة</p>
+            <p style="margin:0; font-size:12px; font-weight:700; color:var(--text-sub);">جميع الحقوق محفوظة © 2026</p>
         </div>
     </aside>
  
@@ -580,7 +682,7 @@
         </div>
  
         <div style="border: 2px dashed var(--text-sub); border-radius: 15px; height: 90px; display: flex; align-items: center; justify-content: center; color: var(--text-sub); margin-bottom: 30px; background: var(--bg-card); opacity:0.6;">
-            © 2026 Teslam Store – جميع الحقوق محفوظة
+            جميع الحقوق محفوظة لمتجر تسلم© teslam store
         </div>
  
         <div id="recommended-section" style="display:none; margin-bottom: 30px;">
@@ -847,8 +949,142 @@
                 window.location.href = url;
             }
         }
-        const app = new TeslamApp();
+        const app = new TeslamApp();// --- كلاس الشات بوت الذكي (مع رسالة ترحيب بعد البحث) ---
+class SmartBot {
+    constructor() {
+        this.isOpen = false;
+    }
+
+    toggle() {
+        this.isOpen = !this.isOpen;
+        const chatWindow = document.getElementById('chatWindow');
+        const chatInput = document.getElementById('chatInput');
+
+        if (chatWindow) {
+            chatWindow.classList.toggle('active');
+            if (this.isOpen && chatInput) chatInput.focus();
+        }
+    }
+
+    send() {
+        const input = document.getElementById('chatInput');
+        if (!input) return;
+        
+        const text = input.value.trim();
+        if (!text) return;
+
+        this.chatBody = document.getElementById('chatBody');
+        this.addMsg(text, 'user');
+        input.value = '';
+
+        this.addLoading();
+        setTimeout(() => {
+            this.removeLoading();
+            this.processSmartSearch(text);
+        }, 600);
+    }
+
+    processSmartSearch(query) {
+        const cleanQuery = query.toLowerCase()
+            .replace(/تحميل|تنزيل|عايز|ابغى|بدي|لعبة|تطبيق|برنامج/g, "")
+            .trim();
+
+        const data = (typeof app !== 'undefined' && app.data) ? app.data : [];
+
+        const results = data.filter(item => {
+            const title = (item.Title || "").toLowerCase();
+            const tag = (item.Tag || "").toLowerCase();
+            return title.includes(cleanQuery) || tag.includes(cleanQuery);
+        });
+
+        if (cleanQuery.length < 2) {
+            this.addMsg("اكتب اسم التطبيق بوضوح عشان أقدر أساعدك 😉", 'bot');
+            return;
+        }
+
+        if (results.length > 0) {
+            // 1. عرض النتايج
+            let reply = `لقيت لك <b>${results.length}</b> نتيجة:<br>`;
+            results.slice(0, 3).forEach(appItem => {
+                reply += `
+                <div style="margin-top:8px; display:flex; align-items:center; gap:10px; background:rgba(0,0,0,0.03); padding:5px; border-radius:8px;">
+                    <img src="${appItem.Image}" style="width:30px; height:30px; border-radius:5px; object-fit:cover;">
+                    <a href="post.html?uid=${appItem.ID}" style="font-weight:bold; color:var(--primary); font-size:12px; text-decoration:none;">${appItem.Title}</a>
+                </div>`;
+            });
+            
+            this.addMsg(reply, 'bot');
+
+            // 🔥 2. (الإضافة الجديدة) رسالة المتابعة والترحيب بعد 1.5 ثانية 🔥
+            setTimeout(() => {
+                const followUpMsg = `
+                أتمنى تكون النتايج عجبتك! 🤩<br>
+                شرفتنا بزيارتك لمتجر تسلم 🌹.<br>
+                <b>تحب تحمل حاجة تانية؟</b> اكتب اسم التطبيق فوراً وأنا هجيبهولك 🚀
+                `;
+                this.addMsg(followUpMsg, 'bot');
+                
+                // تشغيل صوت تنبيه خفيف (اختياري لو حابب)
+                // new Audio('notification.mp3').play().catch(e=>{}); 
+            }, 1500);
+
+        } else {
+            this.addMsg(`للأسف مش لاقي "<b>${cleanQuery}</b>" 😔.<br>ممكن تجرب تبحث باسم تاني؟`, 'bot');
+        }
+    }
+
+    addMsg(html, type) {
+        const div = document.createElement('div');
+        div.className = `msg ${type}`;
+        div.innerHTML = html;
+        if(this.chatBody) {
+            this.chatBody.appendChild(div);
+            this.chatBody.scrollTop = this.chatBody.scrollHeight;
+        }
+    }
+
+    addLoading() {
+        const div = document.createElement('div');
+        div.id = 'bot-loading';
+        div.className = 'msg bot';
+        div.innerHTML = '<i class="fas fa-ellipsis-h fa-beat" style="color:#aaa;"></i>';
+        if(this.chatBody) {
+            this.chatBody.appendChild(div);
+            this.chatBody.scrollTop = this.chatBody.scrollHeight;
+        }
+    }
+
+    removeLoading() {
+        const loader = document.getElementById('bot-loading');
+        if (loader) loader.remove();
+    }
+}
+
+// تعريف البوت
+window.smartBot = new SmartBot();
+
+        
     </script>
     <script src="https://quge5.com/88/tag.min.js" data-zone="201546" async data-cfasync="false"></script>
+    <div class="chat-btn" onclick="window.smartBot.toggle()">
+    <i class="fas fa-robot"></i>
+</div>
+
+<div class="chat-window" id="chatWindow">
+    <div class="chat-header">
+        <span>مساعد تسلم الذكي 🤖</span>
+        <i class="fas fa-times" onclick="window.smartBot.toggle()" style="cursor:pointer"></i>
+    </div>
+    <div class="chat-body" id="chatBody">
+        <div class="msg bot">أهلاً يا بطل! 👋<br>عايز تحمل إيه النهاردة؟ اكتب اسم أي لعبة أو تطبيق.</div>
+    </div>
+    <div class="chat-footer">
+        <input type="text" id="chatInput" class="chat-input" placeholder="اكتب هنا..." onkeypress="if(event.key==='Enter') window.smartBot.send()">
+        <button class="send-btn" onclick="window.smartBot.send()">
+            <i class="fas fa-paper-plane"></i>
+        </button>
+    </div>
+</div>
+
 </body>
 </html>
