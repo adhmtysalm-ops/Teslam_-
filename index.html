@@ -17,6 +17,20 @@
     <meta property="og:type" content="website">
  
     <meta name="monetag" content="c2e5bc16769f7d064768b4ff41b605e2">
+    <link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="theme-color" content="#2ecc71">
+
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js')
+        .then(reg => console.log('تم تشغيل التطبيق بنجاح! 📱', reg.scope))
+        .catch(err => console.log('فشل تشغيل التطبيق ❌', err));
+    });
+  }
+</script>
+
  
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
