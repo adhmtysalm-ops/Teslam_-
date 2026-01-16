@@ -3,12 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="google-site-verification" content="oDKEBCiDjN_d1Zz4new-CFOpsFqCCRkk8lYBhwC51k8" />
- 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
  
     <title>متجر تسلم - Teslam Store | تحميل أحدث التطبيقات 2026</title>
     <link rel="icon" href="/favicon.ico" sizes="any">
-
 
     <meta name="description" content="متجر تسلم (Teslam) هو وجهتك الآمنة لتحميل أحدث تطبيقات الأندرويد الأصلية (APK)، تحديثات الألعاب، أدوات النظام، وشروحات التقنية. روابط مباشرة وسرعة قصوى.">
     <meta name="keywords" content="تسلم, متجر تسلم, teslam, تحميل تطبيقات, العاب , متجر اندرويد, تطبيقات 2026, apk download">
@@ -21,129 +19,24 @@
  
     <meta name="monetag" content="c2e5bc16769f7d064768b4ff41b605e2">
     <link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icon-192.png">
-<meta name="theme-color" content="#2ecc71">
+    <link rel="apple-touch-icon" href="icon-192.png">
 
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/sw.js')
-        .then(reg => console.log('تم تشغيل التطبيق بنجاح! 📱', reg.scope))
-        .catch(err => console.log('فشل تشغيل التطبيق ❌', err));
-    });
-  }
-</script>
-
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then(reg => console.log('تم تشغيل التطبيق بنجاح! 📱', reg.scope))
+            .catch(err => console.log('فشل تشغيل التطبيق ❌', err));
+        });
+      }
+    </script>
  
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
  
     <style>
-    /* --- تصميم الشات بوت --- */
-.chat-btn {
-    position: fixed;
-    bottom: 20px;
-    left: 20px;
-    width: 60px;
-    height: 60px;
-    background: var(--primary);
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 28px;
-    cursor: pointer;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    z-index: 9999;
-    transition: transform 0.3s;
-}
-.chat-btn:hover { transform: scale(1.1); }
-
-.chat-window {
-    position: fixed;
-    bottom: 90px;
-    left: 20px;
-    width: 300px;
-    height: 400px;
-    background: var(--bg-card);
-    border-radius: 15px;
-    box-shadow: 0 5px 30px rgba(0,0,0,0.2);
-    z-index: 9999;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    transform: scale(0);
-    transform-origin: bottom left;
-    transition: 0.3s ease;
-    border: 1px solid var(--border-color);
-}
-.chat-window.active { transform: scale(1); }
-
-.chat-header {
-    background: var(--primary);
-    padding: 15px;
-    color: white;
-    font-weight: bold;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.chat-body {
-    flex: 1;
-    padding: 10px;
-    overflow-y: auto;
-    background: var(--bg-body);
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.msg {
-    padding: 8px 12px;
-    border-radius: 10px;
-    font-size: 13px;
-    max-width: 85%;
-    line-height: 1.5;
-}
-.msg.bot { background: var(--bg-card); align-self: flex-start; border: 1px solid var(--border-color); color: var(--text-main); }
-.msg.user { background: var(--primary); color: white; align-self: flex-end; }
-
-.chat-footer {
-    padding: 10px;
-    background: var(--bg-card);
-    border-top: 1px solid var(--border-color);
-    display: flex;
-    gap: 5px;
-}
-.chat-input {
-    flex: 1;
-    padding: 8px;
-    border: 1px solid var(--border-color);
-    border-radius: 20px;
-    background: var(--bg-body);
-    color: var(--text-main);
-    font-family: inherit;
-}
-.send-btn {
-    width: 35px;
-    height: 35px;
-    background: var(--primary);
-    color: white;
-    border: none;
-    border-radius: 50%;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-/* إصلاح مشكلة عدم استجابة الأيقونة للضغط */
-.send-btn i { pointer-events: none; }
-
         /* المتغيرات ونظام الألوان */
         :root {
-            /* نهاري */
             --bg-body: #f4f6f8;
             --bg-card: #ffffff;
             --bg-glass: rgba(255, 255, 255, 0.85);
@@ -156,8 +49,6 @@
             --shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
             --radius: 18px;
         }
- 
-        /* ليلي */
         [data-theme="dark"] {
             --bg-body: #121212;
             --bg-card: #1e1e1e;
@@ -171,499 +62,189 @@
             --shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
         }
  
-        * {
-            box-sizing: border-box;
-            outline: none;
-            -webkit-tap-highlight-color: transparent;
-        }
- 
-        body {
-            background: var(--bg-body);
-            font-family: 'Cairo', sans-serif;
-            margin: 0;
-            padding-bottom: 90px;
-            color: var(--text-main);
-            transition: background 0.4s ease, color 0.4s ease;
-            overflow-x: hidden;
-        }
- 
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
+        * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
+        body { background: var(--bg-body); font-family: 'Cairo', sans-serif; margin: 0; padding-bottom: 90px; color: var(--text-main); transition: background 0.4s ease, color 0.4s ease; overflow-x: hidden; }
+        a { text-decoration: none; color: inherit; }
  
         /* الهيدر */
-        .header {
-            background: var(--bg-glass);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            padding: 12px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            border-bottom: 1px solid var(--border-color);
-            transition: 0.3s;
-        }
- 
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
- 
-        .brand-logo {
-            font-family: 'Cairo', sans-serif;
-            font-weight: 900;
-            font-size: 22px;
-            color: var(--primary);
-            letter-spacing: -1px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            text-transform: uppercase;
-        }
- 
-        .brand-logo span {
-            font-size: 14px;
-            color: var(--text-main);
-            font-weight: 700;
-            letter-spacing: 0;
-            opacity: 0.8;
-            margin-top: 4px;
-        }
- 
-        .theme-toggle {
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--bg-body);
-            color: var(--text-main);
-            cursor: pointer;
-            transition: 0.3s;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
- 
-        .menu-btn {
-            font-size: 22px;
-            color: var(--text-main);
-            cursor: pointer;
-        }
+        .header { background: var(--bg-glass); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid var(--border-color); transition: 0.3s; }
+        .header-left { display: flex; align-items: center; gap: 15px; }
+        .brand-logo { font-family: 'Cairo', sans-serif; font-weight: 900; font-size: 22px; color: var(--primary); letter-spacing: -1px; display: flex; align-items: center; gap: 6px; text-transform: uppercase; }
+        .brand-logo span { font-size: 14px; color: var(--text-main); font-weight: 700; letter-spacing: 0; opacity: 0.8; margin-top: 4px; }
+        .theme-toggle { width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--bg-body); color: var(--text-main); cursor: pointer; transition: 0.3s; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); }
+        .menu-btn { font-size: 22px; color: var(--text-main); cursor: pointer; }
  
         /* القائمة الجانبية */
-        .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 2400;
-            opacity: 0;
-            visibility: hidden;
-            transition: 0.3s;
-            backdrop-filter: blur(3px);
-        }
- 
-        .overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
- 
-        .side-drawer {
-            position: fixed;
-            top: 0;
-            right: -300px;
-            width: 280px;
-            height: 100%;
-            background: var(--bg-card);
-            z-index: 2500;
-            transition: right 0.35s cubic-bezier(0.19, 1, 0.22, 1);
-            display: flex;
-            flex-direction: column;
-            box-shadow: -5px 0 30px rgba(0, 0, 0, 0.2);
-        }
- 
-        .side-drawer.open {
-            right: 0;
-        }
- 
-        .drawer-header {
-            padding: 25px;
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
- 
-        .drawer-title {
-            font-weight: 900;
-            font-size: 22px;
-            color: var(--primary);
-            letter-spacing: -1px;
-        }
- 
-        .drawer-scroll {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px;
-        }
- 
-        .drawer-item {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 14px;
-            border-radius: 12px;
-            margin-bottom: 8px;
-            font-weight: 700;
-            color: var(--text-main);
-            transition: 0.2s;
-        }
- 
-        .drawer-item:hover {
-            background: rgba(46, 204, 113, 0.1);
-            color: var(--primary);
-            transform: translateX(-5px);
-        }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); z-index: 2400; opacity: 0; visibility: hidden; transition: 0.3s; backdrop-filter: blur(3px); }
+        .overlay.active { opacity: 1; visibility: visible; }
+        .side-drawer { position: fixed; top: 0; right: -300px; width: 280px; height: 100%; background: var(--bg-card); z-index: 2500; transition: right 0.35s cubic-bezier(0.19, 1, 0.22, 1); display: flex; flex-direction: column; box-shadow: -5px 0 30px rgba(0, 0, 0, 0.2); }
+        .side-drawer.open { right: 0; }
+        .drawer-header { padding: 25px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
+        .drawer-title { font-weight: 900; font-size: 22px; color: var(--primary); letter-spacing: -1px; }
+        .drawer-scroll { flex: 1; overflow-y: auto; padding: 20px; }
+        .drawer-item { display: flex; align-items: center; gap: 15px; padding: 14px; border-radius: 12px; margin-bottom: 8px; font-weight: 700; color: var(--text-main); transition: 0.2s; }
+        .drawer-item:hover { background: rgba(46, 204, 113, 0.1); color: var(--primary); transform: translateX(-5px); }
  
         /* البحث */
-        .search-container {
-            padding: 15px 20px;
-            background: var(--bg-card);
-            margin-bottom: 15px;
-            border-bottom: 1px solid var(--border-color);
-        }
- 
-        .search-box {
-            background: var(--bg-body);
-            border-radius: 50px;
-            padding: 12px 20px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            transition: 0.3s;
-            border: 1px solid transparent;
-        }
- 
-        .search-box:focus-within {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(46, 204, 113, 0.1);
-        }
- 
-        .search-box input {
-            border: none;
-            background: transparent;
-            width: 100%;
-            font-family: 'Cairo';
-            font-weight: 700;
-            font-size: 14px;
-            color: var(--text-main);
-        }
- 
-        .search-box i {
-            color: var(--text-sub);
-        }
+        .search-container { padding: 15px 20px; background: var(--bg-card); margin-bottom: 15px; border-bottom: 1px solid var(--border-color); }
+        .search-box { background: var(--bg-body); border-radius: 50px; padding: 12px 20px; display: flex; align-items: center; gap: 12px; transition: 0.3s; border: 1px solid transparent; }
+        .search-box:focus-within { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(46, 204, 113, 0.1); }
+        .search-box input { border: none; background: transparent; width: 100%; font-family: 'Cairo'; font-weight: 700; font-size: 14px; color: var(--text-main); }
+        .search-box i { color: var(--text-sub); }
  
         /* المحتوى */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 15px;
-        }
- 
-        /* Hero */
-        .hero-card {
-            background: var(--hero-bg);
-            border-radius: 20px;
-            padding: 25px;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 25px;
-            box-shadow: var(--shadow);
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-            transition: transform 0.3s;
-        }
- 
-        .hero-card:active {
-            transform: scale(0.98);
-        }
- 
-        .hero-card::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 50%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            transform: skewX(-25deg);
-            animation: shine 3s infinite;
-        }
- 
-        @keyframes shine {
-            100% {
-                left: 150%;
-            }
-        }
- 
-        .hero-info {
-            z-index: 2;
-            flex: 1;
-            padding-left: 15px;
-        }
- 
-        .hero-badge {
-            background: #ff5252;
-            color: #fff;
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 11px;
-            font-weight: 800;
-            display: inline-block;
-            margin-bottom: 8px;
-        }
- 
-        .hero-title {
-            font-size: 24px;
-            font-weight: 900;
-            margin: 5px 0 10px;
-        }
- 
-        .hero-img {
-            width: 110px;
-            height: 110px;
-            border-radius: 18px;
-            z-index: 2;
-            border: 3px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
-        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 15px; }
+        .hero-card { background: var(--hero-bg); border-radius: 20px; padding: 25px; color: white; display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px; box-shadow: var(--shadow); cursor: pointer; position: relative; overflow: hidden; transition: transform 0.3s; }
+        .hero-card:active { transform: scale(0.98); }
+        .hero-card::after { content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent); transform: skewX(-25deg); animation: shine 3s infinite; }
+        @keyframes shine { 100% { left: 150%; } }
+        .hero-info { z-index: 2; flex: 1; padding-left: 15px; }
+        .hero-badge { background: #ff5252; color: #fff; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 800; display: inline-block; margin-bottom: 8px; }
+        .hero-title { font-size: 24px; font-weight: 900; margin: 5px 0 10px; }
+        .hero-img { width: 110px; height: 110px; border-radius: 18px; z-index: 2; border: 3px solid rgba(255, 255, 255, 0.1); box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3); }
  
         /* Tags */
-        .tags-wrapper {
-            display: flex;
-            gap: 10px;
-            overflow-x: auto;
-            padding-bottom: 5px;
-            margin-bottom: 25px;
-            scrollbar-width: none;
-        }
- 
-        .tag-pill {
-            background: var(--bg-card);
-            color: var(--text-sub);
-            padding: 10px 24px;
-            border-radius: 50px;
-            font-size: 13px;
-            font-weight: 800;
-            white-space: nowrap;
-            cursor: pointer;
-            border: 1px solid var(--border-color);
-            transition: 0.3s;
-        }
- 
-        .tag-pill.active {
-            background: var(--text-main);
-            color: var(--bg-card);
-            border-color: var(--text-main);
-            transform: scale(1.05);
-        }
+        .tags-wrapper { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px; margin-bottom: 25px; scrollbar-width: none; }
+        .tag-pill { background: var(--bg-card); color: var(--text-sub); padding: 10px 24px; border-radius: 50px; font-size: 13px; font-weight: 800; white-space: nowrap; cursor: pointer; border: 1px solid var(--border-color); transition: 0.3s; }
+        .tag-pill.active { background: var(--text-main); color: var(--bg-card); border-color: var(--text-main); transform: scale(1.05); }
  
         /* Grid System */
-        .section-header {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 20px;
-        }
- 
-        .section-header h2 {
-            font-size: 19px;
-            font-weight: 900;
-            margin: 0;
-            color: var(--text-main);
-        }
- 
-        .apps-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            width: 100%;
-        }
- 
-        .app-card {
-            background: var(--bg-card);
-            border-radius: var(--radius);
-            padding: 12px;
-            text-align: center;
-            box-shadow: var(--shadow);
-            display: flex;
-            flex-direction: column;
-            cursor: pointer;
-            transition: 0.3s;
-            border: 1px solid transparent;
-            animation: fadeUp 0.6s ease backwards;
-            overflow: hidden;
-        }
- 
-        @keyframes fadeUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
- 
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
- 
-        .app-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--primary);
-        }
- 
-        .card-img-wrapper {
-            width: 100%;
-            padding-top: 100%;
-            position: relative;
-            border-radius: 14px;
-            overflow: hidden;
-            margin-bottom: 12px;
-            background: var(--bg-body);
-            border: 1px solid var(--border-color);
-        }
- 
-        .card-img {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: 0.5s;
-        }
- 
-        .app-card:hover .card-img {
-            transform: scale(1.1);
-        }
- 
-        .card-title {
-            font-size: 15px;
-            font-weight: 800;
-            margin-bottom: 12px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            color: var(--text-main);
-        }
- 
-        .dl-btn {
-            background: var(--primary);
-            color: #fff;
-            width: 100%;
-            padding: 12px 0;
-            border-radius: 12px;
-            font-size: 13px;
-            font-weight: 800;
-            margin-top: auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            box-shadow: 0 4px 15px rgba(46, 204, 113, 0.25);
-            transition: 0.2s;
-        }
- 
-        .app-card:hover .dl-btn {
-            background: var(--primary-hover);
-            animation: pulse 1s infinite;
-        }
- 
-        @keyframes pulse {
-            0% {
-                transform: scale(1);
-            }
- 
-            50% {
-                transform: scale(1.03);
-            }
- 
-            100% {
-                transform: scale(1);
-            }
-        }
+        .section-header { display: flex; align-items: center; gap: 8px; margin-bottom: 20px; }
+        .section-header h2 { font-size: 19px; font-weight: 900; margin: 0; color: var(--text-main); }
+        .apps-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; width: 100%; }
+        .app-card { background: var(--bg-card); border-radius: var(--radius); padding: 12px; text-align: center; box-shadow: var(--shadow); display: flex; flex-direction: column; cursor: pointer; transition: 0.3s; border: 1px solid transparent; animation: fadeUp 0.6s ease backwards; overflow: hidden; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .app-card:hover { transform: translateY(-5px); border-color: var(--primary); }
+        .card-img-wrapper { width: 100%; padding-top: 100%; position: relative; border-radius: 14px; overflow: hidden; margin-bottom: 12px; background: var(--bg-body); border: 1px solid var(--border-color); }
+        .card-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+        .app-card:hover .card-img { transform: scale(1.1); }
+        .card-title { font-size: 15px; font-weight: 800; margin-bottom: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-main); }
+        .dl-btn { background: var(--primary); color: #fff; width: 100%; padding: 12px 0; border-radius: 12px; font-size: 13px; font-weight: 800; margin-top: auto; display: flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 4px 15px rgba(46, 204, 113, 0.25); transition: 0.2s; }
+        .app-card:hover .dl-btn { background: var(--primary-hover); animation: pulse 1s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.03); } 100% { transform: scale(1); } }
  
         /* Footer */
-        .sticky-ad {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 60px;
-            background: var(--bg-glass);
-            border-top: 1px solid var(--border-color);
-            z-index: 2000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-        }
+        .sticky-ad { position: fixed; bottom: 0; left: 0; width: 100%; height: 60px; background: var(--bg-glass); border-top: 1px solid var(--border-color); z-index: 2000; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
  
         @media (min-width: 768px) {
-            .apps-grid {
-                grid-template-columns: repeat(4, 1fr);
-                gap: 25px;
-            }
- 
-            .container {
-                padding: 0 40px;
-                margin-top: 30px;
-            }
- 
-            .hero-card {
-                height: 260px;
-            }
- 
-            .hero-img {
-                width: 160px;
-                height: 160px;
-            }
+            .apps-grid { grid-template-columns: repeat(4, 1fr); gap: 25px; }
+            .container { padding: 0 40px; margin-top: 30px; }
+            .hero-card { height: 260px; }
+            .hero-img { width: 160px; height: 160px; }
         }
+
+        /* --- تصميم البوت الذكي (المطور - AI Chat) --- */
+        .chat-btn {
+            position: fixed; bottom: 85px; left: 20px; width: 65px; height: 65px;
+            background: var(--bg-card); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; z-index: 9999;
+            box-shadow: 0 8px 30px rgba(46, 204, 113, 0.4);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            border: 2px solid var(--primary); overflow: hidden;
+        }
+        .chat-btn:hover { transform: scale(1.1) rotate(-5deg); }
+        .chat-btn img { width: 100%; height: 100%; object-fit: cover; }
+
+        .chat-window {
+            position: fixed; bottom: 160px; left: 20px; width: 340px; height: 500px;
+            background: var(--bg-card); border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3); z-index: 9999;
+            display: flex; flex-direction: column; overflow: hidden;
+            transform: scale(0); transform-origin: bottom left; 
+            transition: 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+            border: 1px solid var(--border-color);
+        }
+        .chat-window.active { transform: scale(1); opacity: 1; }
+
+        .chat-header {
+            background: var(--bg-card); padding: 18px; border-bottom: 1px solid var(--border-color);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .bot-info { display: flex; align-items: center; gap: 10px; }
+        .bot-avatar-sm { width: 42px; height: 42px; border-radius: 50%; background: white; border: 1px solid #eee; object-fit: cover; }
+        .bot-details h3 { margin: 0; font-size: 15px; font-weight: 900; color: var(--text-main); }
+        .bot-status { font-size: 11px; color: var(--primary); font-weight: bold; display: flex; align-items: center; gap: 4px; }
+        .status-dot { width: 8px; height: 8px; background: var(--primary); border-radius: 50%; animation: pulse-green 2s infinite; }
+        @keyframes pulse-green { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+
+        .chat-body {
+            flex: 1; padding: 15px; overflow-y: auto; background: var(--bg-body);
+            display: flex; flex-direction: column; gap: 15px; scroll-behavior: smooth;
+        }
+
+        .msg-row { display: flex; width: 100%; gap: 10px; animation: slideUp 0.3s ease-out; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+        .msg-row.user { justify-content: flex-end; }
+        
+        .msg-bubble {
+            padding: 12px 18px; border-radius: 20px; font-size: 13px; max-width: 85%; line-height: 1.6; word-wrap: break-word; position: relative;
+        }
+        .msg-row.bot .msg-bubble {
+            background: var(--bg-card); color: var(--text-main); border-bottom-right-radius: 4px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03); border: 1px solid var(--border-color);
+        }
+        .msg-row.user .msg-bubble {
+            background: linear-gradient(135deg, var(--primary), var(--primary-hover)); color: white; border-bottom-left-radius: 4px;
+            box-shadow: 0 4px 15px rgba(46, 204, 113, 0.25);
+        }
+
+        /* كروت النتائج داخل الشات */
+        .bot-result-card {
+            background: var(--bg-card); padding: 10px; margin-top: 8px; border-radius: 16px;
+            display: flex; align-items: center; gap: 12px; cursor: pointer; width: 100%;
+            border: 1px solid var(--border-color); transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        }
+        .bot-result-card:hover { transform: translateY(-3px); border-color: var(--primary); box-shadow: 0 5px 15px rgba(0,0,0,0.06); }
+        .bot-res-img { width: 48px; height: 48px; border-radius: 12px; object-fit: cover; background: #eee; }
+        .bot-res-info { flex: 1; }
+        .bot-res-title { font-weight: 800; font-size: 13px; color: var(--text-main); margin-bottom: 4px; }
+        .bot-res-btn { font-size: 10px; color: white; font-weight: 700; background: var(--primary); padding: 4px 12px; border-radius: 50px; display: inline-block; }
+
+        /* 🔥 أزرار التفاعل (Interactive Chips) 🔥 */
+        .bot-options { display: flex; gap: 8px; margin-top: 5px; flex-wrap: wrap; }
+        .option-btn {
+            background: rgba(46, 204, 113, 0.1); border: 1px solid var(--primary);
+            color: var(--primary); padding: 8px 16px; border-radius: 25px;
+            font-size: 12px; font-weight: bold; cursor: pointer; transition: 0.2s;
+        }
+        .option-btn:hover { background: var(--primary); color: white; transform: translateY(-2px); }
+
+        .chat-footer { padding: 12px 15px; background: var(--bg-card); border-top: 1px solid var(--border-color); display: flex; gap: 8px; align-items: center; }
+        .chat-input { flex: 1; padding: 12px 18px; border: 1px solid var(--border-color); border-radius: 30px; background: var(--bg-body); color: var(--text-main); font-family: inherit; font-size: 13px; outline: none; transition: 0.3s; }
+        .chat-input:focus { border-color: var(--primary); background: var(--bg-card); box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.1); }
+        .send-btn { width: 45px; height: 45px; background: var(--primary); color: white; border: none; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.3s; box-shadow: 0 4px 12px rgba(46, 204, 113, 0.25); }
+        .send-btn:hover { transform: scale(1.1); }
+
+        /* Typing Dots */
+        .typing-indicator { display: flex; gap: 5px; padding: 12px 16px; background: var(--bg-card); border-radius: 20px; border-bottom-right-radius: 4px; width: fit-content; border: 1px solid var(--border-color); margin-bottom: 5px; }
+        .dot { width: 7px; height: 7px; background: #b2bec3; border-radius: 50%; animation: bounce 1.4s infinite ease-in-out both; }
+        .dot:nth-child(1) { animation-delay: -0.32s; }
+        .dot:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
     </style>
 </head>
  
 <body data-theme="light">
  
-    <div class="overlay" onclick="app.toggleMenu()"></div>
+    <div class="overlay" onclick="window.app.toggleMenu()"></div>
  
     <aside class="side-drawer" id="sideDrawer">
         <div class="drawer-header">
             <div class="drawer-title">TESLAM</div>
-            <div onclick="app.toggleMenu()" style="cursor:pointer; padding:5px;"><i class="fas fa-times" style="font-size:22px; color:var(--text-sub);"></i></div>
+            <div onclick="window.app.toggleMenu()" style="cursor:pointer; padding:5px;"><i class="fas fa-times" style="font-size:22px; color:var(--text-sub);"></i></div>
         </div>
- 
         <div class="drawer-scroll">
             <div id="drawer-dynamic-links"></div>
             <div style="height:1px; background:var(--border-color); margin:15px 0;"></div>
- 
             <div style="font-size:11px; font-weight:bold; color:var(--text-sub); margin-bottom:10px;">روابط هامة</div>
             <a href="about.html" class="drawer-item"><i class="fas fa-info-circle"></i> من نحن</a>
             <a href="contest.html" class="drawer-item" style="color:#e74c3c;"><i class="fas fa-gift"></i> مسابقة الجوائز</a>
             <a href="privacy.html" class="drawer-item"><i class="fas fa-shield-alt"></i> سياسة الخصوصية</a>
             <a href="contact.html" class="drawer-item"><i class="fas fa-envelope"></i> اتصل بنا</a>
         </div>
- 
         <div style="padding:20px; text-align:center; border-top:1px solid var(--border-color); background:var(--bg-body);">
             <p style="margin:0; font-size:12px; font-weight:700; color:var(--text-sub);">جميع الحقوق محفوظة © 2026</p>
         </div>
@@ -671,14 +252,12 @@
  
     <nav class="header">
         <div class="header-left">
-            <div class="menu-btn" onclick="app.toggleMenu()"><i class="fas fa-bars"></i></div>
- 
+            <div class="menu-btn" onclick="window.app.toggleMenu()"><i class="fas fa-bars"></i></div>
             <a href="index.html" class="brand-logo">
                 TESLAM <span>_متجر تسلم</span>
             </a>
         </div>
- 
-        <div class="theme-toggle" onclick="app.toggleTheme()">
+        <div class="theme-toggle" onclick="window.app.toggleTheme()">
             <i class="fas fa-moon" id="theme-icon"></i>
         </div>
     </nav>
@@ -691,17 +270,13 @@
     </div>
  
     <div class="container">
- 
         <div id="hero-section"></div>
- 
         <div id="tags-bar" class="tags-wrapper">
-            <div class="tag-pill active" onclick="app.filter('all', this)">الكل</div>
+            <div class="tag-pill active" onclick="window.app.filter('all', this)">الكل</div>
         </div>
- 
         <div style="border: 2px dashed var(--text-sub); border-radius: 15px; height: 90px; display: flex; align-items: center; justify-content: center; color: var(--text-sub); margin-bottom: 30px; background: var(--bg-card); opacity:0.6;">
             جميع الحقوق محفوظة لمتجر تسلم© teslam store
         </div>
- 
         <div id="recommended-section" style="display:none; margin-bottom: 30px;">
             <div class="section-header">
                 <i class="fas fa-magic" style="color:#a55eea; font-size:20px;"></i>
@@ -709,12 +284,10 @@
             </div>
             <div id="recommended-grid" class="apps-grid"></div>
         </div>
- 
         <div class="section-header">
             <i class="fas fa-fire" style="color:#ff7675; font-size:20px;"></i>
             <h2>تطبيقات مختارة لك</h2>
         </div>
- 
         <div id="apps-grid" class="apps-grid">
             <div style="grid-column:1/-1; text-align:center; padding:60px; color:var(--text-sub);">
                 <i class="fas fa-circle-notch fa-spin fa-2x"></i><br><span style="margin-top:15px; display:block;">جاري التحميل...</span>
@@ -725,11 +298,44 @@
     <div class="sticky-ad">
         <span style="font-size:12px; color:var(--text-sub);">جميع الحقوق محفوظة لمتجر_تسلم © teslam store</span>
     </div>
+
+    <div class="chat-btn" onclick="window.geniusBot.toggle()">
+        <img src="icon-192.png" alt="Teslam Bot">
+    </div>
+
+    <div class="chat-window" id="chatWindow">
+        <div class="chat-header">
+            <div class="bot-info">
+                <img src="icon-192.png" class="bot-avatar-sm">
+                <div class="bot-details">
+                    <h3>مساعد تسلم</h3>
+                    <div class="bot-status"><div class="status-dot"></div> AI Online</div>
+                </div>
+            </div>
+            <i class="fas fa-chevron-down" onclick="window.geniusBot.toggle()" style="cursor:pointer; color:var(--text-sub);"></i>
+        </div>
+        
+        <div class="chat-body" id="chatBody">
+            <div class="msg-row bot">
+                <img src="icon-192.png" class="bot-avatar-sm">
+                <div class="msg-bubble">
+                    أزيك يا بطل! 👋<br>أنا عقلي بقى أكبر، ودلوقتي مربوط بقاعدة البيانات بشكل كامل.<br>اسألني عن أي حاجة وهجيبلك أفضل نتيجة 😉
+                </div>
+            </div>
+        </div>
+        
+        <div class="chat-footer">
+            <input type="text" id="chatInput" class="chat-input" placeholder="اكتب هنا..." onkeypress="if(event.key==='Enter') window.geniusBot.send()">
+            <button class="send-btn" onclick="window.geniusBot.send()">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
  
     <script>
+        // --- 1. TeslamApp (الكود الأصلي) ---
         class TeslamApp {
             constructor() {
-                // 🔥 رابط قاعدة بياناتك 🔥
                 this.dbURL = "https://teslamstore-df0a5-default-rtdb.firebaseio.com/apps.json";
                 this.data = [];
                 this.init();
@@ -767,10 +373,8 @@
                 document.querySelector('.overlay').classList.toggle('active');
             }
  
-            // 🔥 خوارزمية الخلط العشوائي (Shuffle) 🔥
             shuffleArray(array) {
-                let currentIndex = array.length,
-                    randomIndex;
+                let currentIndex = array.length, randomIndex;
                 while (currentIndex != 0) {
                     randomIndex = Math.floor(Math.random() * currentIndex);
                     currentIndex--;
@@ -780,34 +384,24 @@
             }
  
             async fetchData() {
-                // 🛑 تم إزالة الكاش (localStorage) ليتم التحميل المباشر دائماً
                 try {
                     const response = await fetch(this.dbURL);
- 
-                    if (!response.ok) throw new Error("مشكلة في التصريح (Rules)");
- 
+                    if (!response.ok) throw new Error("مشكلة في التصريح");
                     const json = await response.json();
- 
                     if (json) {
                         this.data = Object.values(json).filter(item => item != null).reverse();
                     } else {
                         this.data = [];
                     }
- 
                     this.renderApp();
                     this.injectHomeSchema();
                 } catch (error) {
-                    // تم إزالة console.error لتنظيف الكونسول
-                    document.getElementById('apps-grid').innerHTML =
-                        '<p style="grid-column:1/-1;text-align:center; padding:20px;">' +
-                        'جاري الاتصال بالسيرفر...<br>' +
-                        '</p>';
+                    document.getElementById('apps-grid').innerHTML = '<p style="grid-column:1/-1;text-align:center; padding:20px;">جاري الاتصال بالسيرفر...</p>';
                 }
             }
  
             injectHomeSchema() {
                 if (!this.data || this.data.length === 0) return;
- 
                 const topApps = this.data.slice(0, 10).map(app => ({
                     "@type": "SoftwareApplication",
                     "name": app.Title || "تطبيق",
@@ -848,10 +442,8 @@
             renderRecommended() {
                 const recContainer = document.getElementById('recommended-section');
                 const recGrid = document.getElementById('recommended-grid');
- 
                 let shuffled = this.shuffleArray([...this.data]);
                 let selected = shuffled.slice(0, 4);
- 
                 if (selected.length > 0) {
                     recContainer.style.display = 'block';
                     recGrid.innerHTML = '';
@@ -888,21 +480,19 @@
                 const tags = new Set(this.data.map(d => d.Tag?.trim()).filter(Boolean));
                 const bar = document.getElementById('tags-bar');
                 const drawerLinks = document.getElementById('drawer-dynamic-links');
- 
-                bar.innerHTML = `<div class="tag-pill active" onclick="app.filter('all', this)">الكل</div>`;
+                bar.innerHTML = `<div class="tag-pill active" onclick="window.app.filter('all', this)">الكل</div>`;
                 drawerLinks.innerHTML = `
-                    <div class="drawer-item" onclick="app.filter('all', null); app.toggleMenu()">
+                    <div class="drawer-item" onclick="window.app.filter('all', null); window.app.toggleMenu()">
                         <i class="fas fa-home"></i> الرئيسية
                     </div>
                 `;
- 
                 tags.forEach(tag => {
-                    bar.innerHTML += `<div class="tag-pill" onclick="app.filter('${tag}', this)">${tag}</div>`;
+                    bar.innerHTML += `<div class="tag-pill" onclick="window.app.filter('${tag}', this)">${tag}</div>`;
                     let icon = 'fas fa-hashtag';
                     if (tag.includes('لعبة') || tag.includes('Games')) icon = 'fas fa-gamepad';
                     if (tag.includes('تطبيق') || tag.includes('App')) icon = 'fas fa-layer-group';
                     drawerLinks.innerHTML += `
-                        <div class="drawer-item" onclick="app.filter('${tag}', null); app.toggleMenu()">
+                        <div class="drawer-item" onclick="window.app.filter('${tag}', null); window.app.toggleMenu()">
                             <i class="${icon}"></i> ${tag}
                         </div>
                     `;
@@ -916,13 +506,11 @@
                     grid.innerHTML = '<p style="grid-column:1/-1; text-align:center;">لا توجد نتائج</p>';
                     return;
                 }
- 
                 list.forEach((app, idx) => {
                     const card = document.createElement('div');
                     card.className = 'app-card';
                     card.style.animationDelay = `${idx * 0.05}s`;
                     card.onclick = () => this.goToPost(app.ID, idx);
- 
                     card.innerHTML = `
                         <div class="card-img-wrapper"><img src="${app.Image || 'https://placehold.co/150'}" class="card-img" loading="lazy"></div>
                         <div class="card-title">${app.Title || 'بدون عنوان'}</div>
@@ -966,199 +554,308 @@
                 window.location.href = url;
             }
         }
-        const app = new TeslamApp();// --- كلاس الشات بوت الذكي (مع رسالة ترحيب بعد البحث) ---
-class SmartBot {
-    constructor() {
-        this.isOpen = false;
-    }
+        window.app = new TeslamApp();
 
-    toggle() {
-        this.isOpen = !this.isOpen;
-        const chatWindow = document.getElementById('chatWindow');
-        const chatInput = document.getElementById('chatInput');
+        // 🔥 2. GeniusBot V14: Keywords + Audio + Interactive 🔥
+        class GeniusBot {
+            constructor() {
+                this.isOpen = false;
+                this.chatBody = document.getElementById('chatBody');
 
-        if (chatWindow) {
-            chatWindow.classList.toggle('active');
-            if (this.isOpen && chatInput) chatInput.focus();
+                // الأصوات
+                this.sendSound = new Audio("https://cdn.pixabay.com/audio/2022/03/24/audio_3322f963a7.mp3");
+                this.receiveSound = new Audio("https://cdn.pixabay.com/audio/2022/03/15/audio_279930922e.mp3");
+                this.sendSound.volume = 0.5; this.receiveSound.volume = 0.5;
+
+                this.persona = {
+                    greet: { match: /سلام|مرحبا|هلا|هاي|hi|hello|hey|ازيك|عامل ايه/i, reply: ["يا هلا! ❤️ منور المتجر.", "أهلاً بك! 🚀 آمرني؟", "وعليكم السلام! 😉"] },
+                    thanks: { match: /شكرا|تسلم|حبيبي|كفو|thx|thanks/i, reply: ["العفو يا غالي! 🤖", "تحت أمرك في أي وقت! ❤️"] }
+                };
+            }
+
+            toggle() {
+                this.isOpen = !this.isOpen;
+                document.getElementById('chatWindow').classList.toggle('active');
+                if (this.isOpen) {
+                    setTimeout(() => document.getElementById('chatInput').focus(), 300);
+                    // تفعيل الصوت
+                    this.sendSound.play().then(()=>this.sendSound.pause()).catch(()=>{});
+                }
+            }
+
+            playSound(type) {
+                try {
+                    const sound = (type === 'send') ? this.sendSound : this.receiveSound;
+                    sound.currentTime = 0;
+                    sound.play().catch(e => {});
+                } catch(e) {}
+            }
+
+            normalize(text) {
+                return text.toLowerCase()
+                    .replace(/\s+/g, '')       
+                    .replace(/(أ|إ|آ)/g, 'ا')
+                    .replace(/ة/g, 'ه')
+                    .replace(/(ي|ى)/g, 'ي')
+                    .replace(/[^a-z0-9\u0600-\u06FF]/g, '');
+            }
+
+            levenshtein(a, b) {
+                const matrix = [];
+                for (let i = 0; i <= b.length; i++) matrix[i] = [i];
+                for (let j = 0; j <= a.length; j++) matrix[0][j] = j;
+                for (let i = 1; i <= b.length; i++) {
+                    for (let j = 1; j <= a.length; j++) {
+                        if (b.charAt(i - 1) == a.charAt(j - 1)) {
+                            matrix[i][j] = matrix[i - 1][j - 1];
+                        } else {
+                            matrix[i][j] = Math.min(matrix[i - 1][j - 1] + 1, matrix[i][j - 1] + 1, matrix[i - 1][j] + 1);
+                        }
+                    }
+                }
+                return matrix[b.length][a.length];
+            }
+
+            getSimilarity(s1, s2) {
+                let longer = s1.length > s2.length ? s1 : s2;
+                let shorter = s1.length > s2.length ? s2 : s1;
+                if (longer.length == 0) return 1.0;
+                return (longer.length - this.levenshtein(longer, shorter)) / longer.length;
+            }
+
+            send() {
+                const input = document.getElementById('chatInput');
+                const text = input.value.trim();
+                if (!text) return;
+
+                this.playSound('send');
+                this.addMsg(text, 'user');
+                input.value = '';
+                this.showTyping();
+
+                const thinkingTime = Math.min(Math.max(text.length * 50, 600), 2000);
+                setTimeout(() => {
+                    this.removeTyping();
+                    this.processBrain(text);
+                }, thinkingTime);
+            }
+
+            processBrain(rawText) {
+                const simpleText = rawText.toLowerCase();
+                for (let key in this.persona) {
+                    if (this.persona[key].match.test(simpleText)) {
+                        const replies = this.persona[key].reply;
+                        const randomReply = replies[Math.floor(Math.random() * replies.length)];
+                        this.addMsg(randomReply, 'bot');
+                        return;
+                    }
+                }
+
+                const query = this.normalize(rawText);
+                if (query.length < 2) {
+                    this.addMsg("اكتب اسم التطبيق (مثلاً: <b>ببجي</b>)...", 'bot');
+                    return;
+                }
+
+                this.searchDatabase(query);
+            }
+
+            searchDatabase(query) {
+                if (!window.app.data || !window.app.data.length) {
+                    this.addMsg("ثواني بجمع البيانات... ⏳", 'bot');
+                    return;
+                }
+
+                const matches = window.app.data.map(appItem => {
+                    const title = this.normalize(appItem.Title);
+                    const tag = this.normalize(appItem.Tag || "");
+                    const keywords = this.normalize(appItem.Keywords || ""); // 🔥 العمود الجديد 🔥
+                    
+                    let score = 0;
+                    
+                    // 1. بحث في العنوان
+                    if (title.includes(query) || query.includes(title)) score += 100;
+                    
+                    // 2. بحث في الكلمات المفتاحية (Keywords)
+                    if (keywords.includes(query)) score += 95; // سكور عالي جداً لأن دي كلمات إنت كاتبها مخصوص
+
+                    // 3. بحث في التاج
+                    if (tag.includes(query)) score += 80;
+
+                    // 4. Fuzzy Match (للأخطاء الإملائية)
+                    const simScore = this.getSimilarity(query, title);
+                    const simScoreKey = this.getSimilarity(query, keywords); // Fuzzy كمان في الكلمات المفتاحية
+
+                    if (simScore > 0.35) score += (simScore * 100);
+                    if (simScoreKey > 0.4) score += (simScoreKey * 90);
+
+                    return { app: appItem, score: score };
+                })
+                .filter(m => m.score > 35)
+                .sort((a, b) => b.score - a.score);
+
+                if (matches.length > 0) {
+                    const best = matches[0].app;
+                    this.addMsg(`لقيت طلبك! 🤩 غالباً بتدور على <b>${best.Title}</b>:`, 'bot');
+                    
+                    let cardsHTML = '';
+                    matches.slice(0, 3).forEach(m => {
+                        cardsHTML += `
+                        <div class="bot-result-card" onclick="window.location.href='post.html?uid=${m.app.ID}'">
+                            <img src="${m.app.Image}" class="bot-res-img">
+                            <div class="bot-res-info">
+                                <div class="bot-res-title">${m.app.Title}</div>
+                                <div class="bot-res-btn">تحميل مباشر 🚀</div>
+                            </div>
+                        </div>`;
+                    });
+
+                    const div = document.createElement('div');
+                    div.className = 'msg-row bot';
+                    div.style.display = 'block';
+                    div.innerHTML = `<div style="width:100%; padding-right:10px;">${cardsHTML}</div>`;
+                    this.chatBody.appendChild(div);
+
+                } else {
+                    this.addMsg(`للأسف مش لاقي "<b>${query}</b>" 😔.<br>بس ممكن يعجبك ده 👇`, 'bot');
+                    const randomApp = window.app.data[Math.floor(Math.random() * window.app.data.length)];
+                    setTimeout(() => {
+                        const card = `
+                        <div class="bot-result-card" onclick="window.location.href='post.html?uid=${randomApp.ID}'">
+                            <img src="${randomApp.Image}" class="bot-res-img">
+                            <div class="bot-res-info">
+                                <div class="bot-res-title">جرب: ${randomApp.Title}</div>
+                                <div class="bot-res-btn">تطبيق مميز 🔥</div>
+                            </div>
+                        </div>`;
+                        const div = document.createElement('div');
+                        div.className = 'msg-row bot';
+                        div.style.display = 'block';
+                        div.innerHTML = `<div style="width:100%; padding-right:10px;">${card}</div>`;
+                        this.chatBody.appendChild(div);
+                    }, 1000);
+                }
+
+                // Interactive Follow-up
+                setTimeout(() => {
+                    this.showTyping();
+                    setTimeout(() => {
+                        this.removeTyping();
+                        this.addMsg("أتمنى النتيجة عجبتك! 🌹<br><b>محتاج حاجة تانية؟</b>", 'bot');
+                        
+                        const optionsDiv = document.createElement('div');
+                        optionsDiv.className = 'msg-row bot';
+                        optionsDiv.style.display = 'block';
+                        optionsDiv.innerHTML = `
+                            <div style="width:100%; padding-right:10px; margin-top:5px;">
+                                <div class="bot-options">
+                                    <button class="option-btn" onclick="window.geniusBot.handleOption('yes')">أيوه 🔍</button>
+                                    <button class="option-btn" onclick="window.geniusBot.handleOption('no')">لأ، شكراً 👋</button>
+                                </div>
+                            </div>`;
+                        this.chatBody.appendChild(optionsDiv);
+                        this.playSound('receive');
+                        this.scrollToBottom();
+                    }, 1200);
+                }, 2000);
+            }
+
+            handleOption(choice) {
+                if (choice === 'yes') {
+                    this.playSound('send');
+                    this.addMsg("أيوه 🔍", 'user');
+                    setTimeout(() => {
+                        this.showTyping();
+                        setTimeout(() => {
+                            this.removeTyping();
+                            this.addMsg("هات اسم التطبيق وأنا جاهز 🚀", 'bot');
+                        }, 800);
+                    }, 500);
+                } else {
+                    this.playSound('send');
+                    this.addMsg("لأ، شكراً 👋", 'user');
+                    setTimeout(() => {
+                        this.showTyping();
+                        setTimeout(() => {
+                            this.removeTyping();
+                            this.addMsg("نورتنا يا بطل! ❤️", 'bot');
+                        }, 800);
+                    }, 500);
+                }
+            }
+
+            addMsg(html, type) {
+                const row = document.createElement('div');
+                row.className = `msg-row ${type}`;
+                let avatar = (type === 'bot') ? `<img src="icon-192.png" class="bot-avatar-sm">` : '';
+                row.innerHTML = `${avatar}<div class="msg-bubble">${html}</div>`;
+                this.chatBody.appendChild(row);
+                this.scrollToBottom();
+                if(type === 'bot') this.playSound('receive');
+            }
+
+            showTyping() {
+                const div = document.createElement('div');
+                div.id = 'bot-typing';
+                div.className = 'msg-row bot';
+                div.innerHTML = `<img src="icon-192.png" class="bot-avatar-sm"><div class="typing-indicator"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>`;
+                this.chatBody.appendChild(div);
+                this.scrollToBottom();
+            }
+
+            removeTyping() {
+                const typing = document.getElementById('bot-typing');
+                if (typing) typing.remove();
+            }
+
+            scrollToBottom() {
+                this.chatBody.scrollTop = this.chatBody.scrollHeight;
+            }
         }
-    }
-
-    send() {
-        const input = document.getElementById('chatInput');
-        if (!input) return;
         
-        const text = input.value.trim();
-        if (!text) return;
-
-        this.chatBody = document.getElementById('chatBody');
-        this.addMsg(text, 'user');
-        input.value = '';
-
-        this.addLoading();
-        setTimeout(() => {
-            this.removeLoading();
-            this.processSmartSearch(text);
-        }, 600);
-    }
-
-    processSmartSearch(query) {
-        const cleanQuery = query.toLowerCase()
-            .replace(/تحميل|تنزيل|عايز|ابغى|بدي|لعبة|تطبيق|برنامج/g, "")
-            .trim();
-
-        const data = (typeof app !== 'undefined' && app.data) ? app.data : [];
-
-        const results = data.filter(item => {
-            const title = (item.Title || "").toLowerCase();
-            const tag = (item.Tag || "").toLowerCase();
-            return title.includes(cleanQuery) || tag.includes(cleanQuery);
-        });
-
-        if (cleanQuery.length < 2) {
-            this.addMsg("اكتب اسم التطبيق بوضوح عشان أقدر أساعدك 😉", 'bot');
-            return;
-        }
-
-        if (results.length > 0) {
-            // 1. عرض النتايج
-            let reply = `لقيت لك <b>${results.length}</b> نتيجة:<br>`;
-            results.slice(0, 3).forEach(appItem => {
-                reply += `
-                <div style="margin-top:8px; display:flex; align-items:center; gap:10px; background:rgba(0,0,0,0.03); padding:5px; border-radius:8px;">
-                    <img src="${appItem.Image}" style="width:30px; height:30px; border-radius:5px; object-fit:cover;">
-                    <a href="post.html?uid=${appItem.ID}" style="font-weight:bold; color:var(--primary); font-size:12px; text-decoration:none;">${appItem.Title}</a>
-                </div>`;
-            });
-            
-            this.addMsg(reply, 'bot');
-
-            // 🔥 2. (الإضافة الجديدة) رسالة المتابعة والترحيب بعد 1.5 ثانية 🔥
-            setTimeout(() => {
-                const followUpMsg = `
-                أتمنى تكون النتايج عجبتك! 🤩<br>
-                شرفتنا بزيارتك لمتجر تسلم 🌹.<br>
-                <b>تحب تحمل حاجة تانية؟</b> اكتب اسم التطبيق فوراً وأنا هجيبهولك 🚀
-                `;
-                this.addMsg(followUpMsg, 'bot');
-                
-                // تشغيل صوت تنبيه خفيف (اختياري لو حابب)
-                // new Audio('notification.mp3').play().catch(e=>{}); 
-            }, 1500);
-
-        } else {
-            this.addMsg(`للأسف مش لاقي "<b>${cleanQuery}</b>" 😔.<br>ممكن تجرب تبحث باسم تاني؟`, 'bot');
-        }
-    }
-
-    addMsg(html, type) {
-        const div = document.createElement('div');
-        div.className = `msg ${type}`;
-        div.innerHTML = html;
-        if(this.chatBody) {
-            this.chatBody.appendChild(div);
-            this.chatBody.scrollTop = this.chatBody.scrollHeight;
-        }
-    }
-
-    addLoading() {
-        const div = document.createElement('div');
-        div.id = 'bot-loading';
-        div.className = 'msg bot';
-        div.innerHTML = '<i class="fas fa-ellipsis-h fa-beat" style="color:#aaa;"></i>';
-        if(this.chatBody) {
-            this.chatBody.appendChild(div);
-            this.chatBody.scrollTop = this.chatBody.scrollHeight;
-        }
-    }
-
-    removeLoading() {
-        const loader = document.getElementById('bot-loading');
-        if (loader) loader.remove();
-    }
-}
-
-// تعريف البوت
-window.smartBot = new SmartBot();
-
-        
+        window.geniusBot = new GeniusBot();
     </script>
     <script src="https://quge5.com/88/tag.min.js" data-zone="201546" async data-cfasync="false"></script>
-    <div class="chat-btn" onclick="window.smartBot.toggle()">
-    <i class="fas fa-robot"></i>
-</div>
+    
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+      import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-messaging.js";
 
-<div class="chat-window" id="chatWindow">
-    <div class="chat-header">
-        <span>مساعد تسلم الذكي 🤖</span>
-        <i class="fas fa-times" onclick="window.smartBot.toggle()" style="cursor:pointer"></i>
-    </div>
-    <div class="chat-body" id="chatBody">
-        <div class="msg bot">أهلاً يا بطل! 👋<br>عايز تحمل إيه النهاردة؟ اكتب اسم أي لعبة أو تطبيق.</div>
-    </div>
-    <div class="chat-footer">
-        <input type="text" id="chatInput" class="chat-input" placeholder="اكتب هنا..." onkeypress="if(event.key==='Enter') window.smartBot.send()">
-        <button class="send-btn" onclick="window.smartBot.send()">
-            <i class="fas fa-paper-plane"></i>
-        </button>
-    </div>
-</div>
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-  import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-messaging.js";
+      const firebaseConfig = {
+        apiKey: "AIzaSyDiLmqbSVzdW5_DDMrKXttEDeu941vVWqc",
+        authDomain: "teslamstore-df0a5.firebaseapp.com",
+        projectId: "teslamstore-df0a5",
+        storageBucket: "teslamstore-df0a5.firebasestorage.app",
+        messagingSenderId: "1054567379055",
+        appId: "1:1054567379055:web:a97efaa28108945733dd9a",
+        measurementId: "G-MFY4BKBLDS"
+      };
 
-  // ✅ بيانات مشروعك الحقيقية
-  const firebaseConfig = {
-    apiKey: "AIzaSyDiLmqbSVzdW5_DDMrKXttEDeu941vVWqc",
-    authDomain: "teslamstore-df0a5.firebaseapp.com",
-    projectId: "teslamstore-df0a5",
-    storageBucket: "teslamstore-df0a5.firebasestorage.app",
-    messagingSenderId: "1054567379055",
-    appId: "1:1054567379055:web:a97efaa28108945733dd9a",
-    measurementId: "G-MFY4BKBLDS"
-  };
+      const appFire = initializeApp(firebaseConfig);
+      const messaging = getMessaging(appFire);
 
-  // تهيئة التطبيق
-  const app = initializeApp(firebaseConfig);
-  const messaging = getMessaging(app);
-
-  // دالة طلب الإذن
-  function requestPermission() {
-    console.log('جاري طلب إذن الإشعارات...');
-    Notification.requestPermission().then((permission) => {
-      if (permission === 'granted') {
-        console.log('تم السماح بالإشعارات ✅');
-        
-        // 👇 المفتاح الطويل بتاعك محطوط هنا أهو
-        getToken(messaging, { vapidKey: 'BIeZIiTnG3t43CGbFeAEClCJB3SBdHp3lYCvJ7NS4cuNnme3cikcPzmSnBRrc_hg9ZSGKDOzGwPI6PWAe0NZtz0' })
-        .then((currentToken) => {
-          if (currentToken) {
-            console.log('Token:', currentToken);
-          } else {
-            console.log('لم يتم العثور على توكن');
+      function requestPermission() {
+        if (Notification.permission === 'granted') return;
+        Notification.requestPermission().then((permission) => {
+          if (permission === 'granted') {
+            getToken(messaging, { vapidKey: 'BIeZIiTnG3t43CGbFeAEClCJB3SBdHp3lYCvJ7NS4cuNnme3cikcPzmSnBRrc_hg9ZSGKDOzGwPI6PWAe0NZtz0' })
+            .then((currentToken) => {
+              if (currentToken) console.log('Token:', currentToken);
+            }).catch((err) => console.log('Error Token: ', err));
           }
-        }).catch((err) => {
-          console.log('حدث خطأ أثناء جلب التوكن: ', err);
         });
-      } else {
-        console.log('تم رفض الإشعارات ❌');
       }
-    });
-  }
 
-  // استقبال الرسائل والموقع مفتوح
-  onMessage(messaging, (payload) => {
-    console.log('وصلت رسالة جديدة: ', payload);
-    const title = payload.notification.title;
-    const options = {
-      body: payload.notification.body,
-      icon: '/icon-192.png'
-    };
-    new Notification(title, options);
-  });
+      onMessage(messaging, (payload) => {
+        const title = payload.notification.title;
+        const options = {
+          body: payload.notification.body,
+          icon: '/icon-192.png'
+        };
+        new Notification(title, options);
+      });
 
-  // تشغيل الطلب تلقائياً
-  requestPermission();
-</script>
-
+      requestPermission();
+    </script>
 </body>
 </html>
