@@ -1099,6 +1099,63 @@ window.smartBot = new SmartBot();
         </button>
     </div>
 </div>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+  import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-messaging.js";
+
+  // ✅ بيانات مشروعك الحقيقية
+  const firebaseConfig = {
+    apiKey: "AIzaSyDiLmqbSVzdW5_DDMrKXttEDeu941vVWqc",
+    authDomain: "teslamstore-df0a5.firebaseapp.com",
+    projectId: "teslamstore-df0a5",
+    storageBucket: "teslamstore-df0a5.firebasestorage.app",
+    messagingSenderId: "1054567379055",
+    appId: "1:1054567379055:web:a97efaa28108945733dd9a",
+    measurementId: "G-MFY4BKBLDS"
+  };
+
+  // تهيئة التطبيق
+  const app = initializeApp(firebaseConfig);
+  const messaging = getMessaging(app);
+
+  // دالة طلب الإذن
+  function requestPermission() {
+    console.log('جاري طلب إذن الإشعارات...');
+    Notification.requestPermission().then((permission) => {
+      if (permission === 'granted') {
+        console.log('تم السماح بالإشعارات ✅');
+        
+        // 👇 المفتاح الطويل بتاعك محطوط هنا أهو
+        getToken(messaging, { vapidKey: 'BIeZIiTnG3t43CGbFeAEClCJB3SBdHp3lYCvJ7NS4cuNnme3cikcPzmSnBRrc_hg9ZSGKDOzGwPI6PWAe0NZtz0' })
+        .then((currentToken) => {
+          if (currentToken) {
+            console.log('Token:', currentToken);
+          } else {
+            console.log('لم يتم العثور على توكن');
+          }
+        }).catch((err) => {
+          console.log('حدث خطأ أثناء جلب التوكن: ', err);
+        });
+      } else {
+        console.log('تم رفض الإشعارات ❌');
+      }
+    });
+  }
+
+  // استقبال الرسائل والموقع مفتوح
+  onMessage(messaging, (payload) => {
+    console.log('وصلت رسالة جديدة: ', payload);
+    const title = payload.notification.title;
+    const options = {
+      body: payload.notification.body,
+      icon: '/icon-192.png'
+    };
+    new Notification(title, options);
+  });
+
+  // تشغيل الطلب تلقائياً
+  requestPermission();
+</script>
 
 </body>
 </html>
