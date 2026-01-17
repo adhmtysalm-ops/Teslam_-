@@ -1,3 +1,17 @@
+/* =========================================
+   0. كود الحماية (يمنع التشغيل خارج موقعك)
+   ========================================= */
+(function(){
+    // الكود ده هيشتغل بس على موقعك الرسمي
+    var myDomain = "teslam.vercel.app"; 
+    
+    // لو الرابط مش هو موقعك، وقف كل حاجة وامسح الشاشة
+    if (window.location.hostname !== myDomain) {
+        document.body.innerHTML = "<h1>ممنوع سرقة الكود! 🚫</h1>";
+        throw new Error("Access Denied: Production Only");
+    }
+})();
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
 import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-messaging.js";
 
