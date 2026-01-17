@@ -1,7 +1,7 @@
 {
-  "functions": {
-    "api/data.js": {
-      "runtime": "vercel-nodejs@18.x"
-    }
-  }
+  "version": 2,
+  "rewrites": [
+    { "source": "/api/data", "destination": "/api/data.js" }
+  ]
 }
+
