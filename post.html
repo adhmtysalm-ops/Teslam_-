@@ -6,8 +6,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
-    <title>تحميل التطبيق - متجر تسلم</title>
-    <meta name="description" content="صفحة التحميل - متجر تسلم">
+    <title>طھط­ظ…ظٹظ„ ط§ظ„طھط·ط¨ظٹظ‚ - ظ…طھط¬ط± طھط³ظ„ظ…</title>
+    <meta name="description" content="طµظپط­ط© ط§ظ„طھط­ظ…ظٹظ„ - ظ…طھط¬ط± طھط³ظ„ظ…">
     <meta name="theme-color" content="#2ecc71">
  
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
@@ -16,9 +16,9 @@
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
  
     <style>
-        /* المتغيرات ونظام الألوان */
+        /* (ظ†ظپط³ ظƒظˆط¯ CSS ط§ظ„ط³ط§ط¨ظ‚ طھظ…ط§ظ…ط§ظ‹ ط¨ط¯ظˆظ† طھط؛ظٹظٹط±) */
         :root {
-            /* نهاري */
+            /* ظ†ظ‡ط§ط±ظٹ */
             --bg-body: #f4f6f8;
             --bg-card: #ffffff;
             --bg-glass: rgba(255, 255, 255, 0.9);
@@ -33,7 +33,7 @@
             --timer-color: #f39c12;
         }
  
-        /* ليلي */
+        /* ظ„ظٹظ„ظٹ */
         [data-theme="dark"] {
             --bg-body: #121212;
             --bg-card: #1e1e1e;
@@ -56,7 +56,7 @@
         }
         a { text-decoration: none; color: inherit; }
  
-        /* الهيدر */
+        /* ط§ظ„ظ‡ظٹط¯ط± */
         .header {
             background: var(--bg-glass); 
             backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
@@ -82,7 +82,7 @@
             cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
  
-        /* التخطيط */
+        /* ط§ظ„طھط®ط·ظٹط· */
         .container { max-width: 1000px; margin: 30px auto; padding: 0 15px; display: grid; grid-template-columns: 1fr 320px; gap: 25px; }
         
         .main-card {
@@ -112,7 +112,7 @@
             font-size: 14px; color: var(--text-main); border: 1px solid var(--border-color);
         }
  
-        /* التحميل والعداد */
+        /* ط§ظ„طھط­ظ…ظٹظ„ ظˆط§ظ„ط¹ط¯ط§ط¯ */
         .download-zone { margin-top: 30px; padding-top: 20px; border-top: 1px dashed var(--border-color); }
  
         .action-btn {
@@ -130,7 +130,7 @@
         }
         @keyframes popIn { from {transform: scale(0.5); opacity: 0;} to {transform: scale(1); opacity: 1;} }
  
-        /* ستايل العداد الدائري */
+        /* ط³طھط§ظٹظ„ ط§ظ„ط¹ط¯ط§ط¯ ط§ظ„ط¯ط§ط¦ط±ظٹ */
         .timer-wrapper { display: none; margin: 20px auto; text-align: center; }
         .circular-chart { display: block; margin: 10px auto; max-width: 120px; max-height: 120px; }
         .circle-bg { fill: none; stroke: var(--bg-body); stroke-width: 3; }
@@ -141,7 +141,7 @@
         }
         .percentage { fill: var(--text-main); font-family: 'Cairo'; font-weight: 900; font-size: 0.6em; text-anchor: middle; }
  
-        /* القائمة الجانبية */
+        /* ط§ظ„ظ‚ط§ط¦ظ…ط© ط§ظ„ط¬ط§ظ†ط¨ظٹط© */
         .sidebar-card { 
             background: var(--bg-card); padding: 20px; border-radius: var(--radius); 
             box-shadow: var(--shadow); border: 1px solid var(--border-color);
@@ -183,24 +183,24 @@
                 <h1 id="p-title" class="app-title-lg"></h1>
                 
                 <div class="info-pills">
-                    <div class="pill"><i class="fas fa-check-circle"></i> آمن 100%</div>
+                    <div class="pill"><i class="fas fa-check-circle"></i> ط¢ظ…ظ† 100%</div>
                     <div class="pill"><i class="fas fa-android"></i> APK</div>
                     <div class="pill"><i class="fas fa-star" style="color:gold;"></i> 5.0</div>
                 </div>
  
                 <div style="background:var(--bg-body); border:1px dashed var(--text-sub); padding:15px; margin:15px 0; border-radius:12px; color:var(--text-sub); font-size:13px;">
-                    © 2026 Teslam Store – جميع الحقوق محفوظة
+                    آ© 2026 Teslam Store â€“ ط¬ظ…ظٹط¹ ط§ظ„ط­ظ‚ظˆظ‚ ظ…ط­ظپظˆط¸ط©
                 </div>
  
                 <div id="p-desc" class="app-desc"></div>
  
                 <div class="download-zone">
                     <button id="btn-start" class="action-btn btn-prep" onclick="window.startCountdown()">
-                        <i class="fas fa-rocket"></i> تحضير رابط التحميل
+                        <i class="fas fa-rocket"></i> طھط­ط¶ظٹط± ط±ط§ط¨ط· ط§ظ„طھط­ظ…ظٹظ„
                     </button>
  
                     <div id="timer-wrapper" class="timer-wrapper">
-                        <div style="font-weight:bold; margin-bottom:10px; color:var(--text-sub); font-size:14px;">جاري فحص الملفات...</div>
+                        <div style="font-weight:bold; margin-bottom:10px; color:var(--text-sub); font-size:14px;">ط¬ط§ط±ظٹ ظپط­طµ ط§ظ„ظ…ظ„ظپط§طھ...</div>
                         
                         <svg viewBox="0 0 36 36" class="circular-chart">
                             <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
@@ -215,12 +215,12 @@
                         </div>
 
                         <div style="margin-top:15px; background:var(--bg-body); padding:10px; border-radius:8px; font-size:12px; color:var(--text-sub);">
-                        © 2026 Teslam Store – جميع الحقوق محفوظة
+                        آ© 2026 Teslam Store â€“ ط¬ظ…ظٹط¹ ط§ظ„ط­ظ‚ظˆظ‚ ظ…ط­ظپظˆط¸ط©
                         </div>
                     </div>
  
                     <a id="btn-final" href="#" target="_blank" class="action-btn btn-final">
-                        <i class="fas fa-download"></i> تحميل مباشر الآن 🚀
+                        <i class="fas fa-download"></i> طھط­ظ…ظٹظ„ ظ…ط¨ط§ط´ط± ط§ظ„ط¢ظ† ًںڑ€
                     </a>
                 </div>
             </div>
@@ -228,7 +228,7 @@
  
         <aside>
             <div class="sidebar-card">
-                <div style="font-weight:800; margin-bottom:15px;">🔥 تطبيقات قد تعجبك</div>
+                <div style="font-weight:800; margin-bottom:15px;">ًں”¥ طھط·ط¨ظٹظ‚ط§طھ ظ‚ط¯ طھط¹ط¬ط¨ظƒ</div>
                 <div id="sidebar-list">
                     <div style="text-align:center; padding:10px;"><i class="fas fa-spinner fa-spin"></i></div>
                 </div>
@@ -239,7 +239,7 @@
     </div>
  
     <div style="position: fixed; bottom: 0; left: 0; width: 100%; height: 60px; background: var(--bg-glass); border-top: 1px solid var(--border-color); z-index: 2000; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px);">
-        <span style="font-size:12px; color:var(--text-sub);">جميع الحقوق محفوظة لمتجر تسلم © teslam_store</span>
+        <span style="font-size:12px; color:var(--text-sub);">ط¬ظ…ظٹط¹ ط§ظ„ط­ظ‚ظˆظ‚ ظ…ط­ظپظˆط¸ط© ظ„ظ…طھط¬ط± طھط³ظ„ظ… آ© teslam_store</span>
     </div>
  
     <script type="module" src="main.js"></script>
