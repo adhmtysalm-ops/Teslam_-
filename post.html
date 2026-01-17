@@ -16,7 +16,7 @@
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
  
     <style>
-        /* نفس المتغيرات للتناسق */
+        /* (نفس كود CSS السابق تماماً بدون تغيير) */
         :root {
             /* نهاري */
             --bg-body: #f4f6f8;
@@ -168,7 +168,7 @@
             <a href="index.html" class="back-btn"><i class="fas fa-arrow-right"></i></a>
             <div class="brand-logo">TESLAM</div>
         </div>
-        <div class="theme-toggle" onclick="toggleTheme()">
+        <div class="theme-toggle" onclick="window.toggleTheme()">
             <i class="fas fa-moon" id="theme-icon"></i>
         </div>
     </nav>
@@ -195,7 +195,7 @@
                 <div id="p-desc" class="app-desc"></div>
  
                 <div class="download-zone">
-                    <button id="btn-start" class="action-btn btn-prep" onclick="startCountdown()">
+                    <button id="btn-start" class="action-btn btn-prep" onclick="window.startCountdown()">
                         <i class="fas fa-rocket"></i> تحضير رابط التحميل
                     </button>
  
@@ -242,142 +242,6 @@
         <span style="font-size:12px; color:var(--text-sub);">جميع الحقوق محفوظة لمتجر تسلم © teslam_store</span>
     </div>
  
-    <script>
-        // 1. Theme Logic
-        const savedTheme = localStorage.getItem('teslam_theme') || 'light';
-        document.body.setAttribute('data-theme', savedTheme);
-        document.getElementById('theme-icon').className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
- 
-        function toggleTheme() {
-            const body = document.body;
-            const icon = document.getElementById('theme-icon');
-            const current = body.getAttribute('data-theme');
-            
-            if (current === 'dark') {
-                body.setAttribute('data-theme', 'light');
-                icon.className = 'fas fa-moon';
-                localStorage.setItem('teslam_theme', 'light');
-            } else {
-                body.setAttribute('data-theme', 'dark');
-                icon.className = 'fas fa-sun';
-                localStorage.setItem('teslam_theme', 'dark');
-            }
-        }
- 
-        // 2. Data Fetching
-        const dbURL = "/api/data";
-        let finalLink = "#";
- 
-        const urlParams = new URLSearchParams(window.location.search);
-        const uid = urlParams.get('uid');
- 
-        // 🛑 تحميل مباشر من قاعدة البيانات
-        fetch(dbURL)
-            .then(res => res.json())
-            .then(json => {
-                const cleanData = json ? Object.values(json).filter(item => item != null).reverse() : [];
-                processData(cleanData);
-            })
-            .catch(err => {
-                document.getElementById('loader').innerHTML = "حدث خطأ في تحميل البيانات";
-            });
- 
-        function processData(data) {
-            let app = null;
-            if(uid) {
-                app = data.find(item => item.ID == uid);
-            }
- 
-            if(app) {
-                renderPost(app, data);
-            } else {
-                document.getElementById('loader').innerHTML = "عذراً، التطبيق غير موجود أو تم حذفه.";
-            }
-        }
- 
-        function renderPost(app, allApps) {
-            document.title = `${app.Title || 'تطبيق'} - تحميل مجاني`;
-            document.getElementById('p-img').src = app.Image || 'https://placehold.co/150';
-            document.getElementById('p-title').innerText = app.Title || 'بدون عنوان';
-            document.getElementById('p-desc').innerHTML = app.Desc ? app.Desc.replace(/\n/g, '<br>') : "لا يوجد وصف";
-            finalLink = app.Link || '#';
- 
-            // --- منطق الاقتراحات (Sidebar) ---
-            const sbList = document.getElementById('sidebar-list');
-            sbList.innerHTML = '';
- 
-            const related = allApps.filter(a => a.ID != app.ID)
-                                   .sort(() => 0.5 - Math.random())
-                                   .slice(0, 5);
- 
-            if (related.length === 0) {
-                sbList.innerHTML = '<div style="text-align:center; font-size:12px; color:var(--text-sub)">لا توجد اقتراحات</div>';
-            }
- 
-            related.forEach(item => {
-                sbList.innerHTML += `
-                    <a href="post.html?uid=${item.ID}" class="mini-item">
-                        <img src="${item.Image || 'https://placehold.co/150'}" class="mini-img">
-                        <div class="mini-info">
-                            <h4>${item.Title || 'بدون عنوان'}</h4>
-                            <span><i class="fas fa-download"></i> تحميل</span>
-                        </div>
-                    </a>
-                `;
-            });
- 
-            document.getElementById('loader').style.display = 'none';
-            document.getElementById('content').style.display = 'block';
-        }
- 
-        // 🔥 3. منطق التحميل والكابتشا الجديد (Logic Updated) 🔥
-        
-        let isTimerDone = false;
-        let isCaptchaDone = false;
-
-        // دالة بتشتغل لما الكابتشا تتحل صح من جوجل
-        function captchaSolved() {
-            isCaptchaDone = true;
-            checkDownloadReady();
-        }
-
-        // دالة بتفحص الشرطين (الوقت خلص؟ والكابتشا اتحلت؟)
-        function checkDownloadReady() {
-            if (isTimerDone && isCaptchaDone) {
-                document.getElementById('timer-wrapper').style.display = 'none';
-                const finalBtn = document.getElementById('btn-final');
-                finalBtn.href = finalLink;
-                finalBtn.style.display = 'flex';
-            }
-        }
-
-        function startCountdown() {
-            document.getElementById('btn-start').style.display = 'none';
-            document.getElementById('timer-wrapper').style.display = 'block';
- 
-            let timeLeft = 20; // ⏳ مدة الانتظار
-            const totalTime = 20;
-            const circle = document.getElementById('circle-path');
-            const numDisplay = document.getElementById('timer-num');
-            
-            const timer = setInterval(() => {
-                timeLeft--;
-                numDisplay.textContent = timeLeft;
-                
-                const percentage = (timeLeft / totalTime) * 100;
-                circle.style.strokeDasharray = `${percentage}, 100`;
- 
-                if (timeLeft <= 0) {
-                    clearInterval(timer);
-                    isTimerDone = true; // ✅ العداد خلص
-                    
-                    // نغير الأيقونة لصح ونقوله حل الكابتشا
-                    numDisplay.innerHTML = '<i class="fas fa-check"></i>';
-                    
-                    checkDownloadReady(); // افحص يمكن يكون حل الكابتشا أثناء الانتظار
-                }
-            }, 1000);
-        }
-    </script>
+    <script type="module" src="main.js"></script>
 </body>
 </html>
