@@ -21,13 +21,12 @@
  
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icon-192.png">
-
-    <script src="main.js"></script>
  
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
  
     <style>
+        /* (نفس كود CSS السابق تماماً بدون تغيير) */
         /* المتغيرات ونظام الألوان */
         :root {
             --bg-body: #f4f6f8;
@@ -325,48 +324,7 @@
         </div>
     </div>
  
-    <script src="main.js"></script>
-    
-    <script type="module">
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-      import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-messaging.js";
-
-      const firebaseConfig = {
-        apiKey: "AIzaSyDiLmqbSVzdW5_DDMrKXttEDeu941vVWqc",
-        authDomain: "teslamstore-df0a5.firebaseapp.com",
-        projectId: "teslamstore-df0a5",
-        storageBucket: "teslamstore-df0a5.firebasestorage.app",
-        messagingSenderId: "1054567379055",
-        appId: "1:1054567379055:web:a97efaa28108945733dd9a",
-        measurementId: "G-MFY4BKBLDS"
-      };
-
-      const appFire = initializeApp(firebaseConfig);
-      const messaging = getMessaging(appFire);
-
-      function requestPermission() {
-        if (Notification.permission === 'granted') return;
-        Notification.requestPermission().then((permission) => {
-          if (permission === 'granted') {
-            getToken(messaging, { vapidKey: 'BIeZIiTnG3t43CGbFeAEClCJB3SBdHp3lYCvJ7NS4cuNnme3cikcPzmSnBRrc_hg9ZSGKDOzGwPI6PWAe0NZtz0' })
-            .then((currentToken) => {
-              if (currentToken) console.log('Token:', currentToken);
-            }).catch((err) => console.log('Error Token: ', err));
-          }
-        });
-      }
-
-      onMessage(messaging, (payload) => {
-        const title = payload.notification.title;
-        const options = {
-          body: payload.notification.body,
-          icon: '/icon-192.png'
-        };
-        new Notification(title, options);
-      });
-
-      requestPermission();
-    </script>
+    <script type="module" src="main.js"></script>
 </body>
 </html>
 
