@@ -1,12 +1,12 @@
 /* =========================================
-   0. كود الحماية (تم التعديل للسماح بـ Localhost)
+   0. كود الحماية (مخصص لـ Teslam Store)
    ========================================= */
 (function(){
     var myDomain = "teslam.vercel.app"; 
     var host = window.location.hostname;
     
     // السماح بالدومين الرسمي + السيرفر المحلي للتطوير
-    if (host !== myDomain && host !== "localhost" && host !== "127.0.0.1") {
+    if (host !== myDomain) {
         document.body.innerHTML = "<h1 style='text-align:center; margin-top:50px; color:red;'>🚫 Access Denied<br>هذا الكود محمي ومخصص لمتجر تسلم فقط.</h1>";
         throw new Error("Access Denied: Production Only");
     }
@@ -76,7 +76,6 @@ class TeslamApp {
     constructor() {
         this.dbURL = "/api/data";
         this.data = [];
-        // التأكد من أننا في الصفحة الرئيسية
         if (document.getElementById('apps-grid')) {
             this.init();
         }
@@ -87,7 +86,6 @@ class TeslamApp {
         this.fetchData();
         const searchInput = document.getElementById('searchInput');
         if (searchInput) {
-            // تفعيل البحث الذكي الفوري
             searchInput.addEventListener('input', (e) => this.smartSearch(e.target.value));
         }
     }
@@ -153,9 +151,7 @@ class TeslamApp {
         }
     }
 
-    // --- [بداية] منطق الخوارزميات والذكاء ---
-
-    // 1. دوال المساعدة للبحث (Levenshtein)
+    // --- [Logic] Algorithms & AI ---
     normalize(text) {
         if(!text) return "";
         return text.toLowerCase()
@@ -189,7 +185,6 @@ class TeslamApp {
         return (longer.length - this.levenshtein(longer, shorter)) / longer.length;
     }
 
-    // 2. البحث الذكي (Smart Search)
     smartSearch(q) {
         const grid = document.getElementById('apps-grid');
         const hero = document.getElementById('hero-section');
@@ -208,10 +203,8 @@ class TeslamApp {
         }
 
         const query = this.normalize(q);
-
         const results = this.data.map(appItem => {
             const title = this.normalize(appItem.Title || "");
-            const tag = this.normalize(appItem.Tag || "");
             const keywords = this.normalize(appItem.Keywords || "");
             
             let score = 0;
@@ -240,38 +233,26 @@ class TeslamApp {
         }
     }
 
-    // 3. خوارزمية التخصيص (Personalization)
-    // حفظ الاهتمام عند الضغط
     trackClick(tag) {
         if(!tag) return;
-        // جلب التفضيلات القديمة
         let prefs = JSON.parse(localStorage.getItem('teslam_prefs') || '{}');
-        // زيادة عداد هذا التاج
         prefs[tag] = (prefs[tag] || 0) + 1;
-        // الحفظ
         localStorage.setItem('teslam_prefs', JSON.stringify(prefs));
     }
 
-    // عرض قسم "مخصص لك" بناءً على التاريخ
     renderSmartFeed() {
         const smartSection = document.getElementById('smart-feed-section');
         const smartGrid = document.getElementById('smart-feed-grid');
-        
         if (!smartSection || !smartGrid) return;
 
-        // قراءة التفضيلات
         const prefs = JSON.parse(localStorage.getItem('teslam_prefs') || '{}');
-        const userTags = Object.keys(prefs).sort((a,b) => prefs[b] - prefs[a]); // التاجات الأكثر زيارة
+        const userTags = Object.keys(prefs).sort((a,b) => prefs[b] - prefs[a]);
 
         if (userTags.length === 0) {
-            smartSection.style.display = 'none'; // المستخدم جديد، اخف القسم
+            smartSection.style.display = 'none';
             return;
         }
-
-        // فلترة التطبيقات التي تناسب اهتمامات المستخدم
         let recommendedApps = this.data.filter(app => userTags.includes(app.Tag));
-        
-        // خلط النتائج قليلاً للتنوع
         recommendedApps = this.shuffleArray(recommendedApps).slice(0, 4);
 
         if (recommendedApps.length > 0) {
@@ -292,8 +273,6 @@ class TeslamApp {
             smartSection.style.display = 'none';
         }
     }
-
-    // --- [نهاية] منطق الخوارزميات ---
 
     injectHomeSchema() {
         if (!this.data || this.data.length === 0) return;
@@ -330,7 +309,7 @@ class TeslamApp {
             return;
         }
         this.renderHero();
-        this.renderSmartFeed(); // تشغيل خوارزمية التخصيص
+        this.renderSmartFeed();
         this.renderRecommended();
         this.renderTagsAndSidebar();
         this.renderGrid(this.data);
@@ -437,20 +416,18 @@ class TeslamApp {
         if (tag === 'all') {
             if(hero) hero.style.display = 'block';
             if(rec) rec.style.display = 'block';
-            if(smart) smart.style.display = 'block'; // أظهر القسم الذكي في الرئيسية
+            if(smart) smart.style.display = 'block';
             this.renderGrid(this.data);
         } else {
             if(hero) hero.style.display = 'none';
             if(rec) rec.style.display = 'none';
-            if(smart) smart.style.display = 'none'; // اخفِ القسم الذكي عند الفلترة
+            if(smart) smart.style.display = 'none';
             this.renderGrid(this.data.filter(i => i.Tag && i.Tag.trim() === tag));
         }
     }
 
     goToPost(uid, idx, tag) {
-        // [هام] تسجيل اهتمام المستخدم قبل الانتقال
         if(tag) this.trackClick(tag);
-
         let url = 'post.html?';
         if (uid) url += `uid=${uid}`;
         else url += `id=${idx}`;
@@ -459,35 +436,70 @@ class TeslamApp {
 }
 
 /* =========================================
-   4. كلاس GENIUS BOT (المحدث: تسلم + أدهم)
+   4. كلاس GENIUS BOT (المتطور جداً)
    ========================================= */
 class GeniusBot {
     constructor() {
         this.isOpen = false;
         this.chatBody = document.getElementById('chatBody');
+        this.chatState = 'idle'; // (idle | asking_features | asking_search)
+        this.lastFoundApp = null; // لتخزين التطبيق الأخير الذي وجده البوت
+
         if(!this.chatBody) return;
 
         this.sendSound = new Audio("https://cdn.pixabay.com/audio/2022/03/24/audio_3322f963a7.mp3");
         this.receiveSound = new Audio("https://cdn.pixabay.com/audio/2022/03/15/audio_279930922e.mp3");
         this.sendSound.volume = 0.5; this.receiveSound.volume = 0.5;
 
-        // الشخصية الجديدة: تسلم، من تطوير أدهم
+        // --- قاموس الشخصية (موسع جداً ليشمل التراحيب والسمول توك) ---
         this.persona = {
+            // ترحيبات
             greet: { 
-                match: /سلام|مرحبا|هلا|هاي|hi|hello|hey|ازيك|عامل ايه|بداية/i, 
-                reply: ["أهلاً يا صديقي! أنا <b>تسلم</b> 🤖، المساعد الذكي للموقع.", "يا هلا! معاك <b>تسلم</b> 🚀، آمرني؟", "منور المتجر! 😉 أنا تسلم، جاهز أساعدك."] 
+                match: /^(سلام|السلام|مرحبا|اهلا|اهلين|هلا|هاي|hi|hello|hey|yo|welcome|ازيك|عامل ايه|شخبارك|صباح|مساء)/i, 
+                reply: [
+                    "يا هلا والله! ❤️ نورت متجر تسلم.",
+                    "أهلاً بيك يا غالي! 🚀 أنا تسلم، آمرني؟",
+                    "وعليكم السلام! 😉 جاهز أساعدك تلاقي أي تطبيق.",
+                    "يا مية هلا! 🌹 أنا هنا عشانك.",
+                    "منور الدنيا كلها! 💡 قل لي بتدور على إيه؟"
+                ] 
             },
+            // أحوال
+            hru: {
+                match: /^(كيفك|كيف الحال|اخبارك|عامل ايه|شخبارك|how are you|how r u|what's up)/i,
+                reply: [
+                    "أنا بخير طول ما أنت بخير! 🤖❤️",
+                    "عال العال! جاهز للبحث عن تطبيقاتك 🚀",
+                    "تمام الحمد لله، شكراً لسؤالك يا ذوق! 🌹"
+                ]
+            },
+            // شكر
             thanks: { 
-                match: /شكرا|تسلم|حبيبي|كفو|thx|thanks/i, 
-                reply: ["العفو يا بطل! 🤖", "تحت أمرك في أي وقت! ❤️", "حبيبي، ده واجبي!"] 
+                match: /^(شكرا|تسلم|حبيبي|كفو|thx|thanks|thank you|يسلمو|الله يعافيك)/i,
+                reply: [
+                    "العفو يا بطل! 🤖 واجبي.",
+                    "تحت أمرك في أي وقت! ❤️",
+                    "حبيبي، ده أقل واجب! 😉",
+                    "الله يسلمك ويخليك لينا! 🌹"
+                ] 
             },
+            // المطور
             creator: {
-                match: /مين عملك|مين صممك|مين المطور|مين صاحب الموقع|مين ادهم|ادهم/i,
-                reply: ["أنا من تصميم وتطوير <b>أدهم (Adham)</b> 💻، وهو صاحب ومؤسس متجر تسلم. هو برمجني عشان أخدمك بأسرع وقت! 😎🔥", "اللي صنعني هو العبقري <b>أدهم</b>، صاحب المتجر ده. 🚀"]
+                match: /(مين عملك|مين صممك|مين المطور|مين صاحب الموقع|مين ادهم|ادهم)/i,
+                reply: [
+                    "أنا من تصميم المبدع **أدهم (Adham)** 💻، صاحب متجر تسلم. برمجني عشان أخدمك بسرعة! 😎🔥",
+                    "اللي صنعني هو العبقري **أدهم**، عشان يوفر عليك وقت التدوير. 🚀"
+                ]
             },
+            // الهوية
             identity: {
-                match: /اسمك ايه|مين انت|عرف نفسك/i,
-                reply: ["أنا <b>تسلم (Teslam AI)</b> 🤖، ذكاء اصطناعي صممه أدهم عشان يجبلك التطبيقات اللي بتحبها في ثواني!"]
+                match: /(اسمك ايه|مين انت|عرف نفسك|who are you|ur name)/i,
+                reply: ["أنا **تسلم (Teslam AI)** 🤖، مساعدك الذكي للتطبيقات والألعاب!"]
+            },
+            // الحب/المدح
+            love: {
+                match: /(بحبك|انت جامد|انت عسل|love you|awesome|cool)/i,
+                reply: ["وأنا كمان بحبك يا جميل! ❤️🤖", "أنت اللي جامد والله! 😎", "خجلتني بصراحة ☺️ تسلم يا ذوق!"]
             }
         };
     }
@@ -496,7 +508,6 @@ class GeniusBot {
         this.isOpen = !this.isOpen;
         const chatWin = document.getElementById('chatWindow');
         if(chatWin) chatWin.classList.toggle('active');
-        
         if (this.isOpen) {
             setTimeout(() => {
                 const inp = document.getElementById('chatInput');
@@ -558,7 +569,8 @@ class GeniusBot {
         input.value = '';
         this.showTyping();
 
-        const thinkingTime = Math.min(Math.max(text.length * 50, 600), 2000);
+        // محاكاة التفكير
+        const thinkingTime = Math.min(Math.max(text.length * 50, 600), 1500);
         setTimeout(() => {
             this.removeTyping();
             this.processBrain(text);
@@ -566,9 +578,20 @@ class GeniusBot {
     }
 
     processBrain(rawText) {
+        // 1. إعادة تعيين الحالة إذا كان المستخدم يكتب نصاً جديداً خارج سياق الأزرار
+        // (إلا إذا كان الرد نعم/لا في سياق السؤال)
+        if (this.chatState !== 'idle') {
+           const simple = rawText.toLowerCase();
+           if (!simple.match(/^(نعم|لا|yes|no|ايوة|لاء|ok)/)) {
+               this.chatState = 'idle'; // نعتبره بحث جديد
+           }
+        }
+
         const simpleText = rawText.toLowerCase();
+
+        // 2. الردود الاجتماعية (Greetings, Small Talk)
         for (let key in this.persona) {
-            if (this.persona[key].match.test(simpleText)) {
+            if (this.persona[key].match.test(rawText)) { // استخدام rawText عشان ال Regex
                 const replies = this.persona[key].reply;
                 const randomReply = replies[Math.floor(Math.random() * replies.length)];
                 this.addMsg(randomReply, 'bot');
@@ -576,9 +599,10 @@ class GeniusBot {
             }
         }
 
+        // 3. البحث عن التطبيق
         const query = this.normalize(rawText);
         if (query.length < 2) {
-            this.addMsg("اكتب اسم التطبيق (مثلاً: <b>ببجي</b>)...", 'bot');
+            this.addMsg("اكتب اسم التطبيق (مثلاً: <b>ببجي</b>، <b>واتساب</b>)...", 'bot');
             return;
         }
 
@@ -613,28 +637,42 @@ class GeniusBot {
         .sort((a, b) => b.score - a.score);
 
         if (matches.length > 0) {
+            // وجدنا التطبيق
             const best = matches[0].app;
+            this.lastFoundApp = best; // حفظ التطبيق في الذاكرة
+            this.chatState = 'asking_features'; // تغيير الحالة لانتظار قرار المميزات
+
             this.addMsg(`لقيت طلبك! 🤩 غالباً بتدور على <b>${best.Title}</b>:`, 'bot');
             
-            let cardsHTML = '';
-            matches.slice(0, 3).forEach(m => {
-                cardsHTML += `
-                <div class="bot-result-card" onclick="window.location.href='post.html?uid=${m.app.ID}'">
-                    <img src="${m.app.Image}" class="bot-res-img">
-                    <div class="bot-res-info">
-                        <div class="bot-res-title">${m.app.Title}</div>
-                        <div class="bot-res-btn">تحميل مباشر 🚀</div>
-                    </div>
-                </div>`;
-            });
-
+            // عرض الكارت
+            let cardHTML = `
+            <div class="bot-result-card" onclick="window.location.href='post.html?uid=${best.ID}'">
+                <img src="${best.Image}" class="bot-res-img">
+                <div class="bot-res-info">
+                    <div class="bot-res-title">${best.Title}</div>
+                    <div class="bot-res-btn">تحميل مباشر 🚀</div>
+                </div>
+            </div>`;
+            
             const div = document.createElement('div');
             div.className = 'msg-row bot';
             div.style.display = 'block';
-            div.innerHTML = `<div style="width:100%; padding-right:10px;">${cardsHTML}</div>`;
+            div.innerHTML = `<div style="width:100%; padding-right:10px;">${cardHTML}</div>`;
             this.chatBody.appendChild(div);
 
+            // السؤال الذكي: هل تريد المميزات؟
+            setTimeout(() => {
+                this.addMsg(`تحب أعرض لك مميزات التطبيق ده من الوصف؟ 🤔`, 'bot');
+                this.addOptions([
+                    { text: "أيوة يا ريت 📄", val: "yes_features" },
+                    { text: "لأ، شكراً 👋", val: "no_features" }
+                ]);
+                this.playSound('receive');
+            }, 800);
+
         } else {
+            // لم نجد التطبيق
+            this.chatState = 'idle';
             this.addMsg(`للأسف مش لاقي "<b>${query}</b>" 😔.<br>بس ممكن يعجبك ده 👇`, 'bot');
             const randomApp = window.app.data[Math.floor(Math.random() * window.app.data.length)];
             setTimeout(() => {
@@ -653,52 +691,78 @@ class GeniusBot {
                 this.chatBody.appendChild(div);
             }, 1000);
         }
-
-        setTimeout(() => {
-            this.showTyping();
-            setTimeout(() => {
-                this.removeTyping();
-                this.addMsg("أتمنى النتيجة عجبتك! 🌹<br><b>محتاج حاجة تانية؟</b>", 'bot');
-                
-                const optionsDiv = document.createElement('div');
-                optionsDiv.className = 'msg-row bot';
-                optionsDiv.style.display = 'block';
-                optionsDiv.innerHTML = `
-                    <div style="width:100%; padding-right:10px; margin-top:5px;">
-                        <div class="bot-options">
-                            <button class="option-btn" onclick="window.geniusBot.handleOption('yes')">أيوه 🔍</button>
-                            <button class="option-btn" onclick="window.geniusBot.handleOption('no')">لأ، شكراً 👋</button>
-                        </div>
-                    </div>`;
-                this.chatBody.appendChild(optionsDiv);
-                this.playSound('receive');
-                this.scrollToBottom();
-            }, 1200);
-        }, 2000);
     }
 
-    handleOption(choice) {
-        if (choice === 'yes') {
-            this.playSound('send');
-            this.addMsg("أيوه 🔍", 'user');
-            setTimeout(() => {
-                this.showTyping();
+    // إضافة أزرار الخيارات
+    addOptions(opts) {
+        const optionsDiv = document.createElement('div');
+        optionsDiv.className = 'msg-row bot';
+        optionsDiv.style.display = 'block';
+        let htmlBtns = '';
+        opts.forEach(o => {
+            htmlBtns += `<button class="option-btn" onclick="window.geniusBot.handleOption('${o.val}', '${o.text}')">${o.text}</button>`;
+        });
+        optionsDiv.innerHTML = `
+            <div style="width:100%; padding-right:10px; margin-top:5px;">
+                <div class="bot-options">${htmlBtns}</div>
+            </div>`;
+        this.chatBody.appendChild(optionsDiv);
+        this.scrollToBottom();
+    }
+
+    // معالجة الضغط على الأزرار بذكاء
+    handleOption(val, textLabel) {
+        this.playSound('send');
+        this.addMsg(textLabel, 'user'); // عرض رد المستخدم
+        
+        this.showTyping();
+        setTimeout(() => {
+            this.removeTyping();
+
+            if (val === 'yes_features') {
+                // المستخدم وافق على عرض المميزات
+                if (this.lastFoundApp && this.lastFoundApp.Desc) {
+                    // تنسيق الوصف (استبدال السطور الجديدة بـ br)
+                    let desc = this.lastFoundApp.Desc.replace(/\n/g, "<br>");
+                    // تقصير الوصف لو طويل جداً
+                    if(desc.length > 300) desc = desc.substring(0, 300) + "... <a href='post.html?uid="+this.lastFoundApp.ID+"' style='color:var(--primary)'>اقرأ المزيد</a>";
+                    
+                    this.addMsg(`<b>📌 مميزات ${this.lastFoundApp.Title}:</b><br><br>${desc}`, 'bot');
+                } else {
+                    this.addMsg("للأسف مفيش وصف متاح للتطبيق ده حالياً 😅", 'bot');
+                }
+                
+                // بعد عرض المميزات، نسأل لو محتاج حاجة تانية
                 setTimeout(() => {
-                    this.removeTyping();
-                    this.addMsg("هات اسم التطبيق وأنا جاهز 🚀", 'bot');
-                }, 800);
-            }, 500);
-        } else {
-            this.playSound('send');
-            this.addMsg("لأ، شكراً 👋", 'user');
-            setTimeout(() => {
-                this.showTyping();
-                setTimeout(() => {
-                    this.removeTyping();
-                    this.addMsg("نورتنا يا بطل! ❤️", 'bot');
-                }, 800);
-            }, 500);
-        }
+                    this.chatState = 'asking_restart';
+                    this.addMsg("تمام يا بطل؟ محتاج تطبيق تاني؟ 🚀", 'bot');
+                    this.addOptions([
+                        { text: "أيوة 🔍", val: "restart_yes" },
+                        { text: "لأ، كفاية 👋", val: "restart_no" }
+                    ]);
+                }, 1000);
+
+            } else if (val === 'no_features') {
+                // المستخدم رفض عرض المميزات
+                this.chatState = 'asking_restart';
+                this.addMsg("ولا يهمك! محتاج أبحثلك عن حاجة تانية؟ 😊", 'bot');
+                this.addOptions([
+                    { text: "أيوة 🔍", val: "restart_yes" },
+                    { text: "لأ، شكراً 👋", val: "restart_no" }
+                ]);
+
+            } else if (val === 'restart_yes') {
+                // بحث جديد
+                this.chatState = 'idle';
+                this.addMsg("هات اسم التطبيق وأنا جاهز 🚀", 'bot');
+
+            } else if (val === 'restart_no') {
+                // إنهاء المحادثة
+                this.chatState = 'idle';
+                this.addMsg("نورتنا يا بطل! ❤️ استمتع بالتطبيقات.", 'bot');
+            }
+
+        }, 800);
     }
 
     addMsg(html, type) {
@@ -767,8 +831,6 @@ function initPostPage() {
             
             // [هام] تسجيل الاهتمام عند فتح صفحة البوست (Personalization)
             if(app.Tag) {
-                // نستخدم خدعة بسيطة لاستدعاء دالة التتبع من الكلاس الرئيسي
-                // أو نحفظها مباشرة هنا
                 let prefs = JSON.parse(localStorage.getItem('teslam_prefs') || '{}');
                 prefs[app.Tag] = (prefs[app.Tag] || 0) + 1;
                 localStorage.setItem('teslam_prefs', JSON.stringify(prefs));
@@ -887,4 +949,4 @@ if (document.getElementById('apps-grid')) {
     initPostPage();
     // تفعيل البوت في صفحة التحميل أيضاً
     window.geniusBot = new GeniusBot();
-  }
+    }
