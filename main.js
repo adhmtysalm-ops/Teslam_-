@@ -5,7 +5,7 @@
     var myDomain = "teslam.vercel.app"; 
     var host = window.location.hostname;
     
-    if (host !== myDomain && host !== "localhost" && host !== "127.0.0.1") {
+    if (host !== myDomain) {
         document.body.innerHTML = "<h1 style='text-align:center; margin-top:50px; color:red;'>🚫 Access Denied<br>هذا الكود محمي ومخصص لمتجر تسلم فقط.</h1>";
         throw new Error("Access Denied: Production Only");
     }
