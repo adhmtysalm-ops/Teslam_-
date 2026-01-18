@@ -5,14 +5,16 @@
     var myDomain = "teslam.vercel.app"; 
     var host = window.location.hostname;
     
-    if (host !== myDomain && host !== "localhost" && host !== "127.0.0.1") {
-        document.body.innerHTML = "<h1 style='text-align:center; margin-top:50px; color:red;'>🚫 Access Denied<br>هذا الكود محمي ومخصص لمتجر تسلم فقط.</h1>";
+    // السماح بالدومين الأصلي + السيرفر المحلي للتجربة
+    if (host !== myDomain ) {
+        document.body.innerHTML = "<div style='display:flex;justify-content:center;align-items:center;height:100vh;flex-direction:column;font-family:sans-serif;'><h1>🚫 Access Denied</h1><p>هذا الكود محمي ومخصص لمتجر تسلم فقط.</p></div>";
         throw new Error("Access Denied: Production Only");
     }
 })();
 
 /* =========================================
-   1. نظام إدارة الإشعارات (IndexedDB - المتطور)
+   1. نظام إدارة الإشعارات (IndexedDB - القوي)
+   (يعمل في الخلفية ويخزن الرسائل حتى لو الموقع مغلق)
    ========================================= */
 class NotificationSystem {
     constructor() {
@@ -60,7 +62,7 @@ class NotificationSystem {
                     resolve();
                 };
             });
-        } catch(e) { console.log("DB Error", e); }
+        } catch(e) { console.log("DB Load Error", e); }
     }
 
     async add(title, body) {
@@ -146,7 +148,7 @@ class NotificationSystem {
             const date = new Date(n.time).toLocaleTimeString('ar-EG', {hour: '2-digit', minute:'2-digit'});
             const item = document.createElement('div');
             item.className = 'notif-item';
-            item.style.backgroundColor = n.read ? 'transparent' : 'rgba(46, 204, 113, 0.05)';
+            item.style.backgroundColor = n.read ? 'transparent' : 'rgba(46, 204, 113, 0.08)';
             
             item.innerHTML = `
                 <div class="notif-icon"><i class="fas fa-bell"></i></div>
@@ -161,12 +163,12 @@ class NotificationSystem {
     }
 }
 
-// تشغيل نظام الإشعارات فوراً
+// ✅ تشغيل النظام فوراً
 window.notif = new NotificationSystem();
 
 
 /* =========================================
-   2. تهيئة FIREBASE
+   2. إعدادات FIREBASE
    ========================================= */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
 import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-messaging.js";
@@ -200,6 +202,7 @@ try {
     onMessage(messaging, (payload) => {
         const title = payload.notification.title;
         const body = payload.notification.body;
+        
         const options = { body: body, icon: '/icon-192.png' };
         new Notification(title, options);
 
@@ -210,7 +213,7 @@ try {
 
     requestPermission();
 } catch (e) {
-    console.log("Firebase Error:", e);
+    console.log("Firebase initialized previously or error:", e);
 }
 
 
@@ -226,6 +229,7 @@ function initNetworkChecker() {
             toast.classList.remove('active');
         } else {
             toast.classList.add('active');
+            try { new Audio('https://cdn.pixabay.com/audio/2022/03/10/audio_c8c8a73467.mp3').play().catch(()=>{}); } catch(e){}
         }
     }
 
@@ -235,19 +239,21 @@ function initNetworkChecker() {
 }
 window.addEventListener('load', initNetworkChecker);
 
+
 /* =========================================
    4. تسجيل SERVICE WORKER
    ========================================= */
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('/sw.js')
-            .then(reg => console.log('SW Registered', reg.scope))
-            .catch(err => console.log('SW Failed', err));
+            .then(reg => console.log('SW Ready', reg.scope))
+            .catch(err => console.log('SW Fail', err));
     });
 }
 
+
 /* =========================================
-   5. كلاس تطبيق TESLAM
+   5. كلاس تطبيق TESLAM (المحرك الرئيسي)
    ========================================= */
 class TeslamApp {
     constructor() {
@@ -317,7 +323,6 @@ class TeslamApp {
     }
 
     async fetchData() {
-        // لو البيانات موجودة بالفعل لا تعيد تحميلها
         if (window.app && window.app.data && window.app.data.length > 0) {
             this.data = window.app.data;
             this.renderApp();
@@ -693,7 +698,7 @@ class TeslamApp {
 }
 
 /* =========================================
-   6. كلاس GENIUS BOT (المنطق المحسن)
+   6. كلاس GENIUS BOT (المتفاعل - بستايل جمناي)
    ========================================= */
 class GeniusBot {
     constructor() {
@@ -707,6 +712,7 @@ class GeniusBot {
 
         if(!this.chatBody) return;
 
+        // تهيئة المايك (Speech to Text)
         if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             this.recognition = new SpeechRecognition();
@@ -718,7 +724,7 @@ class GeniusBot {
                 this.isRecording = true;
                 const btn = document.getElementById('micBtn');
                 if(btn) btn.classList.add('recording');
-                document.getElementById('chatInput').placeholder = "جاري الاستماع... 🎤";
+                document.getElementById('chatInput').placeholder = "سامعك يا بطل... 🎤";
             };
 
             this.recognition.onend = () => {
@@ -742,20 +748,59 @@ class GeniusBot {
         this.receiveSound = new Audio("https://cdn.pixabay.com/audio/2022/03/15/audio_279930922e.mp3");
         this.sendSound.volume = 0.5; this.receiveSound.volume = 0.5;
 
-        // قاموس الشخصية والمنطق
+        // 🤖 "عقل" البوت (النسخة الودودة التفاعلية)
         this.persona = {
             greet: { 
                 match: /^(سلام|السلام|مرحبا|اهلا|اهلين|هلا|هاي|hi|hello|hey|yo|welcome|ازيك|عامل ايه|شخبارك|صباح|مساء)/i, 
                 reply: [
-                    "يا هلا والله! ❤️ نورت متجر تسلم.",
-                    "أهلاً بيك يا غالي! 🚀 أنا تسلم، آمرني؟",
-                    "وعليكم السلام! 😉 جاهز أساعدك تلاقي أي تطبيق."
+                    "يا هلا وغلا! ❤️ نورت بيتك يا بطل.",
+                    "أهلاً بيك يا غالي! 🚀 أنا هنا عشانك.",
+                    "وعليكم السلام! 😉 آمرني يا جميل؟",
+                    "يا مية هلا! 🌹 وحشتنا والله."
                 ] 
+            },
+            hru: {
+                match: /^(كيفك|كيف الحال|اخبارك|عامل ايه|شخبارك|how are you|how r u|what's up)/i,
+                reply: [
+                    "بخير طول ما أنت بخير يا صاحبي! 🤖❤️",
+                    "عال العال! جاهز أجيبلك أي تطبيق 🚀",
+                    "تمام الحمد لله، شكراً لسؤالك يا ذوق! 🌹"
+                ]
+            },
+            thanks: { 
+                match: /^(شكرا|تسلم|حبيبي|كفو|thx|thanks|thank you|يسلمو|الله يعافيك|متشكر)/i,
+                reply: [
+                    "العفو يا بطل! 🤖 احنا في الخدمة.",
+                    "تحت أمرك في أي وقت! ❤️",
+                    "حبيبي، ده أقل واجب والله! 😉",
+                    "تسلم أنت يا ذوق! 🌹"
+                ] 
+            },
+            love: {
+                match: /(بحبك|انت جامد|انت عسل|love you|awesome|cool|عظيم|ممتاز|شاطر)/i,
+                reply: [
+                    "وأنا كمان بحبك يا جميل! ❤️🤖", 
+                    "أنت اللي جامد والله! 😎", 
+                    "خجلتني بصراحة ☺️ تسلم يا ذوق!"
+                ]
             },
             creator: {
                 match: /^(مين|من) (عملك|صممك|طورك|برمجك|سواك|صنعك|اخترعك|انشأك|اسسك|رباك|علمك|شغلك)|(مين|من) (المطور|المصمم|المبرمج|المالك|الصانع|المدير|القائد|الريس|البوص)|(who|who's) (made|created|developed|built|programmed|designed|coded) (you)|(your|ur) (creator|developer|maker|owner|dad|father)|(ادهم|أدهم|adham)|مين (هو|يكون) (ادهم|أدهم)/i,
                 reply: [
-                    "أنا فخور إني من تصميم وتطوير **أدهم (Adham)** 💻، صاحب متجر تسلم. هو برمجني عشان أكون مساعدك الشخصي! 😎🔥"
+                    "أنا فخور إني من صناعة **أدهم (Adham)** 💻، هو المطور العبقري اللي عملني عشان أخدمك! 😎🔥",
+                    "سؤال في الجون! 😉 المطور بتاعي هو **أدهم**."
+                ]
+            },
+            identity: {
+                match: /(اسمك ايه|مين انت|عرف نفسك|who are you|ur name)/i,
+                reply: ["أنا **تسلم (Genius AI)** 🤖، مساعدك الذكي وصاحبك في المتجر!"]
+            },
+            jokes: {
+                match: /(نكتة|ضحكني|قول نكتة|مزحة|joke)/i,
+                reply: [
+                    "مرة مبرمج راح يشتري عيش، البياع قاله: 'لو مفيش فينو اجيب بلدي؟' قاله: 'Return false' 😂",
+                    "مرة واحد حب يطور من نفسه... جاله Error 😂💔",
+                    "ليه الروبوت بيحب الشاي؟ عشان بيحب الـ Tea-data! ☕😂"
                 ]
             }
         };
@@ -776,7 +821,7 @@ class GeniusBot {
 
     toggleVoice() {
         if (!this.recognition) {
-            this.addMsg("عذراً، متصفحك لا يدعم البحث الصوتي 😔", 'bot');
+            this.addMsg("عذراً، متصفحك لا يدعم المايك 😔", 'bot');
             return;
         }
         if (this.isRecording) {
@@ -794,15 +839,6 @@ class GeniusBot {
         } catch(e) {}
     }
 
-    normalize(text) {
-        return text.toLowerCase()
-            .replace(/\s+/g, '')       
-            .replace(/(أ|إ|آ)/g, 'ا')
-            .replace(/ة/g, 'ه')
-            .replace(/(ي|ى)/g, 'ي')
-            .replace(/[^a-z0-9\u0600-\u06FF]/g, '');
-    }
-
     send() {
         const input = document.getElementById('chatInput');
         if(!input) return;
@@ -815,6 +851,7 @@ class GeniusBot {
         input.value = '';
         this.showTyping();
 
+        // محاكاة وقت التفكير (عشان يبان طبيعي)
         const thinkingTime = Math.min(Math.max(text.length * 50, 600), 1500);
         setTimeout(() => {
             this.removeTyping();
@@ -823,6 +860,7 @@ class GeniusBot {
     }
 
     processBrain(rawText) {
+        // إدارة حالة المحادثة (عشان يفهم "نعم" و "لا" بناءً على السؤال السابق)
         if (this.chatState !== 'idle') {
            const simple = rawText.toLowerCase();
            if (!simple.match(/^(نعم|لا|yes|no|ايوة|لاء|ok)/)) {
@@ -830,8 +868,7 @@ class GeniusBot {
            }
         }
 
-        const simpleText = rawText.toLowerCase();
-
+        // 1. البحث في القاموس العاطفي والشخصية
         for (let key in this.persona) {
             if (this.persona[key].match.test(rawText)) { 
                 const replies = this.persona[key].reply;
@@ -841,7 +878,7 @@ class GeniusBot {
             }
         }
 
-        const query = this.normalize(rawText);
+        const query = window.app.normalize(rawText);
         if (query.length < 2) {
             this.addMsg("اكتب اسم التطبيق (مثلاً: <b>ببجي</b>، <b>واتساب</b>)...", 'bot');
             return;
@@ -897,7 +934,7 @@ class GeniusBot {
             this.chatBody.appendChild(div);
 
             setTimeout(() => {
-                this.addMsg(`تحب أعرض لك مميزات التطبيق ده من الوصف؟ 🤔`, 'bot');
+                this.addMsg(`تحب أعرض لك مميزات التطبيق ده؟ 🤔`, 'bot');
                 this.addOptions([
                     { text: "أيوة يا ريت 📄", val: "yes_features" },
                     { text: "لأ، شكراً 👋", val: "no_features" }
@@ -907,7 +944,7 @@ class GeniusBot {
 
         } else {
             this.chatState = 'idle';
-            this.addMsg(`للأسف مش لاقي "<b>${query}</b>" 😔.<br>بس ممكن يعجبك ده 👇`, 'bot');
+            this.addMsg(`للأسف مش لاقي "<b>${query}</b>" 😔.<br>بس جرب ده ممكن يعجبك 👇`, 'bot');
             const randomApp = window.app.data[Math.floor(Math.random() * window.app.data.length)];
             setTimeout(() => {
                 const card = `
@@ -963,7 +1000,7 @@ class GeniusBot {
                 
                 setTimeout(() => {
                     this.chatState = 'asking_restart';
-                    this.addMsg("تمام يا بطل؟ محتاج تطبيق تاني؟ 🚀", 'bot');
+                    this.addMsg("تمام يا بطل؟ محتاج حاجة تانية؟ 🚀", 'bot');
                     this.addOptions([
                         { text: "أيوة 🔍", val: "restart_yes" },
                         { text: "لأ، كفاية 👋", val: "restart_no" }
@@ -1020,9 +1057,10 @@ class GeniusBot {
 }
 
 /* =========================================
-   7. منطق صفحة التحميل (POST.HTML) - تم الإصلاح
+   7. منطق صفحة التحميل (POST.HTML)
    ========================================= */
 function initPostPage() {
+    // تعريف المتغير العام لتجنب الأخطاء
     window.app = { 
         data: [], 
         toggleTheme: function() { 
@@ -1033,7 +1071,10 @@ function initPostPage() {
             body.setAttribute('data-theme', newTheme);
             if(icon) icon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
             localStorage.setItem('teslam_theme', newTheme);
-        }
+        },
+        // دوال مساعدة للبوت (عشان لو فتح في صفحة البوست)
+        normalize: function(text) { return text ? text.toLowerCase().replace(/\s+/g, '') : "" },
+        getSimilarity: function() { return 0; } 
     };
 
     const savedTheme = localStorage.getItem('teslam_theme') || 'light';
@@ -1051,7 +1092,7 @@ function initPostPage() {
         .then(res => res.json())
         .then(json => {
             const cleanData = json ? Object.values(json).filter(item => item != null).reverse() : [];
-            window.app.data = cleanData;
+            window.app.data = cleanData; // مشاركة البيانات مع البوت
             processData(cleanData);
         })
         .catch(err => {
@@ -1145,7 +1186,7 @@ function initPostPage() {
             numDisplay.textContent = timeLeft;
             
             const percentage = (timeLeft / totalTime) * 100;
-            circle.style.strokeDasharray = `${percentage}, 100`;
+            if(circle) circle.style.strokeDasharray = `${percentage}, 100`;
 
             if (timeLeft <= 0) {
                 clearInterval(timer);
@@ -1167,13 +1208,12 @@ window.toggleTheme = function() {
 /* =========================================
    8. نقطة الدخول (Entry Point)
    ========================================= */
-// تشغيل نظام الإشعارات فوراً
-window.notif = new NotificationSystem();
-
 if (document.getElementById('apps-grid')) {
+    // الصفحة الرئيسية
     window.app = new TeslamApp();
     window.geniusBot = new GeniusBot();
 } else if (document.getElementById('p-title')) {
+    // صفحة التحميل
     initPostPage();
     window.geniusBot = new GeniusBot();
-               }
+    }
