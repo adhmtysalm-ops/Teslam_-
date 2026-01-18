@@ -31,7 +31,7 @@
             --primary-hover: #27ae60;
             --hero-bg: #1e1e1e;
             --border-color: #eee;
-            --shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+            --shadow: 0 8px 20px rgba(0, 0, 0, 0.06); /* الظل القديم الناعم */
             --radius: 18px;
             --algo-color: #9b59b6;
         }
@@ -75,10 +75,11 @@
         
         .header-actions { display: flex; align-items: center; gap: 10px; }
         .icon-btn { 
-            width: 38px; height: 38px; border-radius: 50%; 
+            width: 35px; height: 35px; border-radius: 50%; 
             display: flex; align-items: center; justify-content: center; 
             background: var(--bg-body); color: var(--text-main); 
-            cursor: pointer; transition: 0.2s; position: relative; border: 1px solid var(--border-color);
+            cursor: pointer; transition: 0.3s; position: relative;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
         
         .notif-badge {
@@ -91,11 +92,12 @@
 
         /* قائمة الإشعارات */
         .notif-dropdown {
-            position: absolute; top: 65px; left: 20px; width: 300px;
+            position: absolute; top: 60px; left: 20px; width: 300px;
             background: var(--bg-card); border: 1px solid var(--border-color);
-            border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.2);
             z-index: 1100; opacity: 0; visibility: hidden; transform: translateY(-10px);
-            transition: 0.2s ease; overflow: hidden; max-height: 400px; display: flex; flex-direction: column;
+            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            overflow: hidden; max-height: 400px; display: flex; flex-direction: column;
         }
         .notif-dropdown.open { opacity: 1; visibility: visible; transform: translateY(0); }
         
@@ -150,7 +152,7 @@
         .tag-pill { background: var(--bg-card); color: var(--text-sub); padding: 10px 24px; border-radius: 50px; font-size: 13px; font-weight: 800; white-space: nowrap; cursor: pointer; border: 1px solid var(--border-color); transition: 0.3s; }
         .tag-pill.active { background: var(--text-main); color: var(--bg-card); border-color: var(--text-main); transform: scale(1.05); }
  
-        /* Grid System (كما طلبت) */
+        /* Grid System (التصميم القديم الأصلي) */
         .section-header { display: flex; align-items: center; gap: 8px; margin-bottom: 20px; }
         .section-header h2 { font-size: 19px; font-weight: 900; margin: 0; color: var(--text-main); }
         .section-badge { background: var(--algo-color); color: white; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; margin-right: auto; }
@@ -158,27 +160,27 @@
         .apps-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; width: 100%; }
         
         .app-card { 
-            background: var(--bg-card); border-radius: var(--radius); padding: 12px; text-align: center; 
-            box-shadow: var(--shadow); display: flex; flex-direction: column; cursor: pointer; 
-            transition: 0.3s; border: 1px solid transparent; 
-            animation: fadeUp 0.6s ease backwards; overflow: hidden; 
+            background: var(--bg-card); 
+            border-radius: var(--radius); 
+            padding: 12px; 
+            text-align: center; 
+            box-shadow: var(--shadow); 
+            display: flex; flex-direction: column; 
+            cursor: pointer; 
+            transition: 0.3s; 
+            border: 1px solid transparent; 
+            animation: fadeUp 0.6s ease backwards; 
+            overflow: hidden; 
         }
         @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         .app-card:hover { transform: translateY(-5px); border-color: var(--primary); }
         
-        .card-img-wrapper { 
-            width: 100%; padding-top: 100%; position: relative; border-radius: 14px; 
-            overflow: hidden; margin-bottom: 12px; background: var(--bg-body); border: 1px solid var(--border-color); 
-        }
+        .card-img-wrapper { width: 100%; padding-top: 100%; position: relative; border-radius: 14px; overflow: hidden; margin-bottom: 12px; background: var(--bg-body); border: 1px solid var(--border-color); }
         .card-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
         .app-card:hover .card-img { transform: scale(1.1); }
         
         .card-title { font-size: 15px; font-weight: 800; margin-bottom: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-main); }
-        .dl-btn { 
-            background: var(--primary); color: #fff; width: 100%; padding: 12px 0; border-radius: 12px; 
-            font-size: 13px; font-weight: 800; margin-top: auto; display: flex; align-items: center; justify-content: center; 
-            gap: 6px; box-shadow: 0 4px 15px rgba(46, 204, 113, 0.25); transition: 0.2s; 
-        }
+        .dl-btn { background: var(--primary); color: #fff; width: 100%; padding: 12px 0; border-radius: 12px; font-size: 13px; font-weight: 800; margin-top: auto; display: flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 4px 15px rgba(46, 204, 113, 0.25); transition: 0.2s; }
         .app-card:hover .dl-btn { background: var(--primary-hover); animation: pulse 1s infinite; }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.03); } 100% { transform: scale(1); } }
  
@@ -193,11 +195,34 @@
         }
 
         /* --- تصميم البوت الذكي --- */
-        .chat-btn { position: fixed; bottom: 85px; left: 20px; width: 65px; height: 65px; background: var(--bg-card); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 9999; box-shadow: 0 8px 30px rgba(46, 204, 113, 0.4); transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); border: 2px solid var(--primary); overflow: hidden; }
+        /* ✅ تعديل مكان البوت ليكون ثابت في الأسفل اليسار بشكل صحيح */
+        .chat-btn { 
+            position: fixed; 
+            bottom: 85px; /* ارتفاع مناسب فوق الفوتر */
+            left: 20px; 
+            width: 65px; height: 65px; 
+            background: var(--bg-card); border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center; 
+            cursor: pointer; z-index: 9999; 
+            box-shadow: 0 8px 30px rgba(46, 204, 113, 0.4); 
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            border: 2px solid var(--primary); overflow: hidden; 
+        }
         .chat-btn:hover { transform: scale(1.1) rotate(-5deg); }
         .chat-btn img { width: 100%; height: 100%; object-fit: cover; }
 
-        .chat-window { position: fixed; bottom: 160px; left: 20px; width: 340px; height: 500px; background: var(--bg-card); border-radius: 24px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); z-index: 9999; display: flex; flex-direction: column; overflow: hidden; transform: scale(0); transform-origin: bottom left; transition: 0.4s cubic-bezier(0.19, 1, 0.22, 1); border: 1px solid var(--border-color); }
+        .chat-window { 
+            position: fixed; 
+            bottom: 160px; /* يفتح فوق الزر */
+            left: 20px; 
+            width: 340px; height: 500px; 
+            background: var(--bg-card); border-radius: 24px; 
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3); z-index: 9999; 
+            display: flex; flex-direction: column; overflow: hidden; 
+            transform: scale(0); transform-origin: bottom left; 
+            transition: 0.4s cubic-bezier(0.19, 1, 0.22, 1); 
+            border: 1px solid var(--border-color); 
+        }
         .chat-window.active { transform: scale(1); opacity: 1; }
 
         .chat-header { background: var(--bg-card); padding: 18px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
