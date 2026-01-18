@@ -70,7 +70,7 @@ if ('serviceWorker' in navigator) {
 }
 
 /* =========================================
-   3. كلاس تطبيق TESLAM (الأساسي)
+   3. كلاس تطبيق TESLAM (الصفحة الرئيسية)
    ========================================= */
 class TeslamApp {
     constructor() {
@@ -151,6 +151,7 @@ class TeslamApp {
         }
     }
 
+    // --- دوال المساعدة للبحث (مشتركة) ---
     normalize(text) {
         if(!text) return "";
         return text.toLowerCase()
@@ -208,6 +209,7 @@ class TeslamApp {
             
             let score = 0;
             if (title.includes(query)) score += 100;
+            // البحث في الكلمات المفتاحية
             if (keywords.includes(query)) score += 80;
             
             const simScore = this.getSimilarity(query, title);
@@ -435,7 +437,7 @@ class TeslamApp {
 }
 
 /* =========================================
-   4. كلاس GENIUS BOT (مع البحث الصوتي)
+   4. كلاس GENIUS BOT (المتطور - يبحث في Keywords)
    ========================================= */
 class GeniusBot {
     constructor() {
@@ -444,17 +446,16 @@ class GeniusBot {
         this.chatState = 'idle'; 
         this.lastFoundApp = null; 
         
-        // إعداد الصوت
         this.recognition = null;
         this.isRecording = false;
 
         if(!this.chatBody) return;
 
-        // تهيئة البحث الصوتي
+        // إعداد البحث الصوتي
         if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             this.recognition = new SpeechRecognition();
-            this.recognition.lang = 'ar-EG'; // اللهجة المصرية
+            this.recognition.lang = 'ar-EG'; 
             this.recognition.continuous = false;
             this.recognition.interimResults = false;
 
@@ -477,7 +478,7 @@ class GeniusBot {
                 const input = document.getElementById('chatInput');
                 if(input) {
                     input.value = transcript;
-                    this.send(); // إرسال تلقائي
+                    this.send(); 
                 }
             };
         }
@@ -486,7 +487,7 @@ class GeniusBot {
         this.receiveSound = new Audio("https://cdn.pixabay.com/audio/2022/03/15/audio_279930922e.mp3");
         this.sendSound.volume = 0.5; this.receiveSound.volume = 0.5;
 
-        // --- قاموس الشخصية ---
+        // قاموس الشخصية
         this.persona = {
             greet: { 
                 match: /^(سلام|السلام|مرحبا|اهلا|اهلين|هلا|هاي|hi|hello|hey|yo|welcome|ازيك|عامل ايه|شخبارك|صباح|مساء)/i, 
@@ -645,6 +646,7 @@ class GeniusBot {
     }
 
     searchDatabase(query) {
+        // التحقق من وجود بيانات (الآن تعمل في الصفحتين بفضل الإصلاح)
         if (!window.app || !window.app.data || !window.app.data.length) {
             this.addMsg("ثواني بجمع البيانات... ⏳", 'bot');
             return;
@@ -656,10 +658,14 @@ class GeniusBot {
             const keywords = this.normalize(appItem.Keywords || "");
             
             let score = 0;
+            // تطابق العنوان
             if (title.includes(query) || query.includes(title)) score += 100;
+            // تطابق الكلمات المفتاحية Keywords
             if (keywords.includes(query)) score += 95;
+            // تطابق الوسم
             if (tag.includes(query)) score += 80;
 
+            // خوارزميات التشابه (للأخطاء الإملائية)
             const simScore = this.getSimilarity(query, title);
             const simScoreKey = this.getSimilarity(query, keywords);
 
@@ -817,9 +823,23 @@ class GeniusBot {
 }
 
 /* =========================================
-   5. منطق صفحة التحميل (POST.HTML)
+   5. منطق صفحة التحميل (POST.HTML) - تم الإصلاح
    ========================================= */
 function initPostPage() {
+    // 1. تهيئة كائن التطبيق العام فوراً لكي لا يظهر خطأ للبوت
+    window.app = { 
+        data: [], // يبدأ فارغاً حتى اكتمال التحميل
+        toggleTheme: function() { 
+            const body = document.body;
+            const icon = document.getElementById('theme-icon');
+            const current = body.getAttribute('data-theme');
+            const newTheme = current === 'dark' ? 'light' : 'dark';
+            body.setAttribute('data-theme', newTheme);
+            if(icon) icon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+            localStorage.setItem('teslam_theme', newTheme);
+        }
+    };
+
     const savedTheme = localStorage.getItem('teslam_theme') || 'light';
     document.body.setAttribute('data-theme', savedTheme);
     const themeIcon = document.getElementById('theme-icon');
@@ -835,6 +855,10 @@ function initPostPage() {
         .then(res => res.json())
         .then(json => {
             const cleanData = json ? Object.values(json).filter(item => item != null).reverse() : [];
+            
+            // ✅ تخزين البيانات في المتغير العام ليراها البوت
+            window.app.data = cleanData;
+
             processData(cleanData);
         })
         .catch(err => {
@@ -851,7 +875,6 @@ function initPostPage() {
         if(app) {
             renderPost(app, data);
             
-            // [هام] تسجيل الاهتمام عند فتح صفحة البوست (Personalization)
             if(app.Tag) {
                 let prefs = JSON.parse(localStorage.getItem('teslam_prefs') || '{}');
                 prefs[app.Tag] = (prefs[app.Tag] || 0) + 1;
@@ -874,10 +897,8 @@ function initPostPage() {
         const sbList = document.getElementById('sidebar-list');
         if(sbList) {
             sbList.innerHTML = '';
-            // اقتراحات ذات صلة بنفس التاج
             const related = allApps.filter(a => a.ID != app.ID && (a.Tag === app.Tag))
                                    .slice(0, 5);
-            // لو مفيش، هات عشوائي
             if (related.length < 3) {
                  const random = allApps.filter(a => a.ID != app.ID).sort(() => 0.5 - Math.random()).slice(0, 5 - related.length);
                  related.push(...random);
@@ -945,17 +966,8 @@ function initPostPage() {
 }
 
 window.toggleTheme = function() {
-    if (window.app) {
+    if (window.app && window.app.toggleTheme) {
         window.app.toggleTheme();
-    } else {
-        const body = document.body;
-        const icon = document.getElementById('theme-icon');
-        const current = body.getAttribute('data-theme');
-        const newTheme = current === 'dark' ? 'light' : 'dark';
-        
-        body.setAttribute('data-theme', newTheme);
-        if(icon) icon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
-        localStorage.setItem('teslam_theme', newTheme);
     }
 }
 
@@ -971,4 +983,4 @@ if (document.getElementById('apps-grid')) {
     initPostPage();
     // تفعيل البوت في صفحة التحميل أيضاً
     window.geniusBot = new GeniusBot();
-                   }
+}
