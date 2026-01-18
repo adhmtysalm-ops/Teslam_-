@@ -6,7 +6,7 @@
     var host = window.location.hostname;
     
     // السماح بالدومين الرسمي + السيرفر المحلي للتطوير
-    if (host !== myDomain) {
+    if (host !== myDomain && host !== "localhost" && host !== "127.0.0.1") {
         document.body.innerHTML = "<h1 style='text-align:center; margin-top:50px; color:red;'>🚫 Access Denied<br>هذا الكود محمي ومخصص لمتجر تسلم فقط.</h1>";
         throw new Error("Access Denied: Production Only");
     }
@@ -70,7 +70,7 @@ if ('serviceWorker' in navigator) {
 }
 
 /* =========================================
-   3. كلاس تطبيق TESLAM (مع خوارزميات التفضيل والبحث)
+   3. كلاس تطبيق TESLAM (الأساسي)
    ========================================= */
 class TeslamApp {
     constructor() {
@@ -436,14 +436,14 @@ class TeslamApp {
 }
 
 /* =========================================
-   4. كلاس GENIUS BOT (المتطور جداً)
+   4. كلاس GENIUS BOT (الذكاء الاصطناعي - النسخة المطورة)
    ========================================= */
 class GeniusBot {
     constructor() {
         this.isOpen = false;
         this.chatBody = document.getElementById('chatBody');
-        this.chatState = 'idle'; // (idle | asking_features | asking_search)
-        this.lastFoundApp = null; // لتخزين التطبيق الأخير الذي وجده البوت
+        this.chatState = 'idle'; 
+        this.lastFoundApp = null; 
 
         if(!this.chatBody) return;
 
@@ -451,7 +451,7 @@ class GeniusBot {
         this.receiveSound = new Audio("https://cdn.pixabay.com/audio/2022/03/15/audio_279930922e.mp3");
         this.sendSound.volume = 0.5; this.receiveSound.volume = 0.5;
 
-        // --- قاموس الشخصية (موسع جداً ليشمل التراحيب والسمول توك) ---
+        // --- قاموس الشخصية والردود الذكية ---
         this.persona = {
             // ترحيبات
             greet: { 
@@ -460,8 +460,7 @@ class GeniusBot {
                     "يا هلا والله! ❤️ نورت متجر تسلم.",
                     "أهلاً بيك يا غالي! 🚀 أنا تسلم، آمرني؟",
                     "وعليكم السلام! 😉 جاهز أساعدك تلاقي أي تطبيق.",
-                    "يا مية هلا! 🌹 أنا هنا عشانك.",
-                    "منور الدنيا كلها! 💡 قل لي بتدور على إيه؟"
+                    "يا مية هلا! 🌹 أنا هنا عشانك."
                 ] 
             },
             // أحوال
@@ -479,16 +478,18 @@ class GeniusBot {
                 reply: [
                     "العفو يا بطل! 🤖 واجبي.",
                     "تحت أمرك في أي وقت! ❤️",
-                    "حبيبي، ده أقل واجب! 😉",
-                    "الله يسلمك ويخليك لينا! 🌹"
+                    "حبيبي، ده أقل واجب! 😉"
                 ] 
             },
-            // المطور
+            // المطور (القائمة الضخمة التي طلبتها)
             creator: {
-                match: /(مين عملك|مين صممك|مين المطور|مين صاحب الموقع|مين ادهم|ادهم)/i,
+                // كلمات مفتاحية تشمل كل الصيغ الممكنة تقريباً
+                match: /^(مين|من) (عملك|صممك|طورك|برمجك|سواك|صنعك|اخترعك|انشأك|اسسك|رباك|علمك|شغلك)|(مين|من) (المطور|المصمم|المبرمج|المالك|الصانع|المدير|القائد|الريس|البوص)|(who|who's) (made|created|developed|built|programmed|designed|coded) (you)|(your|ur) (creator|developer|maker|owner|dad|father)|(ادهم|أدهم|adham)|مين (هو|يكون) (ادهم|أدهم)/i,
                 reply: [
-                    "أنا من تصميم المبدع **أدهم (Adham)** 💻، صاحب متجر تسلم. برمجني عشان أخدمك بسرعة! 😎🔥",
-                    "اللي صنعني هو العبقري **أدهم**، عشان يوفر عليك وقت التدوير. 🚀"
+                    "أنا فخور إني من تصميم وتطوير **أدهم (Adham)** 💻، صاحب متجر تسلم. هو برمجني عشان أكون مساعدك الشخصي! 😎🔥",
+                    "اللي صنعني هو العبقري **أدهم**، عشان يوفر عليك وقت التدوير على التطبيقات. 🚀",
+                    "سؤال في الجون! 😉 المطور بتاعي هو **أدهم (Adham)**، وهو اللي سهر الليالي يكتب الكود ده عشانك.",
+                    "أنا روبوت من تطوير **أدهم**، المؤسس والمطور لمتجر تسلم ستور. ❤️"
                 ]
             },
             // الهوية
@@ -578,8 +579,6 @@ class GeniusBot {
     }
 
     processBrain(rawText) {
-        // 1. إعادة تعيين الحالة إذا كان المستخدم يكتب نصاً جديداً خارج سياق الأزرار
-        // (إلا إذا كان الرد نعم/لا في سياق السؤال)
         if (this.chatState !== 'idle') {
            const simple = rawText.toLowerCase();
            if (!simple.match(/^(نعم|لا|yes|no|ايوة|لاء|ok)/)) {
@@ -589,9 +588,10 @@ class GeniusBot {
 
         const simpleText = rawText.toLowerCase();
 
-        // 2. الردود الاجتماعية (Greetings, Small Talk)
+        // 2. الردود الاجتماعية (Greetings, Small Talk, Creator)
         for (let key in this.persona) {
-            if (this.persona[key].match.test(rawText)) { // استخدام rawText عشان ال Regex
+            // نستخدم النص الأصلي (rawText) للتحقق من Regex المطور
+            if (this.persona[key].match.test(rawText)) { 
                 const replies = this.persona[key].reply;
                 const randomReply = replies[Math.floor(Math.random() * replies.length)];
                 this.addMsg(randomReply, 'bot');
@@ -639,8 +639,8 @@ class GeniusBot {
         if (matches.length > 0) {
             // وجدنا التطبيق
             const best = matches[0].app;
-            this.lastFoundApp = best; // حفظ التطبيق في الذاكرة
-            this.chatState = 'asking_features'; // تغيير الحالة لانتظار قرار المميزات
+            this.lastFoundApp = best; 
+            this.chatState = 'asking_features'; 
 
             this.addMsg(`لقيت طلبك! 🤩 غالباً بتدور على <b>${best.Title}</b>:`, 'bot');
             
@@ -693,7 +693,6 @@ class GeniusBot {
         }
     }
 
-    // إضافة أزرار الخيارات
     addOptions(opts) {
         const optionsDiv = document.createElement('div');
         optionsDiv.className = 'msg-row bot';
@@ -710,21 +709,17 @@ class GeniusBot {
         this.scrollToBottom();
     }
 
-    // معالجة الضغط على الأزرار بذكاء
     handleOption(val, textLabel) {
         this.playSound('send');
-        this.addMsg(textLabel, 'user'); // عرض رد المستخدم
+        this.addMsg(textLabel, 'user'); 
         
         this.showTyping();
         setTimeout(() => {
             this.removeTyping();
 
             if (val === 'yes_features') {
-                // المستخدم وافق على عرض المميزات
                 if (this.lastFoundApp && this.lastFoundApp.Desc) {
-                    // تنسيق الوصف (استبدال السطور الجديدة بـ br)
                     let desc = this.lastFoundApp.Desc.replace(/\n/g, "<br>");
-                    // تقصير الوصف لو طويل جداً
                     if(desc.length > 300) desc = desc.substring(0, 300) + "... <a href='post.html?uid="+this.lastFoundApp.ID+"' style='color:var(--primary)'>اقرأ المزيد</a>";
                     
                     this.addMsg(`<b>📌 مميزات ${this.lastFoundApp.Title}:</b><br><br>${desc}`, 'bot');
@@ -732,7 +727,6 @@ class GeniusBot {
                     this.addMsg("للأسف مفيش وصف متاح للتطبيق ده حالياً 😅", 'bot');
                 }
                 
-                // بعد عرض المميزات، نسأل لو محتاج حاجة تانية
                 setTimeout(() => {
                     this.chatState = 'asking_restart';
                     this.addMsg("تمام يا بطل؟ محتاج تطبيق تاني؟ 🚀", 'bot');
@@ -743,7 +737,6 @@ class GeniusBot {
                 }, 1000);
 
             } else if (val === 'no_features') {
-                // المستخدم رفض عرض المميزات
                 this.chatState = 'asking_restart';
                 this.addMsg("ولا يهمك! محتاج أبحثلك عن حاجة تانية؟ 😊", 'bot');
                 this.addOptions([
@@ -752,12 +745,10 @@ class GeniusBot {
                 ]);
 
             } else if (val === 'restart_yes') {
-                // بحث جديد
                 this.chatState = 'idle';
                 this.addMsg("هات اسم التطبيق وأنا جاهز 🚀", 'bot');
 
             } else if (val === 'restart_no') {
-                // إنهاء المحادثة
                 this.chatState = 'idle';
                 this.addMsg("نورتنا يا بطل! ❤️ استمتع بالتطبيقات.", 'bot');
             }
@@ -949,4 +940,4 @@ if (document.getElementById('apps-grid')) {
     initPostPage();
     // تفعيل البوت في صفحة التحميل أيضاً
     window.geniusBot = new GeniusBot();
-    }
+               }
