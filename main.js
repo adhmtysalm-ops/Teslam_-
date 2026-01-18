@@ -5,58 +5,100 @@
     var myDomain = "teslam.vercel.app"; 
     var host = window.location.hostname;
     
-    if (host !== myDomain ) {
+    if (host !== myDomain && host !== "localhost" && host !== "127.0.0.1") {
         document.body.innerHTML = "<h1 style='text-align:center; margin-top:50px; color:red;'>🚫 Access Denied<br>هذا الكود محمي ومخصص لمتجر تسلم فقط.</h1>";
         throw new Error("Access Denied: Production Only");
     }
 })();
 
 /* =========================================
-   1. نظام إدارة الإشعارات (الأولوية القصوى)
-   يجب تعريفه أولاً ليكون جاهزاً لاستقبال رسائل فايربيس
+   1. نظام إدارة الإشعارات (IndexedDB - المتطور)
    ========================================= */
 class NotificationSystem {
     constructor() {
-        this.key = 'teslam_notifications';
-        this.list = JSON.parse(localStorage.getItem(this.key) || '[]');
-        this.sound = new Audio('https://cdn.pixabay.com/audio/2022/03/15/audio_279930922e.mp3'); // صوت إشعار
+        this.dbName = 'TeslamDB';
+        this.storeName = 'notifications';
+        this.list = [];
+        this.sound = new Audio('https://cdn.pixabay.com/audio/2022/03/15/audio_279930922e.mp3'); 
         this.init();
     }
 
-    init() {
+    async init() {
+        await this.loadFromDB();
         this.updateBadge();
-        // تحديث القائمة فور التشغيل
         const dropdown = document.getElementById('notifDropdown');
         if(dropdown && dropdown.classList.contains('open')) {
             this.render();
         }
     }
 
-    // إضافة إشعار جديد وتخزينه
-    add(title, body) {
+    openDB() {
+        return new Promise((resolve, reject) => {
+            const request = indexedDB.open(this.dbName, 1);
+            request.onupgradeneeded = (e) => {
+                const db = e.target.result;
+                if (!db.objectStoreNames.contains(this.storeName)) {
+                    db.createObjectStore(this.storeName, { keyPath: 'time' });
+                }
+            };
+            request.onsuccess = () => resolve(request.result);
+            request.onerror = () => reject(request.error);
+        });
+    }
+
+    async loadFromDB() {
+        try {
+            const db = await this.openDB();
+            const tx = db.transaction(this.storeName, 'readonly');
+            const store = tx.objectStore(this.storeName);
+            const request = store.getAll();
+            
+            return new Promise((resolve) => {
+                request.onsuccess = () => {
+                    this.list = request.result.sort((a, b) => b.time - a.time);
+                    this.updateBadge();
+                    resolve();
+                };
+            });
+        } catch(e) { console.log("DB Error", e); }
+    }
+
+    async add(title, body) {
         const newNotif = {
             title: title || "إشعار جديد",
-            body: body || "لديك رسالة جديدة من تسلم",
+            body: body || "لديك رسالة جديدة",
             time: new Date().getTime(),
             read: false
         };
         
-        // إضافة للأول
         this.list.unshift(newNotif);
-        
-        // الاحتفاظ بآخر 30 إشعار فقط لتوفير المساحة
         if(this.list.length > 30) this.list = this.list.slice(0, 30);
         
-        this.save();
-        this.updateBadge();
+        const db = await this.openDB();
+        const tx = db.transaction(this.storeName, 'readwrite');
+        tx.objectStore(this.storeName).add(newNotif);
         
-        // تشغيل صوت وتحديث القائمة
+        this.updateBadge();
         try { this.sound.play().catch(()=>{}); } catch(e){}
         this.render();
     }
 
-    save() {
-        localStorage.setItem(this.key, JSON.stringify(this.list));
+    async markAllRead() {
+        this.list.forEach(n => n.read = true);
+        this.updateBadge();
+        const db = await this.openDB();
+        const tx = db.transaction(this.storeName, 'readwrite');
+        const store = tx.objectStore(this.storeName);
+        this.list.forEach(item => store.put(item));
+    }
+
+    async clearAll() {
+        this.list = [];
+        this.updateBadge();
+        this.render();
+        const db = await this.openDB();
+        const tx = db.transaction(this.storeName, 'readwrite');
+        tx.objectStore(this.storeName).clear();
     }
 
     updateBadge() {
@@ -66,7 +108,7 @@ class NotificationSystem {
         const unreadCount = this.list.filter(n => !n.read).length;
         if(unreadCount > 0) {
             badge.classList.add('active');
-            badge.innerText = unreadCount > 9 ? "+9" : unreadCount; // عرض الرقم (اختياري)
+            badge.innerText = unreadCount > 9 ? "+9" : unreadCount;
             badge.style.display = "flex";
             badge.style.alignItems = "center";
             badge.style.justifyContent = "center";
@@ -86,7 +128,7 @@ class NotificationSystem {
         dropdown.classList.toggle('open');
         if(dropdown.classList.contains('open')) {
             this.render();
-            this.markAllRead(); // تعليم الكل كمقروء عند الفتح
+            this.markAllRead();
         }
     }
 
@@ -104,7 +146,6 @@ class NotificationSystem {
             const date = new Date(n.time).toLocaleTimeString('ar-EG', {hour: '2-digit', minute:'2-digit'});
             const item = document.createElement('div');
             item.className = 'notif-item';
-            // تمييز غير المقروء بخلفية خفيفة
             item.style.backgroundColor = n.read ? 'transparent' : 'rgba(46, 204, 113, 0.05)';
             
             item.innerHTML = `
@@ -118,27 +159,14 @@ class NotificationSystem {
             listContainer.appendChild(item);
         });
     }
-
-    markAllRead() {
-        this.list.forEach(n => n.read = true);
-        this.save();
-        this.updateBadge();
-    }
-
-    clearAll() {
-        this.list = [];
-        this.save();
-        this.render();
-        this.updateBadge();
-    }
 }
 
-// ✅ تشغيل النظام فوراً ليكون جاهزاً
+// تشغيل نظام الإشعارات فوراً
 window.notif = new NotificationSystem();
 
 
 /* =========================================
-   2. تهيئة وإعدادات FIREBASE
+   2. تهيئة FIREBASE
    ========================================= */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
 import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-messaging.js";
@@ -169,17 +197,12 @@ try {
         });
     }
 
-    // ✅ استقبال الرسالة وتخزينها في النظام (هذا هو الجزء المهم)
     onMessage(messaging, (payload) => {
-        console.log("Message received: ", payload);
         const title = payload.notification.title;
         const body = payload.notification.body;
-        
-        // 1. عرض إشعار النظام (Pop-up)
         const options = { body: body, icon: '/icon-192.png' };
         new Notification(title, options);
 
-        // 2. التخزين في أيقونة الجرس
         if(window.notif) {
             window.notif.add(title, body);
         }
@@ -187,7 +210,7 @@ try {
 
     requestPermission();
 } catch (e) {
-    console.log("Firebase initialized previously or error:", e);
+    console.log("Firebase Error:", e);
 }
 
 
@@ -218,8 +241,8 @@ window.addEventListener('load', initNetworkChecker);
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('/sw.js')
-            .then(reg => console.log('App Ready!', reg.scope))
-            .catch(err => console.log('SW Fail', err));
+            .then(reg => console.log('SW Registered', reg.scope))
+            .catch(err => console.log('SW Failed', err));
     });
 }
 
@@ -294,6 +317,7 @@ class TeslamApp {
     }
 
     async fetchData() {
+        // لو البيانات موجودة بالفعل لا تعيد تحميلها
         if (window.app && window.app.data && window.app.data.length > 0) {
             this.data = window.app.data;
             this.renderApp();
@@ -669,7 +693,7 @@ class TeslamApp {
 }
 
 /* =========================================
-   6. كلاس GENIUS BOT
+   6. كلاس GENIUS BOT (المنطق المحسن)
    ========================================= */
 class GeniusBot {
     constructor() {
@@ -677,6 +701,7 @@ class GeniusBot {
         this.chatBody = document.getElementById('chatBody');
         this.chatState = 'idle'; 
         this.lastFoundApp = null; 
+        
         this.recognition = null;
         this.isRecording = false;
 
@@ -717,7 +742,7 @@ class GeniusBot {
         this.receiveSound = new Audio("https://cdn.pixabay.com/audio/2022/03/15/audio_279930922e.mp3");
         this.sendSound.volume = 0.5; this.receiveSound.volume = 0.5;
 
-        // قاموس الشخصية
+        // قاموس الشخصية والمنطق
         this.persona = {
             greet: { 
                 match: /^(سلام|السلام|مرحبا|اهلا|اهلين|هلا|هاي|hi|hello|hey|yo|welcome|ازيك|عامل ايه|شخبارك|صباح|مساء)/i, 
@@ -726,6 +751,12 @@ class GeniusBot {
                     "أهلاً بيك يا غالي! 🚀 أنا تسلم، آمرني؟",
                     "وعليكم السلام! 😉 جاهز أساعدك تلاقي أي تطبيق."
                 ] 
+            },
+            creator: {
+                match: /^(مين|من) (عملك|صممك|طورك|برمجك|سواك|صنعك|اخترعك|انشأك|اسسك|رباك|علمك|شغلك)|(مين|من) (المطور|المصمم|المبرمج|المالك|الصانع|المدير|القائد|الريس|البوص)|(who|who's) (made|created|developed|built|programmed|designed|coded) (you)|(your|ur) (creator|developer|maker|owner|dad|father)|(ادهم|أدهم|adham)|مين (هو|يكون) (ادهم|أدهم)/i,
+                reply: [
+                    "أنا فخور إني من تصميم وتطوير **أدهم (Adham)** 💻، صاحب متجر تسلم. هو برمجني عشان أكون مساعدك الشخصي! 😎🔥"
+                ]
             }
         };
     }
@@ -772,30 +803,6 @@ class GeniusBot {
             .replace(/[^a-z0-9\u0600-\u06FF]/g, '');
     }
 
-    levenshtein(a, b) {
-        if (Math.abs(a.length - b.length) > 5) return 100;
-        const matrix = [];
-        for (let i = 0; i <= b.length; i++) matrix[i] = [i];
-        for (let j = 0; j <= a.length; j++) matrix[0][j] = j;
-        for (let i = 1; i <= b.length; i++) {
-            for (let j = 1; j <= a.length; j++) {
-                if (b.charAt(i - 1) == a.charAt(j - 1)) {
-                    matrix[i][j] = matrix[i - 1][j - 1];
-                } else {
-                    matrix[i][j] = Math.min(matrix[i - 1][j - 1] + 1, matrix[i][j - 1] + 1, matrix[i - 1][j] + 1);
-                }
-            }
-        }
-        return matrix[b.length][a.length];
-    }
-
-    getSimilarity(s1, s2) {
-        let longer = s1.length > s2.length ? s1 : s2;
-        let shorter = s1.length > s2.length ? s2 : s1;
-        if (longer.length == 0) return 1.0;
-        return (longer.length - this.levenshtein(longer, shorter)) / longer.length;
-    }
-
     send() {
         const input = document.getElementById('chatInput');
         if(!input) return;
@@ -823,6 +830,8 @@ class GeniusBot {
            }
         }
 
+        const simpleText = rawText.toLowerCase();
+
         for (let key in this.persona) {
             if (this.persona[key].match.test(rawText)) { 
                 const replies = this.persona[key].reply;
@@ -848,20 +857,17 @@ class GeniusBot {
         }
 
         const matches = window.app.data.map(appItem => {
-            const title = this.normalize(appItem.Title);
-            const tag = this.normalize(appItem.Tag || "");
-            const keywords = this.normalize(appItem.Keywords || "");
+            const title = window.app.normalize(appItem.Title);
+            const tag = window.app.normalize(appItem.Tag || "");
+            const keywords = window.app.normalize(appItem.Keywords || "");
             
             let score = 0;
             if (title.includes(query) || query.includes(title)) score += 100;
             if (keywords.includes(query)) score += 95;
             if (tag.includes(query)) score += 80;
 
-            const simScore = this.getSimilarity(query, title);
-            const simScoreKey = this.getSimilarity(query, keywords);
-
+            const simScore = window.app.getSimilarity(query, title);
             if (simScore > 0.35) score += (simScore * 100);
-            if (simScoreKey > 0.4) score += (simScoreKey * 90);
 
             return { app: appItem, score: score };
         })
@@ -949,6 +955,7 @@ class GeniusBot {
                 if (this.lastFoundApp && this.lastFoundApp.Desc) {
                     let desc = this.lastFoundApp.Desc.replace(/\n/g, "<br>");
                     if(desc.length > 300) desc = desc.substring(0, 300) + "... <a href='post.html?uid="+this.lastFoundApp.ID+"' style='color:var(--primary)'>اقرأ المزيد</a>";
+                    
                     this.addMsg(`<b>📌 مميزات ${this.lastFoundApp.Title}:</b><br><br>${desc}`, 'bot');
                 } else {
                     this.addMsg("للأسف مفيش وصف متاح للتطبيق ده حالياً 😅", 'bot');
@@ -957,16 +964,29 @@ class GeniusBot {
                 setTimeout(() => {
                     this.chatState = 'asking_restart';
                     this.addMsg("تمام يا بطل؟ محتاج تطبيق تاني؟ 🚀", 'bot');
-                    this.addOptions([{ text: "أيوة 🔍", val: "restart_yes" }, { text: "لأ، كفاية 👋", val: "restart_no" }]);
+                    this.addOptions([
+                        { text: "أيوة 🔍", val: "restart_yes" },
+                        { text: "لأ، كفاية 👋", val: "restart_no" }
+                    ]);
                 }, 1000);
 
-            } else if (val === 'no_features' || val === 'restart_no') {
-                this.chatState = 'idle';
-                this.addMsg("نورتنا يا بطل! ❤️", 'bot');
+            } else if (val === 'no_features') {
+                this.chatState = 'asking_restart';
+                this.addMsg("ولا يهمك! محتاج أبحثلك عن حاجة تانية؟ 😊", 'bot');
+                this.addOptions([
+                    { text: "أيوة 🔍", val: "restart_yes" },
+                    { text: "لأ، شكراً 👋", val: "restart_no" }
+                ]);
+
             } else if (val === 'restart_yes') {
                 this.chatState = 'idle';
                 this.addMsg("هات اسم التطبيق وأنا جاهز 🚀", 'bot');
+
+            } else if (val === 'restart_no') {
+                this.chatState = 'idle';
+                this.addMsg("نورتنا يا بطل! ❤️ استمتع بالتطبيقات.", 'bot');
             }
+
         }, 800);
     }
 
@@ -1000,7 +1020,7 @@ class GeniusBot {
 }
 
 /* =========================================
-   7. منطق صفحة التحميل (POST.HTML)
+   7. منطق صفحة التحميل (POST.HTML) - تم الإصلاح
    ========================================= */
 function initPostPage() {
     window.app = { 
@@ -1047,11 +1067,13 @@ function initPostPage() {
 
         if(app) {
             renderPost(app, data);
+            
             if(app.Tag) {
                 let prefs = JSON.parse(localStorage.getItem('teslam_prefs') || '{}');
                 prefs[app.Tag] = (prefs[app.Tag] || 0) + 1;
                 localStorage.setItem('teslam_prefs', JSON.stringify(prefs));
             }
+
         } else {
             const loader = document.getElementById('loader');
             if(loader) loader.innerHTML = "عذراً، التطبيق غير موجود أو تم حذفه.";
@@ -1068,7 +1090,8 @@ function initPostPage() {
         const sbList = document.getElementById('sidebar-list');
         if(sbList) {
             sbList.innerHTML = '';
-            const related = allApps.filter(a => a.ID != app.ID && (a.Tag === app.Tag)).slice(0, 5);
+            const related = allApps.filter(a => a.ID != app.ID && (a.Tag === app.Tag))
+                                   .slice(0, 5);
             if (related.length < 3) {
                  const random = allApps.filter(a => a.ID != app.ID).sort(() => 0.5 - Math.random()).slice(0, 5 - related.length);
                  related.push(...random);
@@ -1094,30 +1117,6 @@ function initPostPage() {
     window.isTimerDone = false;
     window.isCaptchaDone = false;
 
-    window.startCountdown = function() {
-        document.getElementById('btn-start').style.display = 'none';
-        document.getElementById('timer-wrapper').style.display = 'block';
-
-        let timeLeft = 20; 
-        const totalTime = 20;
-        const circle = document.getElementById('circle-path');
-        const numDisplay = document.getElementById('timer-num');
-        
-        const timer = setInterval(() => {
-            timeLeft--;
-            numDisplay.textContent = timeLeft;
-            const percentage = (timeLeft / totalTime) * 100;
-            circle.style.strokeDasharray = `${percentage}, 100`;
-
-            if (timeLeft <= 0) {
-                clearInterval(timer);
-                window.isTimerDone = true; 
-                numDisplay.innerHTML = '<i class="fas fa-check"></i>';
-                checkDownloadReady(); 
-            }
-        }, 1000);
-    }
-
     window.captchaSolved = function() {
         window.isCaptchaDone = true;
         checkDownloadReady();
@@ -1131,6 +1130,32 @@ function initPostPage() {
             finalBtn.style.display = 'flex';
         }
     }
+
+    window.startCountdown = function() {
+        document.getElementById('btn-start').style.display = 'none';
+        document.getElementById('timer-wrapper').style.display = 'block';
+
+        let timeLeft = 20; 
+        const totalTime = 20;
+        const circle = document.getElementById('circle-path');
+        const numDisplay = document.getElementById('timer-num');
+        
+        const timer = setInterval(() => {
+            timeLeft--;
+            numDisplay.textContent = timeLeft;
+            
+            const percentage = (timeLeft / totalTime) * 100;
+            circle.style.strokeDasharray = `${percentage}, 100`;
+
+            if (timeLeft <= 0) {
+                clearInterval(timer);
+                window.isTimerDone = true; 
+                
+                numDisplay.innerHTML = '<i class="fas fa-check"></i>';
+                checkDownloadReady(); 
+            }
+        }, 1000);
+    }
 }
 
 window.toggleTheme = function() {
@@ -1142,10 +1167,13 @@ window.toggleTheme = function() {
 /* =========================================
    8. نقطة الدخول (Entry Point)
    ========================================= */
+// تشغيل نظام الإشعارات فوراً
+window.notif = new NotificationSystem();
+
 if (document.getElementById('apps-grid')) {
     window.app = new TeslamApp();
     window.geniusBot = new GeniusBot();
 } else if (document.getElementById('p-title')) {
     initPostPage();
     window.geniusBot = new GeniusBot();
-    }
+               }
