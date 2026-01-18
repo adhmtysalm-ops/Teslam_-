@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1233737777122332"
+     crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <title>تحميل التطبيق - متجر تسلم الذكي</title>
+    <meta name="description" content="صفحة التحميل الآمنة - متجر تسلم (Teslam Store). تحميل بروابط مباشرة وسريعة مع فحص الأمان بالذكاء الاصطناعي.">
+    <meta name="author" content="Adham Atya">
+    <meta name="theme-color" content="#2ecc71">
+ 
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+ 
+    <style>
+        :root {
+            /* نهاري */
+            --bg-body: #f4f6f8;
+            --bg-card: #ffffff;
+            --bg-glass: rgba(255, 255, 255, 0.9);
+            --text-main: #2d3436;
+            --text-sub: #636e72;
+            --primary: #2ecc71;
+            --primary-hover: #27ae60;
+            --hero-bg: #1e1e1e;
+            --border-color: #eee;
+            --shadow: 0 8px 20px rgba(0,0,0,0.06);
+            --radius: 18px;
+            --timer-color: #f39c12;
+        }
+ 
+        /* ليلي */
+        [data-theme="dark"] {
+            --bg-body: #121212;
+            --bg-card: #1e1e1e;
+            --bg-glass: rgba(30, 30, 30, 0.9);
+            --text-main: #dfe6e9;
+            --text-sub: #b2bec3;
+            --primary: #00d2d3;
+            --primary-hover: #01a3a4;
+            --hero-bg: #000000;
+            --border-color: #333;
+            --shadow: 0 8px 20px rgba(0,0,0,0.4);
+            --timer-color: #f1c40f;
+        }
+ 
+        * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
+        body { 
+            background: var(--bg-body); font-family: 'Cairo', sans-serif; 
+            margin: 0; padding-bottom: 90px; color: var(--text-main); 
+            transition: background 0.4s ease, color 0.4s ease;
+        }
+        a { text-decoration: none; color: inherit; }
+ 
+        /* الهيدر */
+        .header {
+            background: var(--bg-glass); 
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            padding: 12px 20px;
+            display: flex; align-items: center; justify-content: space-between;
+            position: sticky; top: 0; z-index: 1000; 
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .header-left { display: flex; align-items: center; gap: 15px; }
+        .back-btn { font-size: 20px; color: var(--text-main); cursor: pointer; transition:0.2s; }
+        .back-btn:hover { color: var(--primary); transform: translateX(5px); }
+ 
+        .brand-logo {
+            font-family: 'Cairo', sans-serif; font-weight: 900; font-size: 20px;
+            color: var(--primary); letter-spacing: -1px; text-transform: uppercase;
+        }
+ 
+        .theme-toggle {
+            width: 35px; height: 35px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            background: var(--bg-body); color: var(--text-main);
+            cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+ 
+        /* التخطيط */
+        .container { max-width: 1000px; margin: 30px auto; padding: 0 15px; display: grid; grid-template-columns: 1fr 320px; gap: 25px; }
+        
+        .main-card {
+            background: var(--bg-card); border-radius: var(--radius); padding: 30px;
+            box-shadow: var(--shadow); text-align: center; position: relative; overflow: hidden;
+            border: 1px solid var(--border-color);
+            min-height: 400px;
+        }
+        
+        .app-icon-lg { 
+            width: 120px; height: 120px; border-radius: 25px; margin-bottom: 15px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15); object-fit: cover;
+            border: 4px solid var(--bg-body);
+        }
+        
+        .app-title-lg { font-size: 24px; font-weight: 900; margin: 5px 0 15px; color: var(--text-main); }
+        
+        .info-pills { display: flex; justify-content: center; gap: 10px; margin-bottom: 25px; }
+        .pill { 
+            background: var(--bg-body); padding: 6px 15px; border-radius: 50px; 
+            font-size: 12px; font-weight: 700; color: var(--text-sub); border: 1px solid var(--border-color);
+        }
+ 
+        .app-desc { 
+            text-align: right; line-height: 1.8; opacity: 0.9; margin: 20px 0; 
+            padding: 20px; background: var(--bg-body); border-radius: 15px; 
+            font-size: 14px; color: var(--text-main); border: 1px solid var(--border-color);
+        }
+ 
+        /* التحميل والعداد */
+        .download-zone { margin-top: 30px; padding-top: 20px; border-top: 1px dashed var(--border-color); }
+ 
+        .action-btn {
+            width: 100%; padding: 16px; border-radius: 14px; border: none;
+            font-family: inherit; font-weight: 800; font-size: 16px; color: white;
+            cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;
+            transition: 0.3s; box-shadow: 0 8px 20px rgba(46, 204, 113, 0.3); text-decoration: none;
+        }
+        .btn-prep { background: var(--primary); }
+        .btn-prep:hover { background: var(--primary-hover); transform: translateY(-3px); }
+        
+        .btn-final { 
+            background: linear-gradient(135deg, #0984e3, #74b9ff); 
+            display: none; animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+        }
+        @keyframes popIn { from {transform: scale(0.5); opacity: 0;} to {transform: scale(1); opacity: 1;} }
+ 
+        /* ستايل العداد الدائري */
+        .timer-wrapper { display: none; margin: 20px auto; text-align: center; }
+        .circular-chart { display: block; margin: 10px auto; max-width: 120px; max-height: 120px; }
+        .circle-bg { fill: none; stroke: var(--bg-body); stroke-width: 3; }
+        .circle { 
+            fill: none; stroke-width: 3; stroke-linecap: round; 
+            stroke: var(--timer-color); 
+            stroke-dasharray: 100, 100; transition: stroke-dasharray 1s linear;
+        }
+        .percentage { fill: var(--text-main); font-family: 'Cairo'; font-weight: 900; font-size: 0.6em; text-anchor: middle; }
+ 
+        /* القائمة الجانبية */
+        .sidebar-card { 
+            background: var(--bg-card); padding: 20px; border-radius: var(--radius); 
+            box-shadow: var(--shadow); border: 1px solid var(--border-color);
+        }
+        .mini-item { 
+            display: flex; align-items: center; gap: 12px; margin-bottom: 15px; 
+            cursor: pointer; padding: 10px; border-radius: 10px; transition: 0.2s;
+            text-decoration: none; color: inherit;
+        }
+        .mini-item:hover { background: var(--bg-body); }
+        .mini-img { width: 45px; height: 45px; border-radius: 10px; object-fit: cover; }
+        .mini-info h4 { margin: 0; font-size: 13px; color: var(--text-main); }
+        .mini-info span { font-size: 11px; color: var(--text-sub); }
+ 
+        @media (max-width: 900px) {
+            .container { grid-template-columns: 1fr; margin-top: 15px; }
+        }
+
+        /* --- تصميم البوت الذكي (المطور - AI Chat) --- */
+        .chat-btn {
+            position: fixed; bottom: 85px; left: 20px; width: 65px; height: 65px;
+            background: var(--bg-card); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; z-index: 9999;
+            box-shadow: 0 8px 30px rgba(46, 204, 113, 0.4);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            border: 2px solid var(--primary); overflow: hidden;
+        }
+        .chat-btn:hover { transform: scale(1.1) rotate(-5deg); }
+        .chat-btn img { width: 100%; height: 100%; object-fit: cover; }
+
+        .chat-window {
+            position: fixed; bottom: 160px; left: 20px; width: 340px; height: 500px;
+            background: var(--bg-card); border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3); z-index: 9999;
+            display: flex; flex-direction: column; overflow: hidden;
+            transform: scale(0); transform-origin: bottom left; 
+            transition: 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+            border: 1px solid var(--border-color);
+        }
+        .chat-window.active { transform: scale(1); opacity: 1; }
+
+        .chat-header {
+            background: var(--bg-card); padding: 18px; border-bottom: 1px solid var(--border-color);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .bot-info { display: flex; align-items: center; gap: 10px; }
+        .bot-avatar-sm { width: 42px; height: 42px; border-radius: 50%; background: white; border: 1px solid #eee; object-fit: cover; }
+        .bot-details h3 { margin: 0; font-size: 15px; font-weight: 900; color: var(--text-main); }
+        .bot-status { font-size: 11px; color: var(--primary); font-weight: bold; display: flex; align-items: center; gap: 4px; }
+        .status-dot { width: 8px; height: 8px; background: var(--primary); border-radius: 50%; animation: pulse-green 2s infinite; }
+        @keyframes pulse-green { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+
+        .chat-body {
+            flex: 1; padding: 15px; overflow-y: auto; background: var(--bg-body);
+            display: flex; flex-direction: column; gap: 15px; scroll-behavior: smooth;
+        }
+
+        .msg-row { display: flex; width: 100%; gap: 10px; animation: slideUp 0.3s ease-out; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+        .msg-row.user { justify-content: flex-end; }
+        
+        .msg-bubble {
+            padding: 12px 18px; border-radius: 20px; font-size: 13px; max-width: 85%; line-height: 1.6; word-wrap: break-word; position: relative;
+        }
+        .msg-row.bot .msg-bubble {
+            background: var(--bg-card); color: var(--text-main); border-bottom-right-radius: 4px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03); border: 1px solid var(--border-color);
+        }
+        .msg-row.user .msg-bubble {
+            background: linear-gradient(135deg, var(--primary), var(--primary-hover)); color: white; border-bottom-left-radius: 4px;
+            box-shadow: 0 4px 15px rgba(46, 204, 113, 0.25);
+        }
+        
+        /* كروت النتائج داخل الشات */
+        .bot-result-card {
+            background: var(--bg-card); padding: 10px; margin-top: 8px; border-radius: 16px;
+            display: flex; align-items: center; gap: 12px; cursor: pointer; width: 100%;
+            border: 1px solid var(--border-color); transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        }
+        .bot-result-card:hover { transform: translateY(-3px); border-color: var(--primary); box-shadow: 0 5px 15px rgba(0,0,0,0.06); }
+        .bot-res-img { width: 48px; height: 48px; border-radius: 12px; object-fit: cover; background: #eee; }
+        .bot-res-info { flex: 1; }
+        .bot-res-title { font-weight: 800; font-size: 13px; color: var(--text-main); margin-bottom: 4px; }
+        .bot-res-btn { font-size: 10px; color: white; font-weight: 700; background: var(--primary); padding: 4px 12px; border-radius: 50px; display: inline-block; }
+
+        .bot-options { display: flex; gap: 8px; margin-top: 5px; flex-wrap: wrap; }
+        .option-btn {
+            background: rgba(46, 204, 113, 0.1); border: 1px solid var(--primary);
+            color: var(--primary); padding: 8px 16px; border-radius: 25px;
+            font-size: 12px; font-weight: bold; cursor: pointer; transition: 0.2s;
+        }
+        .option-btn:hover { background: var(--primary); color: white; transform: translateY(-2px); }
+
+        .chat-footer { padding: 12px 15px; background: var(--bg-card); border-top: 1px solid var(--border-color); display: flex; gap: 8px; align-items: center; }
+        .chat-input { flex: 1; padding: 12px 18px; border: 1px solid var(--border-color); border-radius: 30px; background: var(--bg-body); color: var(--text-main); font-family: inherit; font-size: 13px; outline: none; transition: 0.3s; }
+        .chat-input:focus { border-color: var(--primary); background: var(--bg-card); box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.1); }
+        .send-btn { width: 45px; height: 45px; background: var(--primary); color: white; border: none; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.3s; box-shadow: 0 4px 12px rgba(46, 204, 113, 0.25); }
+        .send-btn:hover { transform: scale(1.1); }
+
+        .typing-indicator { display: flex; gap: 5px; padding: 12px 16px; background: var(--bg-card); border-radius: 20px; border-bottom-right-radius: 4px; width: fit-content; border: 1px solid var(--border-color); margin-bottom: 5px; }
+        .dot { width: 7px; height: 7px; background: #b2bec3; border-radius: 50%; animation: bounce 1.4s infinite ease-in-out both; }
+        .dot:nth-child(1) { animation-delay: -0.32s; }
+        .dot:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
+    </style>
+</head>
+<body data-theme="light">
+ 
+    <nav class="header">
+        <div class="header-left">
+            <a href="index.html" class="back-btn"><i class="fas fa-arrow-right"></i></a>
+            <div class="brand-logo">TESLAM</div>
+        </div>
+        <div class="theme-toggle" onclick="window.toggleTheme()">
+            <i class="fas fa-moon" id="theme-icon"></i>
+        </div>
+    </nav>
+ 
+    <div class="container">
+        
+        <main class="main-card">
+            <div id="loader" style="padding:40px; margin-top:100px;"><i class="fas fa-circle-notch fa-spin fa-2x"></i></div>
+            
+            <div id="content" style="display:none;">
+                <img id="p-img" src="" class="app-icon-lg">
+                <h1 id="p-title" class="app-title-lg"></h1>
+                
+                <div class="info-pills">
+                    <div class="pill"><i class="fas fa-check-circle"></i> آمن 100%</div>
+                    <div class="pill"><i class="fas fa-android"></i> APK</div>
+                    <div class="pill"><i class="fas fa-star" style="color:gold;"></i> 5.0</div>
+                </div>
+ 
+                <div style="background:var(--bg-body); border:1px dashed var(--text-sub); padding:15px; margin:15px 0; border-radius:12px; color:var(--text-sub); font-size:13px;">
+                    © 2026 Teslam Store – جميع الحقوق محفوظة لـ أدهم (Adham)
+                </div>
+ 
+                <div id="p-desc" class="app-desc"></div>
+ 
+                <div class="download-zone">
+                    <button id="btn-start" class="action-btn btn-prep" onclick="window.startCountdown()">
+                        <i class="fas fa-rocket"></i> تحضير رابط التحميل
+                    </button>
+ 
+                    <div id="timer-wrapper" class="timer-wrapper">
+                        <div style="font-weight:bold; margin-bottom:10px; color:var(--text-sub); font-size:14px;">جاري فحص الملفات...</div>
+                        
+                        <svg viewBox="0 0 36 36" class="circular-chart">
+                            <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                            <path id="circle-path" class="circle" stroke-dasharray="100, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                            <text x="18" y="21" class="percentage" id="timer-num">20</text>
+                        </svg>
+                        
+                        <div class="g-recaptcha" 
+                             data-sitekey="6LeJK0wsAAAAAPXek1-KyLLJkJHCpi5Y0UNwOZnK" 
+                             data-callback="captchaSolved" 
+                             style="margin: 15px auto; display: inline-block;">
+                        </div>
+
+                        <div style="margin-top:15px; background:var(--bg-body); padding:10px; border-radius:8px; font-size:12px; color:var(--text-sub);">
+                        © 2026 Teslam Store – Developed by Adham
+                        </div>
+                    </div>
+ 
+                    <a id="btn-final" href="#" target="_blank" class="action-btn btn-final">
+                        <i class="fas fa-download"></i> تحميل مباشر الآن 🚀
+                    </a>
+                </div>
+            </div>
+        </main>
+ 
+        <aside>
+            <div class="sidebar-card">
+                <div style="font-weight:800; margin-bottom:15px;">🔥 تطبيقات قد تعجبك</div>
+                <div id="sidebar-list">
+                    <div style="text-align:center; padding:10px;"><i class="fas fa-spinner fa-spin"></i></div>
+                </div>
+            </div>
+        </aside>
+ 
+    </div>
+ 
+    <div style="position: fixed; bottom: 0; left: 0; width: 100%; height: 60px; background: var(--bg-glass); border-top: 1px solid var(--border-color); z-index: 2000; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px);">
+        <span style="font-size:12px; color:var(--text-sub);">جميع الحقوق محفوظة لمتجر تسلم © 2026 - By Adham</span>
+    </div>
+
+    <div class="chat-btn" onclick="window.geniusBot.toggle()">
+        <img src="icon-192.png" alt="Teslam Bot">
+    </div>
+
+    <div class="chat-window" id="chatWindow">
+        <div class="chat-header">
+            <div class="bot-info">
+                <img src="icon-192.png" class="bot-avatar-sm">
+                <div class="bot-details">
+                    <h3>تسلم (AI)</h3>
+                    <div class="bot-status"><div class="status-dot"></div> Online by Adham</div>
+                </div>
+            </div>
+            <i class="fas fa-chevron-down" onclick="window.geniusBot.toggle()" style="cursor:pointer; color:var(--text-sub);"></i>
+        </div>
+        
+        <div class="chat-body" id="chatBody">
+            <div class="msg-row bot">
+                <img src="icon-192.png" class="bot-avatar-sm">
+                <div class="msg-bubble">
+                    أهلاً بك في صفحة التحميل! 🚀<br>أنا <b>تسلم</b>، لو واجهت مشكلة أو محتاج تطبيق تاني قولي فوراً! 😉
+                </div>
+            </div>
+        </div>
+        
+        <div class="chat-footer">
+            <input type="text" id="chatInput" class="chat-input" placeholder="اكتب هنا..." onkeypress="if(event.key==='Enter') window.geniusBot.send()">
+            <button class="send-btn" onclick="window.geniusBot.send()">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+ 
+    <script type="module" src="main.js"></script>
+</body>
+</html>
