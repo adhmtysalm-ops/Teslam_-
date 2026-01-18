@@ -31,7 +31,7 @@
             --primary-hover: #27ae60;
             --hero-bg: #1e1e1e;
             --border-color: #eee;
-            --shadow: 0 8px 20px rgba(0, 0, 0, 0.06); /* الظل القديم الناعم */
+            --shadow: 0 8px 20px rgba(0, 0, 0, 0.06); /* الظل الأصلي */
             --radius: 18px;
             --algo-color: #9b59b6;
         }
@@ -53,6 +53,7 @@
         
         body { 
             background-color: var(--bg-body);
+            /* الخلفية السريعة عشان الموقع مايهنجش */
             background-image: linear-gradient(180deg, rgba(46, 204, 113, 0.03) 0%, transparent 100%);
             font-family: 'Cairo', sans-serif; 
             margin: 0; padding-bottom: 90px; color: var(--text-main); 
