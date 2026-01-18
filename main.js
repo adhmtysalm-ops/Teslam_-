@@ -6,7 +6,7 @@
     var host = window.location.hostname;
     
     // السماح بالدومين الرسمي + السيرفر المحلي للتطوير
-    if (host !== myDomain && host !== "localhost" && host !== "127.0.0.1") {
+    if (host !== myDomain) {
         document.body.innerHTML = "<h1 style='text-align:center; margin-top:50px; color:red;'>🚫 Access Denied<br>هذا الكود محمي ومخصص لمتجر تسلم فقط.</h1>";
         throw new Error("Access Denied: Production Only");
     }
