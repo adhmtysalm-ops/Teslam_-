@@ -43,13 +43,19 @@ try {
         });
     }
 
+    // عندما يوصل إشعار والموقع مفتوح
     onMessage(messaging, (payload) => {
         const title = payload.notification.title;
-        const options = {
-            body: payload.notification.body,
-            icon: '/icon-192.png'
-        };
+        const body = payload.notification.body;
+        
+        // 1. عرض إشعار النظام (اختياري لو المتصفح بيدعم)
+        const options = { body: body, icon: '/icon-192.png' };
         new Notification(title, options);
+
+        // 2. حفظ الإشعار في القائمة داخل الموقع (الميزة الجديدة)
+        if(window.notif) {
+            window.notif.add(title, body);
+        }
     });
 
     requestPermission();
@@ -58,7 +64,108 @@ try {
 }
 
 /* =========================================
-   2. مراقب حالة الإنترنت (جديد - المطور أدهم)
+   2. نظام إدارة الإشعارات (جديد)
+   ========================================= */
+class NotificationSystem {
+    constructor() {
+        this.key = 'teslam_notifications';
+        this.list = JSON.parse(localStorage.getItem(this.key) || '[]');
+        this.updateBadge();
+    }
+
+    // إضافة إشعار جديد
+    add(title, body) {
+        const newNotif = {
+            title: title,
+            body: body,
+            time: new Date().getTime(),
+            read: false
+        };
+        // إضافة للأول
+        this.list.unshift(newNotif);
+        // الاحتفاظ بآخر 20 إشعار فقط
+        if(this.list.length > 20) this.list = this.list.slice(0, 20);
+        
+        this.save();
+        this.updateBadge();
+        
+        // لو القائمة مفتوحة، حدثها فوراً
+        const dropdown = document.getElementById('notifDropdown');
+        if(dropdown && dropdown.classList.contains('open')) {
+            this.render();
+        }
+    }
+
+    save() {
+        localStorage.setItem(this.key, JSON.stringify(this.list));
+    }
+
+    updateBadge() {
+        const badge = document.getElementById('notifBadge');
+        if(!badge) return;
+        
+        const unreadCount = this.list.filter(n => !n.read).length;
+        if(unreadCount > 0) {
+            badge.classList.add('active');
+        } else {
+            badge.classList.remove('active');
+        }
+    }
+
+    toggle() {
+        const dropdown = document.getElementById('notifDropdown');
+        if(!dropdown) return;
+        
+        dropdown.classList.toggle('open');
+        if(dropdown.classList.contains('open')) {
+            this.render();
+            // تعليم الكل كمقروء بمجرد الفتح
+            this.markAllRead();
+        }
+    }
+
+    render() {
+        const listContainer = document.getElementById('notifList');
+        if(!listContainer) return;
+
+        if(this.list.length === 0) {
+            listContainer.innerHTML = '<div class="empty-notif">لا توجد إشعارات جديدة</div>';
+            return;
+        }
+
+        listContainer.innerHTML = '';
+        this.list.forEach(n => {
+            const date = new Date(n.time).toLocaleTimeString('ar-EG', {hour: '2-digit', minute:'2-digit'});
+            const item = document.createElement('div');
+            item.className = 'notif-item';
+            item.innerHTML = `
+                <div class="notif-icon"><i class="fas fa-bell"></i></div>
+                <div class="notif-content">
+                    <h4>${n.title}</h4>
+                    <p>${n.body}</p>
+                    <span class="notif-time">${date}</span>
+                </div>
+            `;
+            listContainer.appendChild(item);
+        });
+    }
+
+    markAllRead() {
+        this.list.forEach(n => n.read = true);
+        this.save();
+        this.updateBadge();
+    }
+
+    clearAll() {
+        this.list = [];
+        this.save();
+        this.render();
+        this.updateBadge();
+    }
+}
+
+/* =========================================
+   3. مراقب حالة الإنترنت
    ========================================= */
 function initNetworkChecker() {
     const toast = document.getElementById('offline-toast');
@@ -66,30 +173,20 @@ function initNetworkChecker() {
 
     function updateNetworkStatus() {
         if (navigator.onLine) {
-            // لو النت رجع
             toast.classList.remove('active');
-            // ممكن تظهر رسالة صغيرة "عاد الاتصال" لو حبيت، بس الإخفاء كافي
         } else {
-            // لو النت قطع
             toast.classList.add('active');
-            // تشغيل صوت تنبيه خفيف لو حبيت
-            try { new Audio('https://cdn.pixabay.com/audio/2022/03/15/audio_279930922e.mp3').play().catch(()=>{}); } catch(e){}
         }
     }
 
     window.addEventListener('online', updateNetworkStatus);
     window.addEventListener('offline', updateNetworkStatus);
-    
-    // التحقق عند فتح الموقع لأول مرة
     updateNetworkStatus();
 }
-
-// تشغيل المراقب عند تحميل الصفحة
 window.addEventListener('load', initNetworkChecker);
 
-
 /* =========================================
-   3. تسجيل SERVICE WORKER
+   4. تسجيل SERVICE WORKER
    ========================================= */
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
@@ -100,12 +197,13 @@ if ('serviceWorker' in navigator) {
 }
 
 /* =========================================
-   4. كلاس تطبيق TESLAM (الأساسي)
+   5. كلاس تطبيق TESLAM (محسن للأداء)
    ========================================= */
 class TeslamApp {
     constructor() {
         this.dbURL = "/api/data";
         this.data = [];
+        this.searchTimeout = null; 
         if (document.getElementById('apps-grid')) {
             this.init();
         }
@@ -116,7 +214,12 @@ class TeslamApp {
         this.fetchData();
         const searchInput = document.getElementById('searchInput');
         if (searchInput) {
-            searchInput.addEventListener('input', (e) => this.smartSearch(e.target.value));
+            searchInput.addEventListener('input', (e) => {
+                clearTimeout(this.searchTimeout); 
+                this.searchTimeout = setTimeout(() => {
+                    this.smartSearch(e.target.value);
+                }, 300); 
+            });
         }
     }
 
@@ -164,13 +267,18 @@ class TeslamApp {
     }
 
     async fetchData() {
+        if (window.app && window.app.data && window.app.data.length > 0) {
+            this.data = window.app.data;
+            this.renderApp();
+            return;
+        }
+
         try {
             const response = await fetch(this.dbURL);
             if (!response.ok) throw new Error("مشكلة في التصريح");
             const json = await response.json();
             if (json) {
                 this.data = Object.values(json).filter(item => item != null).reverse();
-                // مشاركة البيانات مع البوت
                 if(!window.app) window.app = {};
                 window.app.data = this.data;
             } else {
@@ -184,7 +292,6 @@ class TeslamApp {
         }
     }
 
-    // دوال البحث والتصفية
     normalize(text) {
         if(!text) return "";
         return text.toLowerCase()
@@ -196,6 +303,7 @@ class TeslamApp {
     }
 
     levenshtein(a, b) {
+        if (Math.abs(a.length - b.length) > 5) return 100;
         const matrix = [];
         for (let i = 0; i <= b.length; i++) matrix[i] = [i];
         for (let j = 0; j <= a.length; j++) matrix[0][j] = j;
@@ -223,15 +331,17 @@ class TeslamApp {
         const hero = document.getElementById('hero-section');
         const rec = document.getElementById('recommended-section');
         const smartFeed = document.getElementById('smart-feed-section');
+        const updates = document.getElementById('updates-section');
         const tags = document.getElementById('tags-bar');
 
         if(hero) hero.style.display = q ? 'none' : 'block';
         if(rec) rec.style.display = q ? 'none' : 'block';
         if(smartFeed) smartFeed.style.display = q ? 'none' : 'block';
+        if(updates) updates.style.display = q ? 'none' : 'block';
         if(tags) tags.style.display = q ? 'none' : 'flex';
 
         if (!q.trim()) {
-            this.renderGrid(this.data);
+            this.renderGrid(this.data); 
             return;
         }
 
@@ -243,8 +353,11 @@ class TeslamApp {
             let score = 0;
             if (title.includes(query)) score += 100;
             if (keywords.includes(query)) score += 80;
-            const simScore = this.getSimilarity(query, title);
-            if (simScore > 0.4) score += (simScore * 100);
+            
+            if (score === 0) {
+                const simScore = this.getSimilarity(query, title);
+                if (simScore > 0.4) score += (simScore * 100);
+            }
 
             return { app: appItem, score: score };
         })
@@ -253,7 +366,7 @@ class TeslamApp {
         .map(item => item.app);
 
         if (results.length > 0) {
-            this.renderGrid(results);
+            this.renderGrid(results.slice(0, 20));
         } else {
             if(grid) grid.innerHTML = `
                 <div style="grid-column:1/-1; text-align:center; padding:40px; color:var(--text-sub);">
@@ -306,6 +419,52 @@ class TeslamApp {
         }
     }
 
+    checkForUpdates() {
+        const myLibrary = JSON.parse(localStorage.getItem('teslam_library') || '{}');
+        const updatesContainer = document.getElementById('updates-section');
+        const updatesGrid = document.getElementById('updates-grid');
+
+        if (!updatesContainer || !updatesGrid) return;
+
+        const myAppIDs = Object.keys(myLibrary);
+        if (myAppIDs.length === 0) {
+            updatesContainer.style.display = 'none';
+            return;
+        }
+
+        let updatesFound = [];
+        myAppIDs.forEach(id => {
+            const currentApp = this.data.find(a => a.ID == id);
+            if (currentApp) {
+                const lastDownload = myLibrary[id].downloadDate;
+                const now = new Date().getTime();
+                const oneWeek = 7 * 24 * 60 * 60 * 1000;
+                if ((now - lastDownload) > oneWeek) {
+                    updatesFound.push(currentApp);
+                }
+            }
+        });
+
+        if (updatesFound.length > 0) {
+            updatesContainer.style.display = 'block';
+            updatesGrid.innerHTML = '';
+            updatesFound.forEach(app => {
+                const card = document.createElement('div');
+                card.className = 'app-card';
+                card.style.borderColor = '#e67e22'; 
+                card.onclick = () => this.goToPost(app.ID, 0, app.Tag);
+                card.innerHTML = `
+                    <div class="card-img-wrapper"><img src="${app.Image}" class="card-img" loading="lazy"></div>
+                    <div class="card-title">${app.Title}</div>
+                    <div class="dl-btn" style="background:#e67e22;"><i class="fas fa-sync-alt fa-spin"></i> تحديث</div>
+                `;
+                updatesGrid.appendChild(card);
+            });
+        } else {
+            updatesContainer.style.display = 'none';
+        }
+    }
+
     injectHomeSchema() {
         if (!this.data || this.data.length === 0) return;
         const topApps = this.data.slice(0, 10).map(app => ({
@@ -341,10 +500,11 @@ class TeslamApp {
             return;
         }
         this.renderHero();
+        this.checkForUpdates();
         this.renderSmartFeed();
         this.renderRecommended();
         this.renderTagsAndSidebar();
-        this.renderGrid(this.data);
+        this.renderGrid(this.data.slice(0, 20));
     }
 
     renderRecommended() {
@@ -444,22 +604,36 @@ class TeslamApp {
         const hero = document.getElementById('hero-section');
         const rec = document.getElementById('recommended-section');
         const smart = document.getElementById('smart-feed-section');
+        const updates = document.getElementById('updates-section');
 
         if (tag === 'all') {
             if(hero) hero.style.display = 'block';
             if(rec) rec.style.display = 'block';
             if(smart) smart.style.display = 'block';
-            this.renderGrid(this.data);
+            if(updates) updates.style.display = 'block';
+            this.renderGrid(this.data.slice(0, 20));
         } else {
             if(hero) hero.style.display = 'none';
             if(rec) rec.style.display = 'none';
             if(smart) smart.style.display = 'none';
+            if(updates) updates.style.display = 'none';
             this.renderGrid(this.data.filter(i => i.Tag && i.Tag.trim() === tag));
         }
     }
 
     goToPost(uid, idx, tag) {
         if(tag) this.trackClick(tag);
+        
+        const app = this.data.find(a => a.ID == uid) || this.data[idx];
+        if (app) {
+            let myLibrary = JSON.parse(localStorage.getItem('teslam_library') || '{}');
+            myLibrary[app.ID] = {
+                title: app.Title,
+                downloadDate: new Date().getTime() 
+            };
+            localStorage.setItem('teslam_library', JSON.stringify(myLibrary));
+        }
+
         let url = 'post.html?';
         if (uid) url += `uid=${uid}`;
         else url += `id=${idx}`;
@@ -468,7 +642,7 @@ class TeslamApp {
 }
 
 /* =========================================
-   5. كلاس GENIUS BOT (الذكاء الاصطناعي والصوت)
+   6. كلاس GENIUS BOT (الذكاء الاصطناعي والصوت)
    ========================================= */
 class GeniusBot {
     constructor() {
@@ -606,6 +780,7 @@ class GeniusBot {
     }
 
     levenshtein(a, b) {
+        if (Math.abs(a.length - b.length) > 5) return 100;
         const matrix = [];
         for (let i = 0; i <= b.length; i++) matrix[i] = [i];
         for (let j = 0; j <= a.length; j++) matrix[0][j] = j;
@@ -676,7 +851,6 @@ class GeniusBot {
     }
 
     searchDatabase(query) {
-        // التحقق من وجود بيانات (الآن تعمل في الصفحتين بفضل window.app.data)
         if (!window.app || !window.app.data || !window.app.data.length) {
             this.addMsg("ثواني بجمع البيانات... ⏳", 'bot');
             return;
@@ -688,11 +862,8 @@ class GeniusBot {
             const keywords = this.normalize(appItem.Keywords || "");
             
             let score = 0;
-            // تطابق العنوان
             if (title.includes(query) || query.includes(title)) score += 100;
-            // تطابق الكلمات المفتاحية Keywords
             if (keywords.includes(query)) score += 95;
-            // تطابق الوسم
             if (tag.includes(query)) score += 80;
 
             const simScore = this.getSimilarity(query, title);
@@ -852,12 +1023,11 @@ class GeniusBot {
 }
 
 /* =========================================
-   6. منطق صفحة التحميل (POST.HTML) - تم التحديث لمشاركة البيانات
+   7. منطق صفحة التحميل (POST.HTML) - تم الإصلاح
    ========================================= */
 function initPostPage() {
-    // 1. تهيئة كائن التطبيق العام فوراً لكي لا يظهر خطأ للبوت
     window.app = { 
-        data: [], // يبدأ فارغاً
+        data: [], 
         toggleTheme: function() { 
             const body = document.body;
             const icon = document.getElementById('theme-icon');
@@ -884,10 +1054,7 @@ function initPostPage() {
         .then(res => res.json())
         .then(json => {
             const cleanData = json ? Object.values(json).filter(item => item != null).reverse() : [];
-            
-            // ✅ تخزين البيانات في المتغير العام ليراها البوت
             window.app.data = cleanData;
-
             processData(cleanData);
         })
         .catch(err => {
@@ -1001,14 +1168,15 @@ window.toggleTheme = function() {
 }
 
 /* =========================================
-   7. نقطة الدخول (Entry Point)
+   8. نقطة الدخول (Entry Point)
    ========================================= */
+// تشغيل نظام الإشعارات فوراً
+window.notif = new NotificationSystem();
+
 if (document.getElementById('apps-grid')) {
-    // الصفحة الرئيسية
     window.app = new TeslamApp();
     window.geniusBot = new GeniusBot();
 } else if (document.getElementById('p-title')) {
-    // صفحة التحميل
     initPostPage();
     window.geniusBot = new GeniusBot();
-   }
+    }
