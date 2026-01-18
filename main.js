@@ -5,8 +5,7 @@
     var myDomain = "teslam.vercel.app"; 
     var host = window.location.hostname;
     
-    // السماح بالدومين الرسمي + السيرفر المحلي للتطوير
-    if (host !== myDomain) {
+    if (host !== myDomain && host !== "localhost" && host !== "127.0.0.1") {
         document.body.innerHTML = "<h1 style='text-align:center; margin-top:50px; color:red;'>🚫 Access Denied<br>هذا الكود محمي ومخصص لمتجر تسلم فقط.</h1>";
         throw new Error("Access Denied: Production Only");
     }
@@ -59,7 +58,38 @@ try {
 }
 
 /* =========================================
-   2. تسجيل SERVICE WORKER
+   2. مراقب حالة الإنترنت (جديد - المطور أدهم)
+   ========================================= */
+function initNetworkChecker() {
+    const toast = document.getElementById('offline-toast');
+    if (!toast) return;
+
+    function updateNetworkStatus() {
+        if (navigator.onLine) {
+            // لو النت رجع
+            toast.classList.remove('active');
+            // ممكن تظهر رسالة صغيرة "عاد الاتصال" لو حبيت، بس الإخفاء كافي
+        } else {
+            // لو النت قطع
+            toast.classList.add('active');
+            // تشغيل صوت تنبيه خفيف لو حبيت
+            try { new Audio('https://cdn.pixabay.com/audio/2022/03/15/audio_279930922e.mp3').play().catch(()=>{}); } catch(e){}
+        }
+    }
+
+    window.addEventListener('online', updateNetworkStatus);
+    window.addEventListener('offline', updateNetworkStatus);
+    
+    // التحقق عند فتح الموقع لأول مرة
+    updateNetworkStatus();
+}
+
+// تشغيل المراقب عند تحميل الصفحة
+window.addEventListener('load', initNetworkChecker);
+
+
+/* =========================================
+   3. تسجيل SERVICE WORKER
    ========================================= */
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
@@ -70,7 +100,7 @@ if ('serviceWorker' in navigator) {
 }
 
 /* =========================================
-   3. كلاس تطبيق TESLAM (الصفحة الرئيسية)
+   4. كلاس تطبيق TESLAM (الأساسي)
    ========================================= */
 class TeslamApp {
     constructor() {
@@ -140,6 +170,9 @@ class TeslamApp {
             const json = await response.json();
             if (json) {
                 this.data = Object.values(json).filter(item => item != null).reverse();
+                // مشاركة البيانات مع البوت
+                if(!window.app) window.app = {};
+                window.app.data = this.data;
             } else {
                 this.data = [];
             }
@@ -151,7 +184,7 @@ class TeslamApp {
         }
     }
 
-    // --- دوال المساعدة للبحث (مشتركة) ---
+    // دوال البحث والتصفية
     normalize(text) {
         if(!text) return "";
         return text.toLowerCase()
@@ -209,9 +242,7 @@ class TeslamApp {
             
             let score = 0;
             if (title.includes(query)) score += 100;
-            // البحث في الكلمات المفتاحية
             if (keywords.includes(query)) score += 80;
-            
             const simScore = this.getSimilarity(query, title);
             if (simScore > 0.4) score += (simScore * 100);
 
@@ -437,7 +468,7 @@ class TeslamApp {
 }
 
 /* =========================================
-   4. كلاس GENIUS BOT (المتطور - يبحث في Keywords)
+   5. كلاس GENIUS BOT (الذكاء الاصطناعي والصوت)
    ========================================= */
 class GeniusBot {
     constructor() {
@@ -451,7 +482,6 @@ class GeniusBot {
 
         if(!this.chatBody) return;
 
-        // إعداد البحث الصوتي
         if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             this.recognition = new SpeechRecognition();
@@ -646,7 +676,7 @@ class GeniusBot {
     }
 
     searchDatabase(query) {
-        // التحقق من وجود بيانات (الآن تعمل في الصفحتين بفضل الإصلاح)
+        // التحقق من وجود بيانات (الآن تعمل في الصفحتين بفضل window.app.data)
         if (!window.app || !window.app.data || !window.app.data.length) {
             this.addMsg("ثواني بجمع البيانات... ⏳", 'bot');
             return;
@@ -665,7 +695,6 @@ class GeniusBot {
             // تطابق الوسم
             if (tag.includes(query)) score += 80;
 
-            // خوارزميات التشابه (للأخطاء الإملائية)
             const simScore = this.getSimilarity(query, title);
             const simScoreKey = this.getSimilarity(query, keywords);
 
@@ -823,12 +852,12 @@ class GeniusBot {
 }
 
 /* =========================================
-   5. منطق صفحة التحميل (POST.HTML) - تم الإصلاح
+   6. منطق صفحة التحميل (POST.HTML) - تم التحديث لمشاركة البيانات
    ========================================= */
 function initPostPage() {
     // 1. تهيئة كائن التطبيق العام فوراً لكي لا يظهر خطأ للبوت
     window.app = { 
-        data: [], // يبدأ فارغاً حتى اكتمال التحميل
+        data: [], // يبدأ فارغاً
         toggleTheme: function() { 
             const body = document.body;
             const icon = document.getElementById('theme-icon');
@@ -972,7 +1001,7 @@ window.toggleTheme = function() {
 }
 
 /* =========================================
-   6. نقطة الدخول (Entry Point)
+   7. نقطة الدخول (Entry Point)
    ========================================= */
 if (document.getElementById('apps-grid')) {
     // الصفحة الرئيسية
@@ -981,6 +1010,5 @@ if (document.getElementById('apps-grid')) {
 } else if (document.getElementById('p-title')) {
     // صفحة التحميل
     initPostPage();
-    // تفعيل البوت في صفحة التحميل أيضاً
     window.geniusBot = new GeniusBot();
-}
+   }
