@@ -390,5 +390,61 @@
     </div>
  
     <script type="module" src="main.js"></script>
+    <div id="offline-toast" class="offline-toast">
+    <div class="toast-content">
+        <i class="fas fa-wifi-slash toast-icon"></i>
+        <div class="toast-text">
+            <h4>انقطع الاتصال! 🔌</h4>
+            <p>ممكن توصلني بالنت يا ذوق؟ المطور أدهم بيفكرك 😉</p>
+        </div>
+    </div>
+    <button onclick="window.location.reload()" class="retry-btn">تحديث</button>
+</div>
+
+<style>
+    /* تصميم رسالة الاوفلاين */
+    .offline-toast {
+        position: fixed;
+        bottom: -150px; /* مخفية تحت الشاشة */
+        left: 50%;
+        transform: translateX(-50%);
+        width: 90%;
+        max-width: 400px;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-left: 5px solid #ff4757; /* لون أحمر للتنبيه */
+        padding: 15px;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        transition: bottom 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        z-index: 10000;
+        direction: rtl;
+    }
+
+    [data-theme="dark"] .offline-toast {
+        background: rgba(30, 30, 30, 0.95);
+        color: white;
+    }
+
+    .offline-toast.active {
+        bottom: 20px; /* تظهر للأعلى */
+    }
+
+    .toast-content { display: flex; align-items: center; gap: 12px; }
+    .toast-icon { font-size: 24px; color: #ff4757; animation: pulse-red 2s infinite; }
+    
+    .toast-text h4 { margin: 0 0 4px 0; font-size: 14px; font-weight: 800; }
+    .toast-text p { margin: 0; font-size: 11px; opacity: 0.8; }
+
+    .retry-btn {
+        background: #ff4757; color: white; border: none;
+        padding: 8px 12px; border-radius: 6px; font-weight: bold;
+        font-size: 11px; cursor: pointer;
+    }
+</style>
 </body>
 </html>
