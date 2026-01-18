@@ -6,7 +6,8 @@
     var host = window.location.hostname;
     
     // السماح بالدومين الأصلي + السيرفر المحلي للتجربة
-    if (host !== myDomain ) {
+    // يمكنك إضافة 'localhost' للاختبار
+    if (host !== myDomain && host !== "localhost") {
         document.body.innerHTML = "<div style='display:flex;justify-content:center;align-items:center;height:100vh;flex-direction:column;font-family:sans-serif;'><h1>🚫 Access Denied</h1><p>هذا الكود محمي ومخصص لمتجر تسلم فقط.</p></div>";
         throw new Error("Access Denied: Production Only");
     }
@@ -168,7 +169,8 @@ window.notif = new NotificationSystem();
 
 
 /* =========================================
-   2. إعدادات FIREBASE
+   2. إعدادات FIREBASE + Service Worker Registration
+   (تم الدمج لضمان عمل الإشعارات بشكل صحيح)
    ========================================= */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
 import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-messaging.js";
@@ -183,37 +185,58 @@ const firebaseConfig = {
     measurementId: "G-MFY4BKBLDS"
 };
 
-try {
-    const appFire = initializeApp(firebaseConfig);
-    const messaging = getMessaging(appFire);
+// تشغيل الـ Service Worker وربطه بـ Firebase
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', async () => {
+        try {
+            // 1. تسجيل الـ Service Worker الموحد (sw.js)
+            const registration = await navigator.serviceWorker.register('/sw.js');
+            console.log('SW Registered with scope:', registration.scope);
 
-    function requestPermission() {
-        if (Notification.permission === 'granted') return;
-        Notification.requestPermission().then((permission) => {
-            if (permission === 'granted') {
-                getToken(messaging, { vapidKey: 'BIeZIiTnG3t43CGbFeAEClCJB3SBdHp3lYCvJ7NS4cuNnme3cikcPzmSnBRrc_hg9ZSGKDOzGwPI6PWAe0NZtz0' })
-                    .then((currentToken) => {
-                        if (currentToken) console.log('Token:', currentToken);
-                    }).catch((err) => console.log('Error Token: ', err));
+            // 2. تهيئة فايربيس
+            const appFire = initializeApp(firebaseConfig);
+            const messaging = getMessaging(appFire);
+
+            // 3. طلب الإذن وجلب التوكن
+            const requestPermissionAndToken = () => {
+                getToken(messaging, { 
+                    vapidKey: 'BIeZIiTnG3t43CGbFeAEClCJB3SBdHp3lYCvJ7NS4cuNnme3cikcPzmSnBRrc_hg9ZSGKDOzGwPI6PWAe0NZtz0',
+                    serviceWorkerRegistration: registration // ربط التوكن بالـ SW المسجل
+                })
+                .then((currentToken) => {
+                    if (currentToken) console.log('Token Received:', currentToken);
+                    else console.log('No registration token available.');
+                }).catch((err) => console.log('Error retrieving token: ', err));
+            };
+
+            if (Notification.permission === 'granted') {
+                requestPermissionAndToken();
+            } else if (Notification.permission !== 'denied') {
+                Notification.requestPermission().then((permission) => {
+                    if (permission === 'granted') {
+                        requestPermissionAndToken();
+                    }
+                });
             }
-        });
-    }
 
-    onMessage(messaging, (payload) => {
-        const title = payload.notification.title;
-        const body = payload.notification.body;
-        
-        const options = { body: body, icon: '/icon-192.png' };
-        new Notification(title, options);
+            // 4. استقبال الرسائل والموقع مفتوح (Foreground)
+            onMessage(messaging, (payload) => {
+                console.log('Message received in foreground: ', payload);
+                const { title, body } = payload.notification;
+                
+                // عرض إشعار النظام
+                new Notification(title, { body: body, icon: '/icon-192.png' });
+                
+                // إضافة للإشعارات الداخلية في الموقع
+                if(window.notif) {
+                    window.notif.add(title, body);
+                }
+            });
 
-        if(window.notif) {
-            window.notif.add(title, body);
+        } catch (error) {
+            console.error('Service Worker or Firebase Error:', error);
         }
     });
-
-    requestPermission();
-} catch (e) {
-    console.log("Firebase initialized previously or error:", e);
 }
 
 
@@ -241,15 +264,9 @@ window.addEventListener('load', initNetworkChecker);
 
 
 /* =========================================
-   4. تسجيل SERVICE WORKER
+   4. (تم نقل تسجيل الـ SW إلى القسم رقم 2)
+   تم الحذف هنا لمنع التعارض
    ========================================= */
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js')
-            .then(reg => console.log('SW Ready', reg.scope))
-            .catch(err => console.log('SW Fail', err));
-    });
-}
 
 
 /* =========================================
@@ -1216,4 +1233,4 @@ if (document.getElementById('apps-grid')) {
     // صفحة التحميل
     initPostPage();
     window.geniusBot = new GeniusBot();
-    }
+}
