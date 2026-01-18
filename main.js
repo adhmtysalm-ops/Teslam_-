@@ -151,7 +151,6 @@ class TeslamApp {
         }
     }
 
-    // --- [Logic] Algorithms & AI ---
     normalize(text) {
         if(!text) return "";
         return text.toLowerCase()
@@ -436,7 +435,7 @@ class TeslamApp {
 }
 
 /* =========================================
-   4. كلاس GENIUS BOT (الذكاء الاصطناعي - النسخة المطورة)
+   4. كلاس GENIUS BOT (مع البحث الصوتي)
    ========================================= */
 class GeniusBot {
     constructor() {
@@ -444,16 +443,51 @@ class GeniusBot {
         this.chatBody = document.getElementById('chatBody');
         this.chatState = 'idle'; 
         this.lastFoundApp = null; 
+        
+        // إعداد الصوت
+        this.recognition = null;
+        this.isRecording = false;
 
         if(!this.chatBody) return;
+
+        // تهيئة البحث الصوتي
+        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            this.recognition = new SpeechRecognition();
+            this.recognition.lang = 'ar-EG'; // اللهجة المصرية
+            this.recognition.continuous = false;
+            this.recognition.interimResults = false;
+
+            this.recognition.onstart = () => {
+                this.isRecording = true;
+                const btn = document.getElementById('micBtn');
+                if(btn) btn.classList.add('recording');
+                document.getElementById('chatInput').placeholder = "جاري الاستماع... 🎤";
+            };
+
+            this.recognition.onend = () => {
+                this.isRecording = false;
+                const btn = document.getElementById('micBtn');
+                if(btn) btn.classList.remove('recording');
+                document.getElementById('chatInput').placeholder = "اكتب أو تحدث...";
+            };
+
+            this.recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                const input = document.getElementById('chatInput');
+                if(input) {
+                    input.value = transcript;
+                    this.send(); // إرسال تلقائي
+                }
+            };
+        }
 
         this.sendSound = new Audio("https://cdn.pixabay.com/audio/2022/03/24/audio_3322f963a7.mp3");
         this.receiveSound = new Audio("https://cdn.pixabay.com/audio/2022/03/15/audio_279930922e.mp3");
         this.sendSound.volume = 0.5; this.receiveSound.volume = 0.5;
 
-        // --- قاموس الشخصية والردود الذكية ---
+        // --- قاموس الشخصية ---
         this.persona = {
-            // ترحيبات
             greet: { 
                 match: /^(سلام|السلام|مرحبا|اهلا|اهلين|هلا|هاي|hi|hello|hey|yo|welcome|ازيك|عامل ايه|شخبارك|صباح|مساء)/i, 
                 reply: [
@@ -463,7 +497,6 @@ class GeniusBot {
                     "يا مية هلا! 🌹 أنا هنا عشانك."
                 ] 
             },
-            // أحوال
             hru: {
                 match: /^(كيفك|كيف الحال|اخبارك|عامل ايه|شخبارك|how are you|how r u|what's up)/i,
                 reply: [
@@ -472,7 +505,6 @@ class GeniusBot {
                     "تمام الحمد لله، شكراً لسؤالك يا ذوق! 🌹"
                 ]
             },
-            // شكر
             thanks: { 
                 match: /^(شكرا|تسلم|حبيبي|كفو|thx|thanks|thank you|يسلمو|الله يعافيك)/i,
                 reply: [
@@ -481,23 +513,18 @@ class GeniusBot {
                     "حبيبي، ده أقل واجب! 😉"
                 ] 
             },
-            // المطور (القائمة الضخمة التي طلبتها)
             creator: {
-                // كلمات مفتاحية تشمل كل الصيغ الممكنة تقريباً
                 match: /^(مين|من) (عملك|صممك|طورك|برمجك|سواك|صنعك|اخترعك|انشأك|اسسك|رباك|علمك|شغلك)|(مين|من) (المطور|المصمم|المبرمج|المالك|الصانع|المدير|القائد|الريس|البوص)|(who|who's) (made|created|developed|built|programmed|designed|coded) (you)|(your|ur) (creator|developer|maker|owner|dad|father)|(ادهم|أدهم|adham)|مين (هو|يكون) (ادهم|أدهم)/i,
                 reply: [
                     "أنا فخور إني من تصميم وتطوير **أدهم (Adham)** 💻، صاحب متجر تسلم. هو برمجني عشان أكون مساعدك الشخصي! 😎🔥",
                     "اللي صنعني هو العبقري **أدهم**، عشان يوفر عليك وقت التدوير على التطبيقات. 🚀",
-                    "سؤال في الجون! 😉 المطور بتاعي هو **أدهم (Adham)**، وهو اللي سهر الليالي يكتب الكود ده عشانك.",
-                    "أنا روبوت من تطوير **أدهم**، المؤسس والمطور لمتجر تسلم ستور. ❤️"
+                    "سؤال في الجون! 😉 المطور بتاعي هو **أدهم (Adham)**، وهو اللي سهر الليالي يكتب الكود ده عشانك."
                 ]
             },
-            // الهوية
             identity: {
                 match: /(اسمك ايه|مين انت|عرف نفسك|who are you|ur name)/i,
                 reply: ["أنا **تسلم (Teslam AI)** 🤖، مساعدك الذكي للتطبيقات والألعاب!"]
             },
-            // الحب/المدح
             love: {
                 match: /(بحبك|انت جامد|انت عسل|love you|awesome|cool)/i,
                 reply: ["وأنا كمان بحبك يا جميل! ❤️🤖", "أنت اللي جامد والله! 😎", "خجلتني بصراحة ☺️ تسلم يا ذوق!"]
@@ -515,6 +542,18 @@ class GeniusBot {
                 if(inp) inp.focus();
             }, 300);
             this.sendSound.play().then(()=>this.sendSound.pause()).catch(()=>{});
+        }
+    }
+
+    toggleVoice() {
+        if (!this.recognition) {
+            this.addMsg("عذراً، متصفحك لا يدعم البحث الصوتي 😔", 'bot');
+            return;
+        }
+        if (this.isRecording) {
+            this.recognition.stop();
+        } else {
+            this.recognition.start();
         }
     }
 
@@ -570,7 +609,6 @@ class GeniusBot {
         input.value = '';
         this.showTyping();
 
-        // محاكاة التفكير
         const thinkingTime = Math.min(Math.max(text.length * 50, 600), 1500);
         setTimeout(() => {
             this.removeTyping();
@@ -582,15 +620,13 @@ class GeniusBot {
         if (this.chatState !== 'idle') {
            const simple = rawText.toLowerCase();
            if (!simple.match(/^(نعم|لا|yes|no|ايوة|لاء|ok)/)) {
-               this.chatState = 'idle'; // نعتبره بحث جديد
+               this.chatState = 'idle'; 
            }
         }
 
         const simpleText = rawText.toLowerCase();
 
-        // 2. الردود الاجتماعية (Greetings, Small Talk, Creator)
         for (let key in this.persona) {
-            // نستخدم النص الأصلي (rawText) للتحقق من Regex المطور
             if (this.persona[key].match.test(rawText)) { 
                 const replies = this.persona[key].reply;
                 const randomReply = replies[Math.floor(Math.random() * replies.length)];
@@ -599,7 +635,6 @@ class GeniusBot {
             }
         }
 
-        // 3. البحث عن التطبيق
         const query = this.normalize(rawText);
         if (query.length < 2) {
             this.addMsg("اكتب اسم التطبيق (مثلاً: <b>ببجي</b>، <b>واتساب</b>)...", 'bot');
@@ -637,14 +672,12 @@ class GeniusBot {
         .sort((a, b) => b.score - a.score);
 
         if (matches.length > 0) {
-            // وجدنا التطبيق
             const best = matches[0].app;
             this.lastFoundApp = best; 
             this.chatState = 'asking_features'; 
 
             this.addMsg(`لقيت طلبك! 🤩 غالباً بتدور على <b>${best.Title}</b>:`, 'bot');
             
-            // عرض الكارت
             let cardHTML = `
             <div class="bot-result-card" onclick="window.location.href='post.html?uid=${best.ID}'">
                 <img src="${best.Image}" class="bot-res-img">
@@ -660,7 +693,6 @@ class GeniusBot {
             div.innerHTML = `<div style="width:100%; padding-right:10px;">${cardHTML}</div>`;
             this.chatBody.appendChild(div);
 
-            // السؤال الذكي: هل تريد المميزات؟
             setTimeout(() => {
                 this.addMsg(`تحب أعرض لك مميزات التطبيق ده من الوصف؟ 🤔`, 'bot');
                 this.addOptions([
@@ -671,7 +703,6 @@ class GeniusBot {
             }, 800);
 
         } else {
-            // لم نجد التطبيق
             this.chatState = 'idle';
             this.addMsg(`للأسف مش لاقي "<b>${query}</b>" 😔.<br>بس ممكن يعجبك ده 👇`, 'bot');
             const randomApp = window.app.data[Math.floor(Math.random() * window.app.data.length)];
@@ -940,4 +971,4 @@ if (document.getElementById('apps-grid')) {
     initPostPage();
     // تفعيل البوت في صفحة التحميل أيضاً
     window.geniusBot = new GeniusBot();
-               }
+                   }
